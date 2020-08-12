@@ -2,4 +2,8 @@
 *.swp
 *.swo
 *.DS_Store
+.DS_Store
 ./Greenlights/.DS_Store
+.DS_Store
+.gitignore.swp
+.gitignore.swo
