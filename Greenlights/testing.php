@@ -5,4 +5,6 @@ if (!$conn)
 $sql="Create Database Test";
 if (mysqli_query($conn,$sql))
     echo "database created";
+else
+    echo "cannot";
 ?>
