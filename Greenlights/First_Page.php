@@ -4,11 +4,13 @@
 <br>
 Greenlights is a rating system deisgned to help track and improve progress.
 <p>
-<form method=post>
+<form method=post action=Your_Courses.html>
 <input type=submit name=leclog value="Login for Lecturers">
-<br>
+</form>
+<form method=post action=Your_Courses_TA.html>
 <input type=submit name=talog value="Login for TAs">
-<br>
+</form>
+<form method=post action=Your_Modules_Students>
 <input type=submit name=stlog value="Login for students">
 </form>
 <pre>

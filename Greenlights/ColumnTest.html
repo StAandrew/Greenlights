@@ -1,0 +1,21 @@
+<table id="table">
+  <tr><th><input type="text" value="test 1" /><th/></tr>
+  <tr><td><input type="text" value="test 2" /><td/></tr>
+</table>
+
+<button type="button">add column</button>
+<script>
+
+
+function addColumn() {
+    [...document.querySelectorAll('#table tr')].forEach((row, i) => {
+        let input = document.createElement("input")
+        input.setAttribute('type', 'text')
+        let cell = document.createElement(i ? "td" : "th")
+        cell.appendChild(input)
+        row.appendChild(cell)
+    });
+ }
+ 
+ document.querySelector('button').onclick = addColumn
+ </script>
