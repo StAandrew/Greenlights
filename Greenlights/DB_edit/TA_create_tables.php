@@ -46,7 +46,8 @@ $sql = "CREATE TABLE IF NOT EXISTS $module (
     week SMALLINT(2) UNSIGNED NOT NULL,
     session VARCHAR(128) NOT NULL,
     task VARCHAR(256) NOT NULL,
-    task_duration SMALLINT(4) NOT NULL
+    task_duration SMALLINT(4) NOT NULL,
+    group_individual VARCHAR(1) DEFAULT 'I'
 )";
 if ($conn->query($sql) === TRUE) {
   echo "Table $module created successfully<br/>";
