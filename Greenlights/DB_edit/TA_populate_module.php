@@ -28,10 +28,11 @@ for ($week=1; $week <= $num_of_weeks; $week++) {
         
         // Generate pseudo-random task name
         $task = ucfirst(generateRandomString(20));
-
+        $task_duration = rand(30,300);
+        
         // Add a record with each task
-        $sql = "INSERT INTO $module (week, session, task)
-            VALUES ('$week', '$session_name', '$task')";
+        $sql = "INSERT INTO $module (week, session, task, task_duration)
+            VALUES ('$week', '$session_name', '$task', '$task_duration')";
         if ($conn->query($sql) === TRUE) {
           echo "New record created successfully<br/>";
         } else {

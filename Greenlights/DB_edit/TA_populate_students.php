@@ -25,8 +25,8 @@ for ($i=0; $i < $num_of_records; $i++) {
     $email .= "@ucl.ac.uk";
     
     // Add a record
-    $sql = "INSERT INTO $students_name (id, firstname, lastname, email)
-        VALUES ('$id', '$first_name', '$last_name', '$email')";
+    $sql = "INSERT INTO $students_name (id, firstname, lastname, email, course_code, year)
+        VALUES ('$id', '$first_name', '$last_name', '$email', 'H400', '2')";
     if ($conn->query($sql) === TRUE) {
       echo "New record created successfully<br/>";
     } else {

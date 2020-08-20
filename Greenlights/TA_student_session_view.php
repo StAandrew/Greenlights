@@ -13,19 +13,24 @@ if ($conn->connect_error) {
 }
 
 
-print '<table>
-        <tr>
-          <td class="align-top">';
+print '<html>
+        <head>
+            <title>Title</title>
+        </head>
+        <table>
+         <tr>
+          <div class=left-table>
+           <td text-align="top">';
 
 // Student table
 $sql = "SELECT id, firstname, lastname
         FROM $students_name";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
-    print '<table border cellpadding="10" width="500">'; 
+    print '<table border cellpadding="10" width="500" >'; 
     print '<tr>
             <th>Student</th>
-            </tr>';
+           </tr>';
     
     while ($row = $result->fetch_assoc()) {
         $name = $row['firstname'][0] . ". " . $row['lastname'] . " #" . $row['id'];
@@ -39,7 +44,9 @@ if ($result->num_rows > 0) {
 }
 
 print '</td>
-        <td>';
+        </div>
+        <div class=right-table>
+       <td class="align-top">';
 
 // Module table
 $sql = "SELECT session
@@ -49,7 +56,7 @@ if ($result->num_rows > 0) {
     print '<table border cellpadding="10" width="500">'; 
     print '<tr>
             <th>Session</th>
-            </tr>';
+           </tr>';
     
     while ($row = $result->fetch_assoc()) {
         print '<tr>';
@@ -62,8 +69,9 @@ if ($result->num_rows > 0) {
 }
 
 print '</td>
-     </tr>
-</table>';
+      </tr>
+     </table>
+    </html>';
 
 $conn->close();
 ?>

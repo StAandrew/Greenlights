@@ -30,7 +30,9 @@ $sql = "CREATE TABLE IF NOT EXISTS $students_name (
     id INT(8) UNSIGNED PRIMARY KEY,
     firstname VARCHAR(128) NOT NULL,
     lastname VARCHAR(128) NOT NULL,
-    email VARCHAR(128) NOT NULL
+    email VARCHAR(128) NOT NULL,
+    course_code VARCHAR(10) NOT NULL,
+    year SMALLINT(2) NOT NULL
 )";
 if ($conn->query($sql) === TRUE) {
   echo "Table $students_name created successfully<br/>";
@@ -43,7 +45,8 @@ $sql = "CREATE TABLE IF NOT EXISTS $module (
     num INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     week SMALLINT(2) UNSIGNED NOT NULL,
     session VARCHAR(128) NOT NULL,
-    task VARCHAR(256) NOT NULL
+    task VARCHAR(256) NOT NULL,
+    task_duration SMALLINT(4) NOT NULL
 )";
 if ($conn->query($sql) === TRUE) {
   echo "Table $module created successfully<br/>";
