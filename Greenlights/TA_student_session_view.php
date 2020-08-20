@@ -49,7 +49,7 @@ print '</td>
        <td class="align-top">';
 
 // Module table
-$sql = "SELECT session
+$sql = "SELECT DISTINCT session
         FROM $module";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {

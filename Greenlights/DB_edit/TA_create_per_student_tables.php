@@ -42,25 +42,6 @@ foreach ($conn->query("SELECT id FROM $students_name") as $row) {
         echo "Error creating $table table: " . $conn->error;
         break;
     }
-    
-    // Used to insert first row with extra information
-    $init = 0;
-    
-    // Add info from modules table
-    foreach ($conn->query("SELECT week, session, task, task_duration FROM $module") as $row) {
-        $week = $row['week'];
-        $session = $row['session'];
-        $task = $row['task'];
-        $task_duration = $row['task_duration'];
-        $sql = "INSERT INTO $table (week, session, task, task_expected)
-            VALUES ('$week', '$session', '$task', '$task_duration')";
-        if ($conn->query($sql) === TRUE) {
-          echo "New record created successfully<br/>";
-        } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
-            break;
-        }
-    }
 }
 
 // Close the connection
