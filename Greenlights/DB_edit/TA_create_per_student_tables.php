@@ -17,24 +17,12 @@ if ($conn->connect_error) {
 }
 
 // Create table for each student named by their student id
-foreach ($conn->query("SELECT id, firstname, lastname, email, course_code, year FROM $students_name") as $row) {
+foreach ($conn->query("SELECT id FROM $students_name") as $row) {
     $id = $row['id'];
     $table = "s" . $id;
-    $firstname = $row['firstname'];
-    $lastname = $row['lastname'];
-    $email = $row['email'];
-    $course_code = $row['course_code'];
-    $year = $row['year'];
     
     // Create table. Example table name "s18365826"
     $sql = "CREATE TABLE IF NOT EXISTS $table (
-        num INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        firstname VARCHAR(128) DEFAULT NULL,
-        lastname VARCHAR(128) DEFAULT NULL,
-        email VARCHAR(128) DEFAULT NULL,
-        course_code VARCHAR(10) NOT NULL,
-        year SMALLINT(2) NOT NULL,
-        
         week INT(2) UNSIGNED NOT NULL,
         session VARCHAR(128) NOT NULL,
         task VARCHAR(256) NOT NULL,
@@ -64,16 +52,8 @@ foreach ($conn->query("SELECT id, firstname, lastname, email, course_code, year 
         $session = $row['session'];
         $task = $row['task'];
         $task_duration = $row['task_duration'];
-        // If table is empty, add firstname, lastname, email
-        if (!$init) {
-            $sql = "INSERT INTO $table (firstname, lastname, email, course_code, year, week, session, task, task_expected)
-                VALUES ('$firstname', '$lastname', '$email', '$course_code', '$year', '$week', '$session', '$task', '$task_duration')";
-            $init = 1;
-        } else {
-            $sql = "INSERT INTO $table (week, session, task, task_expected)
-                VALUES ('$week', '$session', '$task', '$task_duration')";
-        }
-        
+        $sql = "INSERT INTO $table (week, session, task, task_expected)
+            VALUES ('$week', '$session', '$task', '$task_duration')";
         if ($conn->query($sql) === TRUE) {
           echo "New record created successfully<br/>";
         } else {
