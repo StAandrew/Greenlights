@@ -30,7 +30,7 @@ $sql = "CREATE TABLE IF NOT EXISTS $students_name (
     id INT(8) UNSIGNED PRIMARY KEY,
     firstname VARCHAR(128) NOT NULL,
     lastname VARCHAR(128) NOT NULL,
-    email VARCHAR(128)
+    email VARCHAR(128) NOT NULL
 )";
 if ($conn->query($sql) === TRUE) {
   echo "Table $students_name created successfully<br/>";
@@ -40,16 +40,16 @@ if ($conn->query($sql) === TRUE) {
 
 // Create an example table of a module
 $sql = "CREATE TABLE IF NOT EXISTS $module (
-    week INT(2) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    num INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    week SMALLINT(2) UNSIGNED NOT NULL,
     session VARCHAR(128) NOT NULL,
-    task1 VARCHAR(128) NOT NULL
+    task VARCHAR(256) NOT NULL
 )";
 if ($conn->query($sql) === TRUE) {
   echo "Table $module created successfully<br/>";
 } else {
   echo "Error creating $module table: " . $conn->error;
 }
-
 
 // Close the connection
 $conn->close();

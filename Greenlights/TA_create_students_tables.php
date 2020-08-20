@@ -19,51 +19,60 @@ if ($conn->connect_error) {
 // Create table for each student named by their student id
 foreach ($conn->query("SELECT id, firstname, lastname, email FROM $students_name") as $row) {
     $id = $row['id'];
-    
-    // Create table
-    $sql = "CREATE TABLE IF NOT EXISTS $id (
-        firstname VARCHAR(128) NOT NULL,
-        lastname VARCHAR(128) NOT NULL,
-        email VARCHAR(128),
-        week INT(2) UNSIGNED PRIMARY KEY,
-        session VARCHAR(128) NOT NULL,
-        task1 VARCHAR(128) NOT NULL
-    )";
-    if ($conn->query($sql) === TRUE) {
-        echo "Table $id created successfully<br/>";
-    } else {
-        echo "Error creating $id table: " . $conn->error;
-        break;
-    }
-    
-    // Add name and email
+    $table = "s" . $id;
     $firstname = $row['firstname'];
     $lastname = $row['lastname'];
     $email = $row['email'];
-    $sql = "INSERT INTO $id (firstname, lastname, email)
-        VALUES ('$first_name', '$last_name', '$email')";
-    if ($conn->query($sql) === TRUE) {
-      echo "New record created successfully<br/>";
-    } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
-        break;
-    }
-    foreach ($conn->query("SELECT week, session, task1 FROM $module") as $module_row) {
-        $week = $module_row['week'];
-        $session = $module_row['session'];
-        $task1 = $module_row['task1'];
+
+    
+    // Create table. Example table name "s18365826"
+    $sql = "CREATE TABLE IF NOT EXISTS $table (
+        num INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        firstname VARCHAR(128) DEFAULT NULL,
+        lastname VARCHAR(128) DEFAULT NULL,
+        email VARCHAR(128) DEFAULT NULL,
         
-        $sql = "INSERT INTO $id (week, session, task1)
-        VALUES ('$week', '$session', '$task1')";
-        if ($conn->query($sql) === TRUE) {
-            echo "New record created successfully<br/>";
-        } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
+        week INT(2) UNSIGNED NOT NULL,
+        session VARCHAR(128) NOT NULL,
+        task VARCHAR(256) NOT NULL,
+        rating ENUM('Green', 'Amber', 'Red') DEFAULT NULL,
+        comment VARCHAR(256) DEFAULT NULL,
+        date DATETIME DEFAULT NULL,
+        duration INT(3) DEFAULT NULL
+    )";
+    
+    if ($conn->query($sql) === TRUE) {
+        echo "Table $table created successfully<br/>";
+    } else {
+        echo "Error creating $table table: " . $conn->error;
         break;
-        }
     }
     
-    //TODO: Get task2, task3, etc. if they exist and add them
+    // Used to insert first row with extra information
+    $init = 0;
+    
+    // Add info from modules table
+    foreach ($conn->query("SELECT week, session, task FROM $module") as $row) {
+        $week = $row['week'];
+        $session = $row['session'];
+        $task = $row['task'];
+        // If table is empty, add firstname, lastname, email
+        if (!$init) {
+            $sql = "INSERT INTO $table (firstname, lastname, email, week, session, task)
+                VALUES ('$firstname', '$lastname', '$email', '$week', '$session', '$task')";
+            $init = 1;
+        } else {
+            $sql = "INSERT INTO $table (week, session, task)
+                VALUES ('$week', '$session', '$task')";
+        }
+        
+        if ($conn->query($sql) === TRUE) {
+          echo "New record created successfully<br/>";
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+            break;
+        }
+    }
 }
 
 // Close the connection

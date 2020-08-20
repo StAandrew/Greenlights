@@ -17,34 +17,27 @@ if ($conn->connect_error) {
 }
 
 for ($week=1; $week <= $num_of_weeks; $week++) {
-    // Generate pseudo-random data
+    
+    // Randomly decide how many tasks to add
+    $num_of_tasks = rand(1, 5);
+        
+    // Generate a pseudo-random session name
     $session_name = ucfirst(generateRandomString(10));
-    $task1 = ucfirst(generateRandomString(20));
-    
-//    // Add task 2 with a 50% chance
-//    if (rand(1, 2) == 1)
-//        $task2 = ucfirst(generateRandomString(20));
-//    else
-//        $task2 = NULL;
-//    
-//    // Check if task 2 column exists
-//    $sql = ("SELECT `task2` FROM `$module`");
-//    if ($conn->query($sql) === TRUE){
-//        conn->query("ALTER TABLE $module ADD `task2` VARCHAR(128)");
-//        echo 'task 2 has been added to the database';
-//    } else {
-//        echo "Error: " . $sql . "<br>" . $conn->error;
-//        break;
-//    }
-    
-    // Add a record
-    $sql = "INSERT INTO $module (week, session, task1)
-        VALUES ('$week', '$session_name', '$task1')";
-    if ($conn->query($sql) === TRUE) {
-      echo "New record created successfully<br/>";
-    } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
-        break;
+        
+    for ($task_num = 1; $task_num <= $num_of_tasks; $task_num++) {
+        
+        // Generate pseudo-random task name
+        $task = ucfirst(generateRandomString(20));
+
+        // Add a record with each task
+        $sql = "INSERT INTO $module (week, session, task)
+            VALUES ('$week', '$session_name', '$task')";
+        if ($conn->query($sql) === TRUE) {
+          echo "New record created successfully<br/>";
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+            break;
+        }
     }
 }
 
