@@ -47,7 +47,7 @@ echo "Year: " . $year . "<br/>";
         <table id="data_table" class="table table-striped">
             <thead>
                 <tr>
-                    <th>Unique id</th>
+<!--                <th>Unique id</th>-->
                     <th>Week</th>
                     <th>Session</th>
                     <th>Task</th>

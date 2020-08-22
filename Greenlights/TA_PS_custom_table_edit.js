@@ -12,7 +12,7 @@ $(document).ready(function(){
                      [10, 'meeting_date'],
                      [11, 'meeting_action']]
 		},
-		hideIdentifier: true,
+		hideIdentifier: false,
 		url: 'TA_PS_live_edit.php'		
 	});
 }); 
