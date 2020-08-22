@@ -4,13 +4,13 @@ $(document).ready(function(){
 		editButton: false,   		
 		columns: {
 		  identifier: [0, 'id'],                    
-		  editable: [[4, 'group_number'], 
-                     [5, 'rating'],
-                     [7, 'task_actual'], 
-                     [8, 'comment'], 
-                     [9, 'action'],
-                     [10, 'meeting_date'],
-                     [11, 'meeting_action']]
+		  editable: [[3, 'group_number'], 
+                     [4, 'rating'],
+                     [6, 'task_actual'], 
+                     [7, 'comment'], 
+                     [8, 'action'],
+                     [9, 'meeting_date'],
+                     [10, 'meeting_action']]
 		},
 		hideIdentifier: false,
 		url: 'TA_PS_live_edit.php'		
