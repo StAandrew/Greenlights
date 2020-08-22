@@ -13,6 +13,6 @@ $(document).ready(function(){
                      [11, 'meeting_action']]
 		},
 		hideIdentifier: true,
-		url: 'live_edit.php'		
+		url: 'TA_PS_live_edit.php'		
 	});
 }); 

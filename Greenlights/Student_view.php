@@ -42,7 +42,7 @@ $sql = "SELECT week, session, task, group_number, rating,
         FROM $table";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
-    print '<table border cellpadding="10" width="500">'; 
+    print '<table border cellpadding="10" width="500 class="table table-striped">'; 
     //print '<tr width="100"><th colspan="3">Songs</th></tr>';
     print '<tr>
             <th>Week</th>
