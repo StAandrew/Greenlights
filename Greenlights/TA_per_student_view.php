@@ -85,7 +85,10 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
             print '<td>' . $row['week'] . '</td>';
             print '<td>' . $row['session'] . '</td>';
             print '<td>' . $row['task'] . '</td>';
-            print '<td>' . $row['group_number'] . '</td>';
+            if ($row['group_number'] == 0)
+                print '<td> </td>';
+            else
+                print '<td>' . $row['group_number'] . '</td>';
             print '<td>' . $row['rating'] . '</td>'; 
             print '<td>' . $row['task_expected'] . '</td>';
             print '<td>' . $row['task_actual'] . '</td>';

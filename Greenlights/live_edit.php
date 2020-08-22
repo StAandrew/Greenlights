@@ -10,6 +10,8 @@ if ($input['action'] == 'edit') {
 	} else if(isset($input['task'])) {
 		$update_field.= "task='".$input['task']."'";
 	} else if(isset($input['group_number'])) {
+        if($input['group_number'] == null || $input['group_number'] == 0 || $input['group_number'] == ' ')
+            $input['group_number'] = 0;
 		$update_field.= "group_number='".$input['group_number']."'";
 	} else if(isset($input['rating'])) {
 		$update_field.= "rating='".$input['rating']."'";
