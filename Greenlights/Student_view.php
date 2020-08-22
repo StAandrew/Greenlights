@@ -76,6 +76,7 @@ if ($result->num_rows > 0) {
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }
+print '</table>';
 
 $conn->close();
 ?>
