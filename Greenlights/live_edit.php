@@ -14,6 +14,12 @@ if ($input['action'] == 'edit') {
             $input['group_number'] = 0;
 		$update_field.= "group_number='".$input['group_number']."'";
 	} else if(isset($input['rating'])) {
+        if($input['rating'] == 'G' || $input['rating'] == 'g' || $input['rating'] == 'green')
+            $input['rating'] = 'Green';
+        else if($input['rating'] == 'A' || $input['rating'] == 'a' || $input['rating'] == 'amber')
+            $input['rating'] = 'Amber';
+        else if($input['rating'] == 'R' || $input['rating'] == 'r' || $input['rating'] == 'red')
+            $input['rating'] = 'Red';
 		$update_field.= "rating='".$input['rating']."'";
 	} else if(isset($input['task_expected'])) {
 		$update_field.= "task_expected='".$input['task_expected']."'";
@@ -30,6 +36,6 @@ if ($input['action'] == 'edit') {
 	}
 	if($update_field && $input['id']) {
 		$sql_query = "UPDATE TA_development.s18182839 SET $update_field WHERE id='" . $input['id'] . "'";	
-		mysqli_query($conn, $sql_query) or die("database error:". mysqli_error($conn));		
+		mysqli_query($conn, $sql_query) or die("database error:". mysqli_error($conn));
 	}
 }
