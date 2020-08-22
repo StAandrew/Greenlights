@@ -1,17 +1,17 @@
 <?php
+include_once("db_connect.php");
 $servername = "localhost";
 $username = "root";
 $password = "root";
 $database = "TA_development";
 $students_name = "All_Students";
 $module = "ELECLAB1";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $database);
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
-
+?>
+<?php include("header.php");?>
+    <title>Student view</title>
+<?php include('container.php'); ?>
+    <body>
+<?php
 // Get one students info
 $sql = "SELECT id, firstname, lastname, email, course_code, year
         FROM $students_name
@@ -30,34 +30,38 @@ if ($result->num_rows > 0) {
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }
-
+        
+print "Welcome, " . $firstname;
+?>
+        <div class="container home">
+            <table width="500" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Week</th>
+                    <th>Session</th>
+                    <th>Task</th>
+                    <th>Group number</th>
+                    <th>Rating</th>
+                    <th>Task expected</th>
+                    <th>Task actual</th>
+                    <th>Comment</th>
+                    <th>Action</th>
+                    <th>Meeting date</th>
+                    <th>Meeting duration</th>
+                </tr>
+            </thead>
+            <tbody>
+<?php
+                
 // Create table name
 $table = "s" . $id;
-
-echo "Welcome, " . $firstname;
 // Get all info from student's table
 $sql = "SELECT week, session, task, group_number, rating, 
         task_expected, task_actual, 
         comment, action, meeting_date, meeting_duration
         FROM $table";
 $result = $conn->query($sql);
-if ($result->num_rows > 0) {
-    print '<table border cellpadding="10" width="500 class="table table-striped">'; 
-    //print '<tr width="100"><th colspan="3">Songs</th></tr>';
-    print '<tr>
-            <th>Week</th>
-            <th>Session</th>
-            <th>Task</th>
-            <th>Group number</th>
-            <th>Rating</th>
-            <th>Task expected</th>
-            <th>Task actual</th>
-            <th>Comment</th>
-            <th>Action</th>
-            <th>Meeting date</th>
-            <th>Meeting duration</th>
-            </tr>';
-    
+if ($result->num_rows > 0) {  
     while ($row = $result->fetch_assoc()) {
         print '<tr>';
             print '<td>' . $row['week'] . '</td>';
@@ -76,7 +80,13 @@ if ($result->num_rows > 0) {
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }
-print '</table>';
+?>
+                </tbody>
+            </table>
+        </div>
+</body>
+</html>
 
+<?php
 $conn->close();
 ?>
