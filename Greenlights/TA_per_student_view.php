@@ -1,15 +1,12 @@
 <?php 
-include("inc/header.php"); 
-include('inc/container.php');
+include_once("db_connect.php");
+
 $servername = "localhost";
 $username = "root";
 $password = "root";
 $database = "TA_development";
 $students_name = "All_Students";
 $module = "ELECLAB1";
-
-// Create connection
-include_once("inc/db_connect.php");
 
 // Get one students info
 $sql = "SELECT id, firstname, lastname, email, course_code, year
@@ -40,15 +37,14 @@ echo "Student id: " . $id . "<br/";
 echo "Email: " . $email . "<br/>";
 echo "Course code: " . $course_code . "<br/>";
 echo "Year: " . $year . "<br/>";
-?>
-<html>
-    <head>
+include("header.php"); ?>
+
         <title>TA view</title>
-    </head>
+        <script type="text/javascript" src="dist/jquery.tabledit.js"></script>
+<?php include('container.php'); ?>
     <body>
-    <div class="container">	
-    <div class="row">
-        <table id="editableTable" class="table table-bordered">
+    <div class="container home">	
+        <table id="data_table" class="table table-striped">
         <thead>
             <tr>
                 <th>Unique id</th>
@@ -66,7 +62,7 @@ echo "Year: " . $year . "<br/>";
             </tr>
         </thead>
         <tbody>
-<?php
+<?php 
 // Get all info from student's table
 // Editable fields: (counting from 0)
 //  group_number 3
@@ -99,13 +95,14 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
 }
 ?>
         </tbody>
-            </table>
-        </div>
-        </div>
-        <script src="plugin/bootstable.js"></script>
-        <script src="js/editable.js"></script>
+        </table>
+        <div style="margin:50px 0px 0px 0px;">
+		<a class="btn btn-default read-more" style="background:#3399ff;color:white" href="http://www.phpzag.com/create-live-editable-table-with-jquery-php-and-mysql/">Back to Tutorial</a>		
+	    </div>
+        </div> 
+        <script type="text/javascript" src="custom_table_edit.js"></script>
 </body>
-</html>
 <?php
+include('footer.php');
 $conn->close();
 ?>
