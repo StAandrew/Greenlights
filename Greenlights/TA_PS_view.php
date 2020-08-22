@@ -100,7 +100,7 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
             </tbody>
             </table>
             <div style="margin:50px 0px 0px 0px;">
-                <a class="btn btn-default read-more" style="background:#3399ff;color:white" href="http://google.com">Back</a>
+                <a class="btn btn-default read-more" style="background:#3399ff;color:white" href="http://ucl.ac.uk">Back</a>
             </div>
         </div> 
         <script type="text/javascript" src="TA_PS_custom_table_edit.js"></script>

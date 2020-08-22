@@ -9,12 +9,11 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a href="http://www.google.com" class="navbar-brand">Greenlights</a>
+          <a href="http://www.ucl.ac.uk" class="navbar-brand">Greenlights</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="http://www.google.com">Home</a></li>
-           
+            <li class="active"><a href="http://www.ucl.ac.uk">Home</a></li>
           </ul>
          
         </div><!--/.nav-collapse -->
