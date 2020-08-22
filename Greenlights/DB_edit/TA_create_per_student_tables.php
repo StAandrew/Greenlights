@@ -23,6 +23,7 @@ foreach ($conn->query("SELECT id FROM $students_name") as $row) {
     
     // Create table. Example table name "s18365826"
     $sql = "CREATE TABLE IF NOT EXISTS $table (
+        id INT AUTO_INCREMENT PRIMARY KEY,
         week INT(2) UNSIGNED NOT NULL,
         session VARCHAR(128) NOT NULL,
         task VARCHAR(256) NOT NULL,
