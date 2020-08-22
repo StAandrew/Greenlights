@@ -32,17 +32,19 @@ if ($result->num_rows > 0) {
 $table = "s" . $id;
 
 // Echo student info
-echo "Name: " . $firstname . " " . $lastname . "<br/>";
-echo "Student id: " . $id . "<br/";
-echo "Email: " . $email . "<br/>";
-echo "Course code: " . $course_code . "<br/>";
-echo "Year: " . $year . "<br/>";
-include("header.php"); ?>
+include("header.php");?>
 
         <title>TA view</title>
         <script type="text/javascript" src="dist/jquery.tabledit.js"></script>
 <?php include('container.php'); ?>
     <body>
+<?php
+echo "Name: " . $firstname . " " . $lastname . "<br/>";
+echo "Student id: " . $id . "<br/";
+echo "Email: " . $email . "<br/>";
+echo "Course code: " . $course_code . "<br/>";
+echo "Year: " . $year . "<br/>";?>
+        
     <div class="container home">	
         <table id="data_table" class="table table-striped">
         <thead>
@@ -97,7 +99,7 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
         </tbody>
         </table>
         <div style="margin:50px 0px 0px 0px;">
-		<a class="btn btn-default read-more" style="background:#3399ff;color:white" href="http://www.phpzag.com/create-live-editable-table-with-jquery-php-and-mysql/">Back to Tutorial</a>		
+		<a class="btn btn-default read-more" style="background:#3399ff;color:white" href="http://google.com">Back</a>		
 	    </div>
         </div> 
         <script type="text/javascript" src="custom_table_edit.js"></script>

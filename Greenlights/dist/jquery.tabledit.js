@@ -1,4 +1,4 @@
-/*!
+/*! 
  * Tabledit v1.2.3 (https://github.com/markcell/jQuery-Tabledit)
  * Copyright (c) 2015 Celso Marques
  * Licensed under MIT (https://github.com/markcell/jQuery-Tabledit/blob/master/LICENSE)
