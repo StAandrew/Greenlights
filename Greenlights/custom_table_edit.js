@@ -4,12 +4,8 @@ $(document).ready(function(){
 		editButton: false,   		
 		columns: {
 		  identifier: [0, 'id'],                    
-		  editable: [[1, 'week'],
-                     [2, 'session'],
-                     [3, 'task'], 
-                     [4, 'group_number'], 
+		  editable: [[4, 'group_number'], 
                      [5, 'rating'],
-                     [6, 'task_expected'], 
                      [7, 'task_actual'], 
                      [8, 'comment'], 
                      [9, 'action'],
