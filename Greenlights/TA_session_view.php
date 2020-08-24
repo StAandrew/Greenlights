@@ -7,7 +7,7 @@ $students_name = "All_Students";
 $module = "ELECLAB1";
 
 // Hardcoded session name
-$session = "Chrrrilmol";
+$session = "Mcsyhjeenf";
 echo "Session: " . $session;
 // Create connection
 $conn = new mysqli($servername, $username, $password, $database);

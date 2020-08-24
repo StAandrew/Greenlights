@@ -18,7 +18,7 @@ $module = "ELECLAB1";
 // Get one students info
 $sql = "SELECT id, firstname, lastname, email, course_code, year
         FROM $students_name
-        WHERE id = 18182839
+        WHERE id = 18187614
         ORDER BY id ASC
         LIMIT 0, 1";
 $result = $conn->query($sql);
