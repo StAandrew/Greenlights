@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="//code.jquery.com/jquery-2.1.1.min.js"></script> <!-- jquery included -->
+  <meta charset="utf-8">
+  <title>JS Bin</title>
+</head>
+<body>
+  <table border="1">
+  </table>
+  <br/>
+  <button id="add">Add</button>
+  <button id="remove">Remove</button>
+</body>
+</html>
+
+<script>
+var row_set,td_set,i,j; //variables used
+
+tr_set = "<tr><th>Item</th><th>Name</th><th>Price</th><th>Quantity</th><th>Total</th></tr>";//heading row
+
+td_set = "";//initial data for each row
+
+for(i=1;i<=5;i++){//loop runs to insert 5 rows in table
+  for(j=1;j<=5;j++)//loop that takes 5 data for each row
+    td_set = td_set + "<td>data</td>";//storing data in each td
+  //inner loop ends
+  tr_set = tr_set + "<tr>" + td_set +"</tr>";//inserting 5 data in each row
+  td_set="";//initialising data for next row
+}
+
+$("table").html(tr_set);//selecting table and inserting the row set
+
+
+var insert_row;
+insert_row = "<tr><td>data</td><td>data</td><td>data</td><td>data</td><td>data</td></tr>";
+
+$("#add").click(function(){//when add button is clicked
+  $("table").append(insert_row);//appending new row to table
+});
+
+$("#remove").click(function(){
+  $("tr:last-child").remove();
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+function addColumn() {
+    [...document.querySelectorAll('#makeEditable tr')].forEach((row, i) => {
+        let input = document.createElement("input")
+        input.setAttribute('type', 'text')
+        let cell = document.createElement(i ? "td" : "th")
+        cell.appendChild(input)
+        row.appendChild(cell)
+    });
+ }
+ 
+ document.querySelector('button').onclick = addColumn
+ </script>

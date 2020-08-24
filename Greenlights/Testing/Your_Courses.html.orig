@@ -1,0 +1,9 @@
+<html>
+<body bgcolor=lightgreen>
+<h1><font color=white> Your Modules</font></h1>
+<p>
+<form name=courses method=post action=Add_New_Course.php>
+<input type="submit" value="Add New Module" name="submit">
+</form>
+</body>
+</html>
