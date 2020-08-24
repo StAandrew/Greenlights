@@ -7,7 +7,7 @@ $students_name = "All_Students";
 $module = "ELECLAB1";
 
 // Hardcoded session name
-$session = "Jpxmjxiiik";
+$session = "Chrrrilmol";
 echo "Session: " . $session;
 // Create connection
 $conn = new mysqli($servername, $username, $password, $database);
@@ -61,6 +61,63 @@ if ($stud_result->num_rows > 0) {
         print '<td>' . $name . '</td>';
         print '<td>' . $stud['id'] . '</td>';
         $date = 0;
+        
+        $red_threshold = 0.3; // 30% of all ratings
+        $amber_threshold = 0.5; // 50% of all ratings
+        $green_num = 0;
+        $amber_num = 0;
+        $red_num = 0;
+        $overall_rating = 0;
+        $rating_num = 0;
+        // Calculate overall
+        foreach($tasks as $item) {
+            $sql = "SELECT task, rating
+                FROM $table
+                WHERE task = '$item'";
+            $result = $conn->query($sql);
+            if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                    if($row['rating'] == 'Green') {
+                        $overall_rating += 3;
+                        $green_num += 1;
+                        $rating_num += 1;
+                    } else if($row['rating'] == 'Amber') {
+                        $overall_rating += 2;
+                        $amber_num += 1;
+                        $rating_num += 1;
+                    } else if($row['rating'] == 'Red') {
+                        $overall_rating += 1;
+                        $red_num += 1;
+                        $rating_num += 1;
+                    } else {
+                        //Error
+                        $overall_rating = -1;
+                        break;
+                    }
+                    if ($rating_num != 0)
+                        $overall_rating = $overall_rating / $rating_num;
+                }
+                $amber_num = $amber_num / $rating_num;
+                $red_num = $red_num / $rating_num;
+                $green_num = $green_num / $rating_num;
+//                if ($overall_rating == -1 || $rating_num == 0)
+//                    $overall_rating = "Unknown";
+//                // Check for red and amber thresholds
+//                else if ($red_num >= $red_threshold)
+//                    $overall_rating = "Red";
+//                else if ($amber_num + $red_num >= $amber_threshold)
+//                    $overall_rating = "Amber";
+//                // If thresholds are fine, calculate based on average
+//                else if ($overall_rating <= 0.3)
+//                    $overall_rating = "Red";
+//                else if ($overall_rating <= 0.7)
+//                    $overall_rating = "Amber";
+//                else 
+//                    $overall_rating = "Green";
+            } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+            }
+        }
         // Loop through tasks
         foreach($tasks as $item) {
             $sql = "SELECT task, rating, meeting_date
@@ -71,7 +128,7 @@ if ($stud_result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                     if (!$date) {
                         print '<td>' . $row['meeting_date'] . '</td>';
-                        print '<td>' . 'Unknown' . '</td>';
+                        print '<td>' . $overall_rating . '</td>';
                         $date = 1;
                     }
                     print '<td>' . $row['rating'] . '</td>';
