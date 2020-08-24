@@ -1,6 +1,8 @@
 <html>
+<head>  
+</head>
 <body bgcolor=lightgreen>
-<form name=course_entry method=post action="show.php" enctype="multipart/form-data">
+<form name=course_entry method=post action="tab2.php" enctype="multipart/form-data">
     <br>
 <h1>Add Your Module</h1>
 <p>
@@ -13,8 +15,9 @@ Number of weeks:
 <br>
 <input type=text placeholder="Enter a number..." name=weeks size=20><p>
 Please upload the relevant class list:<br>
-<input type=file name=class_list>
-<input type=submit name=add value="Add New Module">
+<input type=file name=file accept=".csv">
+<p>
+<input type=submit name=submit value="Import Class List and Add New Module">
 </form>
 </body>
 </html>

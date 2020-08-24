@@ -1,0 +1,63 @@
+<html>
+<body>
+<script>
+function addColumn(tblId)
+{
+	var tblHeadObj = document.getElementById(tblId).tHead;
+	for (var h=0; h<tblHeadObj.rows.length; h++) {
+		var newTH = document.createElement('th');
+		tblHeadObj.rows[h].appendChild(newTH);
+		newTH.innerHTML = '[th] row:' + h + ', cell: ' + (tblHeadObj.rows[h].cells.length - 1)
+	}
+
+	var tblBodyObj = document.getElementById(tblId).tBodies[0];
+	for (var i=0; i<tblBodyObj.rows.length; i++) {
+		var newCell = tblBodyObj.rows[i].insertCell(-1);
+		newCell.innerHTML = '[td] row:' + i + ', cell: ' + (tblBodyObj.rows[i].cells.length - 1)
+	}
+}
+function deleteColumn(tblId)
+{
+	var allRows = document.getElementById(tblId).rows;
+	for (var i=0; i<allRows.length; i++) {
+		if (allRows[i].cells.length > 1) {
+			allRows[i].deleteCell(-1);
+		}
+	}
+}
+    </script>
+
+<form>
+<p>
+<input type="button" value="add column" onclick="addColumn('tblSample')" />
+<input type="button" value="delete column" onclick="deleteColumn('tblSample')" />
+</p>
+<table id="tblSample" border="1">
+<thead>
+<tr>
+  <th>[th] row:0, cell: 0</th>
+  <th>[th] row:0, cell: 1</th>
+  <th>[th] row:0, cell: 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>[td] row:0, cell: 0</td>
+  <td>[td] row:0, cell: 1</td>
+  <td>[td] row:0, cell: 2</td>
+</tr>
+<tr>
+  <td>[td] row:1, cell: 0</td>
+  <td>[td] row:1, cell: 1</td>
+  <td>[td] row:1, cell: 2</td>
+</tr>
+<tr>
+  <td>[td] row:2, cell: 0</td>
+  <td>[td] row:2, cell: 1</td>
+  <td>[td] row:2, cell: 2</td>
+</tr>
+</tbody>
+</table>
+</form>   
+</body>
+</html>
