@@ -27,8 +27,8 @@ if ($input['action'] == 'edit') {
 		$update_field.= "task_actual='".$input['task_actual']."'";
 	} else if(isset($input['comment'])) {
 		$update_field.= "comment='".$input['comment']."'";
-	} else if(isset($input['action'])) {
-		$update_field.= "action='".$input['action']."'";
+	} else if(isset($input['actions'])) {
+		$update_field.= "actions='".$input['actions']."'";
 	} else if(isset($input['meeting_date'])) {
 		$update_field.= "meeting_date='".$input['meeting_date']."'";
 	} else if(isset($input['meeting_duration'])) {

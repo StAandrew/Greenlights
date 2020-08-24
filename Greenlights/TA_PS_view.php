@@ -1,4 +1,5 @@
 <?php //per student view
+// TODO: actions, meeting_date, meeting_duration, 
 include_once("db_connect.php");
 $servername = "localhost";
 $username = "root";
@@ -56,7 +57,7 @@ echo "Year: " . $year . "<br/>";
                     <th>Task expected</th>
                     <th>Task actual</th>
                     <th>Comment</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                     <th>Meeting date</th>
                     <th>Meeting duration</th>
                 </tr>
@@ -69,12 +70,12 @@ echo "Year: " . $year . "<br/>";
 //  rating 5
 //  task_actual 7
 //  comment 8
-//  action 9
+//  actions 9
 //  meeting_date 10
 //  meeting_duration 11
 $sql_query = "SELECT id, week, session, task, group_number, rating, 
         task_expected, task_actual, 
-        comment, action, meeting_date, meeting_duration
+        comment, actions, meeting_date, meeting_duration
         FROM $table";
 $resultset = mysqli_query($conn, $sql_query) or die("database error:". mysqli_error($conn));
 while( $row = mysqli_fetch_assoc($resultset) ) {
@@ -91,7 +92,7 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
             print '<td>' . $row['task_expected'] . '</td>';
             print '<td>' . $row['task_actual'] . '</td>';
             print '<td>' . $row['comment'] . '</td>'; 
-            print '<td>' . $row['action'] . '</td>'; 
+            print '<td>' . $row['actions'] . '</td>'; 
             print '<td>' . $row['meeting_date'] . '</td>'; 
             print '<td>' . $row['meeting_duration'] . '</td>'; 
         print '</tr>';

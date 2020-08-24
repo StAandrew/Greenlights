@@ -8,9 +8,9 @@ $(document).ready(function(){
                      [4, 'rating'],
                      [6, 'task_actual'], 
                      [7, 'comment'], 
-                     [8, 'action'],
+                     [8, 'actions'],
                      [9, 'meeting_date'],
-                     [10, 'meeting_action']]
+                     [10, 'meeting_duration']]
 		},
 		hideIdentifier: false,
 		url: 'TA_PS_live_edit.php'		

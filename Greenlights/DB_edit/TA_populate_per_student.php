@@ -38,13 +38,13 @@ foreach ($conn->query("SELECT id FROM $students_name") as $row) {
         else 
             $rating = "Green";
         $comment = "Some comment";
-        $action = "Some action";
+        $actions = "Some actions";
         $task_actual = rand(10, 90);
         $meeting_date = "2020-08-06";
         $meeting_date=date("Y-m-d",strtotime($meeting_date));
         $meeting_duration = rand(10, 60);
 
-        $sql = "INSERT INTO $table (week, session, task, task_expected, group_number, rating, task_actual, comment, action, meeting_date, meeting_duration) VALUES ('$week', '$session', '$task', '$task_expected', '$group_number', '$rating', '$task_actual', '$comment', '$action', '$meeting_date', '$meeting_duration')";
+        $sql = "INSERT INTO $table (week, session, task, task_expected, group_number, rating, task_actual, comment, actions, meeting_date, meeting_duration) VALUES ('$week', '$session', '$task', '$task_expected', '$group_number', '$rating', '$task_actual', '$comment', '$actions', '$meeting_date', '$meeting_duration')";
         if ($conn->query($sql) === TRUE) {
           echo "New record created successfully<br/>";
         } else {

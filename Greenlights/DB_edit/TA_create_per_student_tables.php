@@ -32,7 +32,7 @@ foreach ($conn->query("SELECT id FROM $students_name") as $row) {
         task_expected SMALLINT(4) NOT NULL,
         task_actual SMALLINT(4) DEFAULT NULL,
         comment VARCHAR(256) DEFAULT NULL,
-        action VARCHAR(256) DEFAULT NULL,
+        actions VARCHAR(256) DEFAULT NULL,
         meeting_date DATETIME DEFAULT NULL,
         meeting_duration INT(3) DEFAULT NULL
     )";
