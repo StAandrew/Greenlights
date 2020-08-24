@@ -59,7 +59,7 @@ if(isset($_POST["submit"]))
     </thead>
     <tbody>
       <tr>
-        <td>Week NUmber</td>
+        <td>Week Number</td>
         <td>Name of Teaching Event></td>
         <td>Description of Task and Rating</td>
         <td>Please spceify group/individual</td>
