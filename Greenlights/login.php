@@ -3,8 +3,8 @@ session_set_cookie_params(3600,"/"); // in seconds
 session_start();
 
 // Based on UCL API, app name: Greenlights
-$client_id = '';
-$client_secret = '';
+$client_id = '7769165282747628.1902479455015575';
+$client_secret = 'da4288765c62d139401edae69469e051c986b2efd7b5d43e9e46a21aed65c040';
 
 // Endpoints
 $authorise_endpoint = 'https://uclapi.com/oauth/authorise';
@@ -15,6 +15,12 @@ $student_id_endpoint = 'https://uclapi.com/oauth/user/studentnumber';
 // [DEBUG] Output saved session variables
 //foreach ($_SESSION as $key=>$val)
 //    echo $key." ".$val."<br/>";
+?>
+
+<?php include("header.php");?>
+    <title>Login</title>
+<?php include("container.php");?>
+<?php
 
 // User pressed log out
 if(isset($_GET['logout'])) {
@@ -30,17 +36,18 @@ if(isset($_SESSION['student_id'])) {
     echo '<p>Logged in as ' . $_SESSION['student_id'] . '</p>'; 
     echo '<p>' . $_SESSION['username'] . '</p>';
     echo '<p><a href="' . $_SESSION['base_url'] . '?logout">Log Out</a></p>';
-    die();
 }
 
 // After we got the code
-else if(isset($_GET['code'])) {
+else if(isset($_GET['code']) && !isset($_SESSION['student_id'])) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
     // Check for errors
     if($_SESSION['state'] != $_GET['state']) {
-      die('Authorization server returned an invalid state parameter');
+        echo "[DEBUG] Session state: " . $_SESSION['state'] . "<br/>";
+        echo "[DEBUG] Get state: " . $_GET['state'] . "<br/>";
+        die('Authorization server returned an invalid state parameter');
     }
     if(isset($_GET['error'])) {
       die('Authorization server returned an error: ' . htmlspecialchars($_GET['error']));
@@ -126,4 +133,5 @@ else if(!isset($_SESSION['student_id'])) {
     echo '<p>Not logged in</p>';
     echo '<p><a href="' . $authorise_url . '">Log In</a></p>';
 }
+include("footer.php");
 ?>

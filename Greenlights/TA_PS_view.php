@@ -10,7 +10,6 @@ include_once("db_connect.php");
     <title>Per Student View</title>
     <script type="text/javascript" src="dist/jquery.tabledit.js"></script>
 <?php include('container.php'); ?>
-    <body>
 <?php
 // Get one students info
 $sql = "SELECT id, firstname, lastname, email, course_code, year
@@ -44,7 +43,7 @@ print "Year: " . $year . "<br/>";
     <div id="js-helper"
          data-student-id="<?php echo htmlspecialchars($student_id); ?>">
     </div>
-    <div class="container home">	
+    <div id="table_view">	
         <table id="data_table" class="table table-striped">
             <thead>
                 <tr>
@@ -108,7 +107,6 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
                 type="text/javascript" 
                 src="TA_PS_custom_table_edit.js">
         </script>
-</body>
 <?php
 include('footer.php');
 $conn->close();

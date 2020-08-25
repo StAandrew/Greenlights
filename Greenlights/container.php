@@ -1,5 +1,8 @@
-</head> 
+</head>
+<body>
 <header class="header">
+    <a href="http://www.ucl.ac.uk" class="navbar-brand">Greenlights</a>
+<!--
     <div role="navigation" class="navbar navbar-default navbar-static-top">
           <div class="container">
                 <div class="navbar-header">
@@ -16,11 +19,9 @@
                   <ul class="nav navbar-nav">
                     <li class="active"><a href="http://www.ucl.ac.uk">Home</a></li>
                   </ul>
-                </div><!--/.nav-collapse -->
+                </div>/.nav-collapse 
           </div>
     </div>
+-->
 </header>
-<body class="content">
-	<div class="container" style="min-height:500px;">
-	<div class=''>
-	</div>
+<div id="content">

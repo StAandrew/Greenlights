@@ -30,8 +30,8 @@ if ($result->num_rows > 0) {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }
 ?>
-<div class="container home " width="2000">	
-        <table id="data_table" class="table table-striped" style="width:2000">
+<div class="container home">	
+        <table id="data_table" class="table table-striped">
             <thead>
                 <tr>
                     <th>Student name</th>
