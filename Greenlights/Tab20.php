@@ -55,7 +55,7 @@ if(isset($_POST["submit"]))
  }
 }
 ?>  
-?>
+
 <div class=container>
 <form class="insert-form" id="insert_form" method=post action="<?php echo $_SERVER['PHP_SELF']; ?>">
 <hr>
@@ -84,12 +84,14 @@ if(isset($_POST["submit"]))
       $est_time=$_POST['est_time'];      
      foreach($week as $key => $value)
      {
-        $sql="INSERT INTO Rating (Week, Teaching_Event, Task, Group_Individual, Estimated_Time) 
+        $sql="INSERT INTO Ratings (Week, Teaching_Event, Task, Group_Individual, Estimated_Time) 
         VALUES ('".$value."', '".$event[$key]."','".$task[$key]."','".$gi[$key]."','".$est_time[$key]."')";
          
         $sql=mysqli_query($conn,$sql);
         if ($sql=='true')
-            echo "<font color=Green><b><center><h3>Data added successfully</h3></center></b></font>";   
+            echo "<font color=Green><b><center><h3>Data added successfully</h3></center></b></font>";
+         else
+             echo "<font color=Red><b><center><h3>Data could not be added. Please try again.</h3></center></b></font>";
      }    
     }
 ?>

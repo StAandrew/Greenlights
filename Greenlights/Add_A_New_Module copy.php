@@ -2,7 +2,7 @@
 <head>  
 </head>
 <body bgcolor=lightgreen>
-<form name=course_entry method=post action="tab2.php" enctype="multipart/form-data">
+<form name=course_entry method=post action="Lecturer_Rating.php" enctype="multipart/form-data">
     <br>
 <h1>Add Your Module</h1>
 <p>
