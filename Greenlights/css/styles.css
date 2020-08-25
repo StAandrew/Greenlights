@@ -13,10 +13,11 @@ header {
 #content {
     position: absolute;
     padding-top: 50px;
+    top: 0;
+    bottom: 0;
     right: 5px;
     left: 5px;
-    overflow-y: scroll;
-    overflow-x: scroll;
+    overflow: auto;
 }
 footer {
     position: absolute;
