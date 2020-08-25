@@ -1,25 +1,22 @@
 <?php //per student view
-// TODO: actions, meeting_date, meeting_duration, 
+session_start();
+$module = $_GET['m'];
+$students_name = $_GET['s'];
+$student_id = $_GET['student_id'];
 include_once("db_connect.php");
-$servername = "localhost";
-$username = "root";
-$password = "root";
-$database = "TA_development";
-$students_name = "All_Students";
-$module = "ELECLAB1";
 ?>
 
 <?php include("header.php");?>
-    <title>TA view</title>
+    <title>Per Student View</title>
     <script type="text/javascript" src="dist/jquery.tabledit.js"></script>
 <?php include('container.php'); ?>
     <body>
-<?php   
+<?php
 // Get one students info
 $sql = "SELECT id, firstname, lastname, email, course_code, year
         FROM $students_name
-        WHERE id = 18182839
-        ORDER BY id ASC
+        WHERE id = $student_id
+        ORDER BY id DESC
         LIMIT 0, 1";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
@@ -38,12 +35,15 @@ if ($result->num_rows > 0) {
 // Create table name
 $table = "s" . $id;
 // Echo student info:
-echo "Student name: " . $firstname . " " . $lastname . "<br/>";
-echo "Student id: " . $id . "<br/";
-echo "Email: " . $email . "<br/>";
-echo "Course code: " . $course_code . "<br/>";
-echo "Year: " . $year . "<br/>";
+print "Student name: " . $firstname . " " . $lastname . "<br/>";
+print "Student id: " . $id . "<br/>";
+print "Email: " . $email . "<br/>";
+print "Course code: " . $course_code . "<br/>";
+print "Year: " . $year . "<br/>";
 ?>     
+    <div id="js-helper"
+         data-student-id="<?php echo htmlspecialchars($student_id); ?>">
+    </div>
     <div class="container home">	
         <table id="data_table" class="table table-striped">
             <thead>
@@ -104,7 +104,10 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
                 <a class="btn btn-default read-more" style="background:#3399ff;color:white" href="http://ucl.ac.uk">Back</a>
             </div>
         </div> 
-        <script type="text/javascript" src="TA_PS_custom_table_edit.js"></script>
+        <script 
+                type="text/javascript" 
+                src="TA_PS_custom_table_edit.js">
+        </script>
 </body>
 <?php
 include('footer.php');

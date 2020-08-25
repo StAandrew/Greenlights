@@ -2,4 +2,11 @@
 
 </div>
 </div>
-</body></html>
+</body>
+<footer class="footer">
+    <div class="container">
+        <p>University College London</p>
+        <p>Contact support: <a href="mailto:mail@example.com">mail@example.com</a></p>
+    </div>
+</footer>
+</html>

@@ -13,6 +13,6 @@ $(document).ready(function(){
                      [10, 'meeting_duration']]
 		},
 		hideIdentifier: false,
-		url: 'TA_PS_live_edit.php'		
+		url: 'TA_PS_live_edit.php?student_id=' + $('#js-helper').data('student-id')		
 	});
 }); 

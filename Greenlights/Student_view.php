@@ -58,7 +58,7 @@ $table = "s" . $id;
 // Get all info from student's table
 $sql = "SELECT week, session, task, group_number, rating, 
         task_expected, task_actual, 
-        comment, action, meeting_date, meeting_duration
+        comment, actions, meeting_date, meeting_duration
         FROM $table";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {  
@@ -72,7 +72,7 @@ if ($result->num_rows > 0) {
             print '<td>' . $row['task_expected'] . '</td>';
             print '<td>' . $row['task_actual'] . '</td>';
             print '<td>' . $row['comment'] . '</td>'; 
-            print '<td>' . $row['action'] . '</td>'; 
+            print '<td>' . $row['actions'] . '</td>'; 
             print '<td>' . $row['meeting_date'] . '</td>'; 
             print '<td>' . $row['meeting_duration'] . '</td>'; 
         print '</tr>';

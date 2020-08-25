@@ -1,16 +1,20 @@
 <?php
 include_once("db_connect.php");
-$servername = "localhost";
-$username = "root";
-$password = "root";
-$database = "TA_development";
+$per_student_view = "TA_PS_view.php";
+$per_session_view = "TA_session_view.php";
+
+// Set module and student list here
 $students_name = "All_Students";
 $module = "ELECLAB1";
 ?>
 <?php include("header.php");?>
-    <title>TA Student and Session View</title>
+    <title>Student and Session View</title>
 <?php include('container.php'); ?>
     <body>
+        <?php 
+            echo "Module: " . $module . "<br/>";
+            echo "Student list: " . $students_name . "<br/>";
+        ?>
         <table id="joint-table" width="1200">
             <tr>
                 <div class=left-table>
@@ -28,7 +32,10 @@ if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $name = $row['firstname'][0] . ". " . $row['lastname'] . " #" . $row['id'];
         print '<tr>';
-            print '<td>' . $name . '</td>';
+            print '<td><a href=\'' . $per_student_view . 
+                '?m=' . $module . 
+                '&s=' . $students_name . 
+                '&student_id=' . $row['id'] . '\' >' . $name . '</a></td>';
         print '</tr>';
     }
 } else {
@@ -52,7 +59,11 @@ $result = $conn->query($sql);
 if ($result->num_rows > 0) {
      while ($row = $result->fetch_assoc()) {
         print '<tr>';
-            print '<td>' . $row['session'] . '</td>';
+            print '<td><a href=\''. $per_session_view . 
+                '?m=' . $module . 
+                '&s=' . $students_name .
+                '&session=' . $row['session'] . '\' >' . $row['session'] . '</a></td>';
+
         print '</tr>';
     }
 } else {

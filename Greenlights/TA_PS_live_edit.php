@@ -1,5 +1,7 @@
 <?php
 include_once("db_connect.php");
+$student_id = $_GET['student_id'];
+echo $student_id;
 $input = filter_input_array(INPUT_POST);
 if ($input['action'] == 'edit') {	
 	$update_field='';
@@ -35,7 +37,7 @@ if ($input['action'] == 'edit') {
 		$update_field.= "meeting_duration='".$input['meeting_duration']."'";
 	}
 	if($update_field && $input['id']) {
-		$sql_query = "UPDATE TA_development.s18182839 SET $update_field WHERE id='" . $input['id'] . "'";	
+		$sql_query = "UPDATE TA_development.s" . $student_id . " SET $update_field WHERE id='" . $input['id'] . "'";	
 		mysqli_query($conn, $sql_query) or die("database error:". mysqli_error($conn));
 	}
 }

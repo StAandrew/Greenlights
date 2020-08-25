@@ -1,20 +1,20 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "root";
-$database = "TA_development";
-$students_name = "All_Students";
-$module = "ELECLAB1";
+$module = $_GET['m'];
+$students_name = $_GET['s'];
+$session = $_GET['session'];
+include_once("db_connect.php");
+?>
 
-// Hardcoded session name
-$session = "Chrrrilmol";
-echo "Session: " . $session;
-// Create connection
-$conn = new mysqli($servername, $username, $password, $database);
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
-
+<?php include("header.php");?>
+    <title>Session View</title>
+<?php include('container.php'); ?>
+    <body>
+        <?php 
+            echo "Module: " . $module . "<br/>";
+            echo "Student list: " . $students_name . "<br/>";
+            echo "Session: " . $session;
+        ?>
+<?php
 // Fetch sessions and tasks
 $tasks = array();
 $sql = "SELECT week, session, task
@@ -29,22 +29,27 @@ if ($result->num_rows > 0) {
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }
-
-// Create table headers with dynamic task columns
-print '<table border cellpadding="10" width="1200" >
-        <tr>
-            <th>Student name</th>
-            <th>Student id</th>
-            <th>Meeting date</th>
-            <th>Overall rating</th>';
+?>
+<div class="container home " width="2000">	
+        <table id="data_table" class="table table-striped" style="width:2000">
+            <thead>
+                <tr>
+                    <th>Student name</th>
+                    <th>Student id</th>
+                    <th>Meeting date</th>
+                    <th>Overall rating</th>
+<?php
 $tasknum = 1;
 foreach($tasks as $item) {
     $output = "Task " . $tasknum . ": " . $item;
     print "<th>" . $output . "</th>";
     $tasknum++;
 }
-   print'</tr>';
-
+?>
+                   </tr>
+            </thead>
+            <tbody>
+<?php
 // Fetch students data
 $sql = "SELECT id, firstname, lastname, email, course_code, year
         FROM $students_name";
@@ -62,8 +67,8 @@ if ($stud_result->num_rows > 0) {
         print '<td>' . $stud['id'] . '</td>';
         $date = 0;
         
-        $red_threshold = 0.3; // 30% of all ratings
-        $amber_threshold = 0.5; // 50% of all ratings
+        $red_threshold = 0.3; // 0-50% of all ratings
+        $amber_threshold = 0.5; // 50%-70% of all ratings
         $green_num = 0;
         $amber_num = 0;
         $red_num = 0;
@@ -94,9 +99,10 @@ if ($stud_result->num_rows > 0) {
                         $overall_rating = -1;
                         break;
                     }
-                    if ($rating_num != 0)
-                        $overall_rating = $overall_rating / $rating_num;
                 }
+                if ($rating_num != 0) {
+                        $overall_rating = $overall_rating/3*$rating_num;
+                    }
                 $amber_num = $amber_num / $rating_num;
                 $red_num = $red_num / $rating_num;
                 $green_num = $green_num / $rating_num;
@@ -142,9 +148,13 @@ if ($stud_result->num_rows > 0) {
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }
+?>
 
-print '</table>
-    </html>';
-
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
+<?php
 $conn->close();
 ?>
