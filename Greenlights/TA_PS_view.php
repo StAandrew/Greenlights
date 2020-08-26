@@ -1,16 +1,23 @@
 <?php //per student view
-session_start();
+include("header.php");
 $module = $_GET['m'];
 $students_name = $_GET['s'];
 $student_id = $_GET['student_id'];
 include_once("db_connect.php");
-?>
 
-<?php include("header.php");?>
-    <title>Per Student View</title>
-    <script type="text/javascript" src="dist/jquery.tabledit.js"></script>
-<?php include('container.php'); ?>
-<?php
+$user_id = "";
+if(isset($_SESSION['user_id'])) {
+    if($_SESSION['user_type'] === "TA" || $_SESSION['user_type'] === "Lecturer" || $_SESSION['user_type'] === "admin") {
+        $user_id = $_SESSION['user_id'];
+    } else {
+        header('Location: login.php');
+        die();
+    }
+} else {
+    header('Location: login.php');
+    die();
+}
+
 // Get one students info
 $sql = "SELECT id, firstname, lastname, email, course_code, year
         FROM $students_name
@@ -65,13 +72,13 @@ print "Year: " . $year . "<br/>";
 <?php 
 // Get all info from student's table
 // Editable fields:
-//  group_number 4
-//  rating 5
-//  task_actual 7
-//  comment 8
-//  actions 9
-//  meeting_date 10
-//  meeting_duration 11
+//  group_number
+//  rating
+//  task_actual
+//  comment
+//  actions
+//  meeting_date
+//  meeting_duration
 $sql_query = "SELECT id, week, session, task, group_number, rating, 
         task_expected, task_actual, 
         comment, actions, meeting_date, meeting_duration
@@ -90,7 +97,7 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
             print '<td>' . $row['rating'] . '</td>'; 
             print '<td>' . $row['task_expected'] . '</td>';
             print '<td>' . $row['task_actual'] . '</td>';
-            print '<td>' . $row['comment'] . '</td>'; 
+            print '<td style="word-wrap: break-word; min-width: 160px; max-width: 160px";>' . $row['comment'] . '</td>'; 
             print '<td>' . $row['actions'] . '</td>'; 
             print '<td>' . $row['meeting_date'] . '</td>'; 
             print '<td>' . $row['meeting_duration'] . '</td>'; 

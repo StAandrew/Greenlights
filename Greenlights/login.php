@@ -1,10 +1,11 @@
 <?php
 session_set_cookie_params(3600,"/"); // in seconds
-session_start();
-
+//session_start();
+include("header.php");
 // Based on UCL API, app name: Greenlights
 $client_id = '7769165282747628.1902479455015575';
 $client_secret = 'da4288765c62d139401edae69469e051c986b2efd7b5d43e9e46a21aed65c040';
+$credentials_table = "credentials";
 
 // Endpoints
 $authorise_endpoint = 'https://uclapi.com/oauth/authorise';
@@ -15,12 +16,6 @@ $student_id_endpoint = 'https://uclapi.com/oauth/user/studentnumber';
 //echo "[DEBUG] Output saved session variables";
 //foreach ($_SESSION as $key=>$val)
 //    echo $key." ".$val."<br/>";
-?>
-
-<?php include("header.php");?>
-    <title>Login</title>
-<?php include("container.php");?>
-<?php
 
 // User pressed log out
 if(isset($_GET['logout'])) {
@@ -32,10 +27,74 @@ if(isset($_GET['logout'])) {
 
 // If there is a username, they are logged in, and we show the logged-in view
 if(isset($_SESSION['student_id'])) {
+    if(isset($_SESSION['redirect'])) {
+        $redirect = $_SESSION['redirect'];
+        unset($_SESSION['redirect']);
+        header('Location: ' . $redirect);
+    }
     echo '<div class="welcome-login-text"><p>Welcome, ' . $_SESSION['given_name'] . '</p>';
     echo '<p>Logged in as ' . $_SESSION['full_name'] . ', ' . substr($_SESSION['student_id'], 1) . '</p>'; 
     echo '<p>' . $_SESSION['username'] . '</p>';
     echo '<p><a href="' . $_SESSION['base_url'] . '?logout">Log Out</a></p></div>';
+}
+
+// Check for standard login
+else if(isset($_SESSION['user_id'])) {
+    if(isset($_SESSION['redirect'])) {
+        $redirect = $_SESSION['redirect'];
+        unset($_SESSION['redirect']);
+        header('Location: ' . $redirect);
+    }
+    echo '<div class="welcome-login-text"><p>Welcome, ' . $_SESSION['full_name'] . '</p>';
+    echo '<p>Logged in as ' . $_SESSION['full_name'] . ', ' . substr($_SESSION['user_id'], 1) . '</p>'; 
+    echo '<p>' . $_SESSION['username'] . '</p>';
+    echo '<p><a href="' . $_SESSION['base_url'] . '?logout">Log Out</a></p></div>';
+}
+
+// Check for standard login
+else if(isset($_POST["email"]) && isset($_POST["password"])){
+    $_SESSION['base_url'] = "https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+    include_once("db_connect.php");
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+    $_POST = array();
+    $salt = "1F1XPkkBxcO9OmXUgSSlsExIos70CyWLirEqEWMbug8YYNLmtYz25ToVhCyZK9SuVpidelpk21RE1pTYMVPKOo6jFq7k77zJAgAC0Ce6c4BAMxj622i6MHk4VjSK0y8e";
+    $password = hash('sha256', $salt.$password);
+    $mysqli = new mysqli("localhost", "root", "root", "TA_development");
+    $stmt = $mysqli->prepare('SELECT user_type, user_id FROM '. $credentials_table .' WHERE email = ?');
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    if (!empty($stmt->fetch())) {
+        $stmt->close();
+        
+        $name = "";
+        $surname = "";
+        $user_type = "";
+        $user_id = "";
+        
+        $stmt = $mysqli->prepare('SELECT name, surname, user_type, user_id FROM '. $credentials_table .' WHERE email = ? AND password = ?');
+        $stmt->bind_param("ss", $email, $password);
+        $stmt->execute();
+        $stmt->bind_result($name, $surname, $user_type, $user_id);
+        if (!empty($stmt->fetch())) {
+            echo "Success<br/>";
+            $_SESSION['user_type'] = $user_type;
+            $_SESSION['user_id'] = $user_id;
+            $_SESSION['full_name'] = $name . " " . $surname;
+            $stmt->free_result();
+            $stmt->close();
+            $mysqli->close();
+            
+            header('Location: '.$_SERVER['REQUEST_URI']);
+            die();
+        } else {
+            echo "Wrong password";
+        }
+    } else {
+        echo "User was not found";
+    }
+    $stmt->close();
+    $mysqli->close();
 }
 
 // After we got the code
@@ -47,6 +106,7 @@ else if(isset($_GET['code']) && !isset($_SESSION['student_id'])) {
     if($_SESSION['state'] != $_GET['state']) {
         echo "[DEBUG] Session state: " . $_SESSION['state'] . "<br/>";
         echo "[DEBUG] Get state: " . $_GET['state'] . "<br/>";
+        echo "[DEBUG] Get state: " . $_POST['state'] . "<br/>";
         die('Authorization server returned an invalid state parameter');
     }
     if(isset($_GET['error'])) {
@@ -93,6 +153,7 @@ else if(isset($_GET['code']) && !isset($_SESSION['student_id'])) {
             $_SESSION['department'] = $department;
             $_SESSION['upi'] = $upi;
             $_SESSION['scope_number'] = $scope_number;
+            $_SESSION['user_type'] = "Student";
             
             $student_id_url = $student_id_endpoint.'?'.http_build_query([
                 'token' => $token,
@@ -108,7 +169,6 @@ else if(isset($_GET['code']) && !isset($_SESSION['student_id'])) {
                 $_SESSION['student_id'] = $student_id;
                 echo "student_id set: " . $student_id;
             }
-            
             curl_close($ch);
             header('Location: ' . $_SESSION['base_url']);
             die();
@@ -118,9 +178,11 @@ else if(isset($_GET['code']) && !isset($_SESSION['student_id'])) {
 
 // Generate option to log in. Send request to get code
 else if(!isset($_SESSION['student_id'])) {
+    $redirect = $_SERVER['HTTP_REFERER'];
     session_destroy();
     session_start();
     
+    $_SESSION['redirect'] = $redirect;
     // Base url (with https)
     $_SESSION['base_url'] = "https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
     
@@ -138,18 +200,44 @@ else if(!isset($_SESSION['student_id'])) {
     <p>
         <span>
             <a href="<?php echo $authorise_url;?>">
-                <button class="login-via-ucl" style="vertical-align:middle" href="<?php echo $authorise_url;?>">
-                    <span>Login via UCL</span>
-                </button>
+                <button class="login-via-ucl" style="vertical-align:middle" href="<?php echo $authorise_url;?>"><span>Login via UCL</span></button>
             </a>
         </span>
         <span class="login-via-ucl-text">(recommended)</span>
     </p>
     <p>
-        <button class="login-other" style="vertical-align:middle">
+        <button class="login-other" style="vertical-align:middle" data-toggle="modal" data-target="#myModalHorizontal">
                     <span>Other login</span>
         </button>
     </p>
+    <div class="modal fade" id="myModalHorizontal" tabindex="-1" role="dialog" 
+     aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <button type="button" class="close" 
+                        data-dismiss="modal">
+                       <span aria-hidden="true">&times;</span>
+                       <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Login</h4>
+                </div>
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <form method="post">
+                         <label>Enter Email</label>
+                         <input type="email" name="email" class="form-control" />  
+                         <br />  
+                         <label>Enter Password</label>
+                         <input type="password" name="password" class="form-control" />  
+                         <br />  
+                         <input type="submit" name="login" value="Login" class="btn btn-info" />  
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     
         
 <?php

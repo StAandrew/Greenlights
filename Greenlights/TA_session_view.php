@@ -3,11 +3,19 @@ $module = $_GET['m'];
 $students_name = $_GET['s'];
 $session = $_GET['session'];
 include_once("db_connect.php");
+include("header.php");
+if(isset($_SESSION['user_id'])) {
+    if($_SESSION['user_type'] === "TA" || $_SESSION['user_type'] === "Lecturer" || $_SESSION['user_type'] === "admin") {
+        $user_id = $_SESSION['user_id'];
+    } else {
+        header('Location: login.php');
+        die();
+    }
+} else {
+    header('Location: login.php');
+    die();
+}
 ?>
-
-<?php include("header.php");?>
-    <title>Session View</title>
-<?php include('container.php'); ?>
     <body>
         <?php 
             echo "Module: " . $module . "<br/>";

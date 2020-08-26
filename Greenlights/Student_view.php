@@ -1,17 +1,21 @@
 <?php
 include_once("db_connect.php");
 $students_name = "All_Students";
-$module = "ELECLAB1";
-?>
-<?php include("header.php");?>
-    <title>Student view</title>
-<?php include('container.php'); ?>
-    <body>
-<?php
+include("header.php");
+$student_id = "";
+$table = "";
 if(isset($_SESSION['student_id'])) {
     $student_id = $_SESSION['student_id'];
+    $table = "s" . $student_id;
+    if ($result = $conn->query("SHOW TABLES LIKE '".$table."'")) {
+        if($result->num_rows < 1) {
+            print "No information available yet";
+            die();
+        }
+    }
 } else {
-    
+    header('Location: login.php');
+    die();
 }
 // Get one students info
 $sql = "SELECT id, firstname, lastname, email, course_code, year
@@ -31,8 +35,6 @@ if ($result->num_rows > 0) {
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }
-        
-print "Welcome, " . $firstname;
 ?>
         <div class="container home">
             <table width="500" class="table table-striped">
@@ -54,8 +56,6 @@ print "Welcome, " . $firstname;
             <tbody>
 <?php
                 
-// Create table name
-$table = "s" . $id;
 // Get all info from student's table
 $sql = "SELECT week, session, task, group_number, rating, 
         task_expected, task_actual, 
@@ -85,9 +85,7 @@ if ($result->num_rows > 0) {
                 </tbody>
             </table>
         </div>
-</body>
-</html>
-
 <?php
+include("footer.php");
 $conn->close();
 ?>

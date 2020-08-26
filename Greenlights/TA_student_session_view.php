@@ -2,18 +2,26 @@
 include_once("db_connect.php");
 $per_student_view = "TA_PS_view.php";
 $per_session_view = "TA_session_view.php";
+include("header.php");
+
+$user_id = "";
+if(isset($_SESSION['user_id'])) {
+    if($_SESSION['user_type'] === "TA" || $_SESSION['user_type'] === "Lecturer" || $_SESSION['user_type'] === "admin") {
+        $user_id = $_SESSION['user_id'];
+    } else {
+        header('Location: login.php');
+        die();
+    }
+} else {
+    header('Location: login.php');
+    die();
+}
 
 // Set module and student list here
 $students_name = "All_Students";
 $module = "ELECLAB1";
-?>
-<?php include("header.php");?>
-    <title>Student and Session View</title>
-<?php include('container.php'); ?>
-    <body>
-        <?php 
-            echo "Module: " . $module . "<br/>";
-            echo "Student list: " . $students_name . "<br/>";
+echo "Module: " . $module . "<br/>";
+echo "Student list: " . $students_name . "<br/>";
         ?>
         <table id="joint-table" width="1200">
             <tr>
@@ -74,8 +82,7 @@ if ($result->num_rows > 0) {
                     </td>
                 </div>
         </table>
-    </body>
-</html>
 <?php
+include("footer.php");
 $conn->close();
 ?>
