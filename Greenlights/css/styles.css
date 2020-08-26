@@ -34,3 +34,53 @@ footer {
     text-align: center;
     box-shadow: 0px -2px 5px 0px rgba(0,0,0,0.1);
 }
+
+.welcome-login-text {
+    padding-top: 5px;
+    margin: 5px;
+    font-size: medium;
+    font-weight: 400;
+    color: black;
+}
+.login-via-ucl {
+    display: inline-block;
+    background-color: #52347B;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: medium;
+    padding: 20px;
+    transition: all 0.3s;
+    cursor: pointer;
+    margin: 5px;
+    font-weight: 600;
+}
+.login-via-ucl:hover {
+    color: #FFFFFF;
+    background-color: #F06747;
+}
+.login-via-ucl-text {
+    margin-left: 5px;
+    font-size: medium;
+    font-weight: 500;
+    color: black;
+}
+.login-other {
+    display: inline-block;
+    background-color: white;
+    color: #52347B;
+    text-align: center;
+    font-size: medium;
+    padding: 20px;
+    transition: all 0.3s;
+    cursor: pointer;
+    margin: 5px;
+    font-weight: 600;
+    border: 2px solid #52347B;
+}
+
+.login-other:hover {
+  background-color: #52347B; 
+  color: white; 
+  border: 2px solid #52347B;
+}

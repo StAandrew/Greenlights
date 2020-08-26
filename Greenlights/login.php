@@ -12,7 +12,7 @@ $token_endpoint = 'https://uclapi.com/oauth/token';
 $data_endpoint = 'https://uclapi.com/oauth/user/data';
 $student_id_endpoint = 'https://uclapi.com/oauth/user/studentnumber';
 
-// [DEBUG] Output saved session variables
+//echo "[DEBUG] Output saved session variables";
 //foreach ($_SESSION as $key=>$val)
 //    echo $key." ".$val."<br/>";
 ?>
@@ -32,10 +32,10 @@ if(isset($_GET['logout'])) {
 
 // If there is a username, they are logged in, and we show the logged-in view
 if(isset($_SESSION['student_id'])) {
-    echo '<p>Welcome, ' . $_SESSION['given_name'] . '</p>';
-    echo '<p>Logged in as ' . $_SESSION['student_id'] . '</p>'; 
+    echo '<div class="welcome-login-text"><p>Welcome, ' . $_SESSION['given_name'] . '</p>';
+    echo '<p>Logged in as ' . $_SESSION['full_name'] . ', ' . substr($_SESSION['student_id'], 1) . '</p>'; 
     echo '<p>' . $_SESSION['username'] . '</p>';
-    echo '<p><a href="' . $_SESSION['base_url'] . '?logout">Log Out</a></p>';
+    echo '<p><a href="' . $_SESSION['base_url'] . '?logout">Log Out</a></p></div>';
 }
 
 // After we got the code
@@ -52,10 +52,10 @@ else if(isset($_GET['code']) && !isset($_SESSION['student_id'])) {
     if(isset($_GET['error'])) {
       die('Authorization server returned an error: ' . htmlspecialchars($_GET['error']));
     }
-    echo "Result: " . $_GET['result'] . "<br/>";
-    echo "Client_id: " . $_GET['client_id'] . "<br/>";
-    echo "State: " . $_GET['state'] . "<br/>";
-    echo "Code: " . $_GET['code']. "<br/>";
+//    echo "Result: " . $_GET['result'] . "<br/>";
+//    echo "Client_id: " . $_GET['client_id'] . "<br/>";
+//    echo "State: " . $_GET['state'] . "<br/>";
+//    echo "Code: " . $_GET['code']. "<br/>";
     
     $token_url = $token_endpoint.'?'.http_build_query([
         'client_id' => $client_id,
@@ -82,7 +82,7 @@ else if(isset($_GET['code']) && !isset($_SESSION['student_id'])) {
             die('Authorization error: ' . $json_response['error']);
         } else {
             $email = $json_response['email'];
-            $name = $json_response['full_name'];
+            $full_name = $json_response['full_name'];
             $given_name = $json_response['given_name'];
             $department = $json_response['department'];
             $upi = $json_response['upi'];
@@ -118,6 +118,9 @@ else if(isset($_GET['code']) && !isset($_SESSION['student_id'])) {
 
 // Generate option to log in. Send request to get code
 else if(!isset($_SESSION['student_id'])) {
+    session_destroy();
+    session_start();
+    
     // Base url (with https)
     $_SESSION['base_url'] = "https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
     
@@ -129,9 +132,27 @@ else if(!isset($_SESSION['student_id'])) {
         'client_id' => $client_id,
         'state' => $_SESSION['state'],
     ]);
+    echo '<p class="welcome-login-text">Welcome to Greenlights system<br/>Please log in:</p>';
+    //echo '<p><a href="' . $authorise_url . '">Log In</a></p>';
+    ?>
+    <p>
+        <span>
+            <a href="<?php echo $authorise_url;?>">
+                <button class="login-via-ucl" style="vertical-align:middle" href="<?php echo $authorise_url;?>">
+                    <span>Login via UCL</span>
+                </button>
+            </a>
+        </span>
+        <span class="login-via-ucl-text">(recommended)</span>
+    </p>
+    <p>
+        <button class="login-other" style="vertical-align:middle">
+                    <span>Other login</span>
+        </button>
+    </p>
     
-    echo '<p>Not logged in</p>';
-    echo '<p><a href="' . $authorise_url . '">Log In</a></p>';
+        
+<?php
 }
 include("footer.php");
 ?>

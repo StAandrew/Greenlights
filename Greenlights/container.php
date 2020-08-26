@@ -17,6 +17,7 @@
                   <ul class="nav navbar-nav">
 <!--                    <li class="active"><a href="http://www.ucl.ac.uk">Home</a></li>-->
                     <?php
+                      session_start();
                       $login_url = 'https://6e558e179fd9.ngrok.io/Greenlights/Greenlights/login.php';
                         if(isset($_SESSION['student_id'])) {
                             echo '<li class="inactive"><a>Welcome, ' . $_SESSION['given_name'] . '</li>';

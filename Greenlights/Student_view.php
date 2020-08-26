@@ -1,9 +1,5 @@
 <?php
 include_once("db_connect.php");
-$servername = "localhost";
-$username = "root";
-$password = "root";
-$database = "TA_development";
 $students_name = "All_Students";
 $module = "ELECLAB1";
 ?>
@@ -12,6 +8,11 @@ $module = "ELECLAB1";
 <?php include('container.php'); ?>
     <body>
 <?php
+if(isset($_SESSION['student_id'])) {
+    $student_id = $_SESSION['student_id'];
+} else {
+    
+}
 // Get one students info
 $sql = "SELECT id, firstname, lastname, email, course_code, year
         FROM $students_name
