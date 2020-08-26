@@ -5,13 +5,11 @@
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+
 <script type=text/javascript>
     $(document).ready(function(){
-var html='<tr><td><input type=text name=week[]  required>  </td><td><input type=text name=teach_event[]  required> </td> <td><input type=text name=task[]  required> </td><td><input type=text name=gi[]  required>  </td><td><input type=text name=est_time[]  required>  </td><td><input type=text name=act_time[]  required></td><td><input type=button name=remove id=remove value=remove class="btn btn-danger"></td></tr>';  
-        
-var max=5
-        var x=1;
-       
+var html='<tr><td><input type=text name=week[]  required>  </td><td><input type=text name=teach_event[]  required> </td> <td><input type=text name=task[]  required> </td><td><input type=text name=gi[]  required>  </td><td><input type=text name=est_time[]  required>  </td><td><input type=button name=remove id=remove value=remove class="btn btn-danger"></td></tr>';  
+
         
 $("#add").click(function(){
     $("#table_field").append(html);
@@ -23,15 +21,10 @@ $("#table_field").on('click','#remove',function(){
 
 });
 });
-</script>   
-    
-    
-    
+</script>       
 </head>
 <body>
-    
-    
-<?php  
+<?php 
 $file_name=$_FILES["class_list"]["name"];
 $name=$_POST['modulename']; 
 $weeks=$_POST['weeks'];
@@ -63,9 +56,9 @@ if(isset($_POST["submit"]))
  }
 }
 ?>  
-?>
+
 <div class=container>
-<form class="insert-form" id="insert_form" method=post action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<form class="insert_form" id="insert_form" method=post action="source1.php">
 <hr>
 <h1>Testing</h1>
     <hr>
@@ -75,62 +68,27 @@ if(isset($_POST["submit"]))
     <th>Week</th>
     <th>Teaching Event</th>
     <th>Task</th>
-        <th>Group/Individual</th>
+    <th>Group/Individual</th>
     <th>Estimated Time for task</th>
-    <th>Actual Time Taken</th>
-    <th>Add or Remove</th>
-    </tr>
-    <?php
-    $conn=mysqli_connect("localhost","root","root","Greenlights");
-        
-    if(isset($_POST['submit']))
-    {
-      $week=$_POST['week'];
-      $event=$_POST['teach_event']; 
-      $task=$_POST['task']; 
-      $gi=$_POST['gi']; 
-      $est_time=$_POST['est_time']; 
-      $act_time=$_POST['act_time']; 
-        
-     foreach($week as $key => $value)
-     {
-        $sql="INSERT INTO Rating (Week, Teaching_Event, Task, Group_Individual, Estimated_Time, Actual_Time) 
-        VALUES ('".$value."', '".$event[$key]."','".$task[$key]."','".$gi[$key]."','".$est_time[$key]."','".$act_time[$key]."')";
-         
-        $sql=mysqli_query($conn,$sql);
-        if ($sql=='true')
-            echo "<font color=Green><b><center><h3>Data added successfully</h3></center></b></font>";
-         
-     }
-       
-    }
-
-
-?>
-        
+    <th>Add/Remove a Row</th>
+    </tr>      
         
     <tr>
         <td><input class="form-control" type=text name=week[] required>  </td>     
         <td><input class="form-control" type=text name=teach_event[]  required> </td> <td><input class="form-control" type=text name=task[]  required length=50 > </td>  
         <td><input class="form-control" type=text name=gi[]  required>  </td>  
         <td><input class="form-control" type=text name=est_time[]  required>  </td> 
-        <td><input class="form-control" type=text name=act_time[]  required>  </td> 
         <td><input class="btn btn-warning" type=button name=add id=add value=Add>  </td></tr>
         
         
-        </table>
+    </table>
     <center>
         <input class="btn btn-success" type=submit name=submit id="submit"
        value=Submit> 
         </center>
     
-    </div>
-    
-    
-    
-    
-    
-    </form>
-    </div>
+    </div> 
+    </form>  
+</div>
 </body>
 </html>

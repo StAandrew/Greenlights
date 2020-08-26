@@ -5,6 +5,8 @@
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="src/jquery.table2excel.js"></script>
 <script type=text/javascript>
     $(document).ready(function(){
 var html='<tr><td><input type=text name=week[]  required>  </td><td><input type=text name=teach_event[]  required> </td> <td><input type=text name=task[]  required> </td><td><input type=text name=gi[]  required>  </td><td><input type=text name=est_time[]  required>  </td><td><input type=button name=remove id=remove value=remove class="btn btn-danger"></td></tr>';  
@@ -69,7 +71,7 @@ if(isset($_POST["submit"]))
     <th>Task</th>
     <th>Group/Individual</th>
     <th>Estimated Time for task</th>
-    <th>Add or Remove</th>
+    <th>Add/Remove a Row</th>
     </tr>
     <?php
 
@@ -109,15 +111,78 @@ if(isset($_POST["submit"]))
     <center>
         <input class="btn btn-success" type=submit name=submit id="submit"
        value=Submit> 
+        <br><br><br>
+        <input class="btn btn-success" type=button name=download id="download"
+       value="Download Rating Table">
         </center>
     
-    </div>
-    
-    
-    
-    
-    
+    </div> 
     </form>
-    </div>
+ <table class="table table-striped">
+   <tr>
+    <th>Week</th>
+    <th>Teaching Event</th>
+    <th>Task</th>
+    <th>Group/Individual</th>
+    <th>Estimated Time for task</th>
+    </tr>
+<?php
+$select="SELECT * FROM Ratings";
+$result=mysqli_query($conn,$select);
+while ($row = mysqli_fetch_array($result))
+{?>
+<tr>
+<td> <?php echo $row['Week']; ?> </td>
+<td> <?php echo $row['Teaching_Event']; ?> </td>
+<td> <?php echo $row['Task']; ?> </td>
+<td> <?php echo $row['Group_Individual']; ?> </td>
+<td> <?php echo $row['Estimated_Time']; ?> </td>   
+</tr>  
+     
+<?php    
+}     
+?>
+    </table>  
+</div>
+    
+<?php  
+//export.php  
+$connect = mysqli_connect("localhost", "root", "root", "Greenlights");
+$output = '';
+if(isset($_POST['download']))
+{
+ $query = "SELECT * FROM Ratings";
+ $result = mysqli_query($connect, $query);
+ if(mysqli_num_rows($result) > 0)
+ {
+  $output .= '
+   <table class="table" bordered="1">  
+                    <tr>  
+                         <th>Week</th>  
+                         <th>Teaching Event</th>  
+                         <th>Task</th>  
+       <th>Group or Individual</th>
+       <th>Estimated Time</th>
+                    </tr>
+  ';
+  while($row = mysqli_fetch_array($result))
+  {
+   $output .= '
+    <tr>  
+                         <td>'.$row["Week"].'</td>  
+                         <td>'.$row["Teaching_Event"].'</td>  
+                         <td>'.$row["Task"].'</td>  
+       <td>'.$row["Group_Individual"].'</td>  
+       <td>'.$row["Estimated_Time"].'</td>
+                    </tr>
+   ';
+  }
+  $output .= '</table>';
+  header('Content-Type: application/xls');
+  header('Content-Disposition: attachment; filename=rating.xls');
+  echo $output;
+ }
+}
+?>
 </body>
 </html>
