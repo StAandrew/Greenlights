@@ -17,6 +17,12 @@ Number of weeks:
 Please upload the relevant class list:<br>
 <input type=file name=file accept=".csv">
 <p>
+Do you want to clone a Rating List that you have already created?
+<br>
+<input type=radio name=clone value=yes> Yes
+<br>
+<input type=radio name=clone value=no> No   
+<p>
 <input type=submit name=submit value="Import Class List and Add New Module">
 </form>
 </body>
