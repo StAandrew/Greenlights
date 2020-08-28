@@ -14,9 +14,9 @@ if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
 
-$email = "ucl@ta";
+$email = "ucl@admin";
 $password = "ucladmin";
-$user_type = "TA";
+$user_type = "admin";
 $name = "Name";
 $surname = "Surname";
 
@@ -32,7 +32,7 @@ $result = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn
 if($result->num_rows > 0) {
     echo "user already exists";
 } else {
-    $sql = "INSERT INTO $table_name (name, surname, email, password, user_type) VALUES ('$name', '$surname', '$email', '$password', '$user_type')";
+    $sql = "INSERT INTO $table_name (name, surname, email, pass, user_type) VALUES ('$name', '$surname', '$email', '$password', '$user_type')";
     if ($conn->query($sql) === TRUE) {
         $sql = "SELECT user_id 
                 FROM $table_name 

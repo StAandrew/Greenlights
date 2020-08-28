@@ -1,4 +1,6 @@
 <?php
+if (session_id() == "")
+  session_start();
 session_set_cookie_params(3600,"/"); // in seconds
 //session_start();
 include("header.php");
@@ -13,10 +15,6 @@ $token_endpoint = 'https://uclapi.com/oauth/token';
 $data_endpoint = 'https://uclapi.com/oauth/user/data';
 $student_id_endpoint = 'https://uclapi.com/oauth/user/studentnumber';
 
-//echo "[DEBUG] Output saved session variables";
-//foreach ($_SESSION as $key=>$val)
-//    echo $key." ".$val."<br/>";
-
 // User pressed log out
 if(isset($_GET['logout'])) {
     $base_url = $_SESSION['base_url'];
@@ -25,7 +23,7 @@ if(isset($_GET['logout'])) {
     die();
 }
 
-// If there is a username, they are logged in, and we show the logged-in view
+// UCL login - if there is a username, they are logged in, and we show the logged-in view
 if(isset($_SESSION['student_id'])) {
     if(isset($_SESSION['redirect'])) {
         $redirect = $_SESSION['redirect'];
@@ -38,7 +36,7 @@ if(isset($_SESSION['student_id'])) {
     echo '<p><a href="' . $_SESSION['base_url'] . '?logout">Log Out</a></p></div>';
 }
 
-// Check for standard login
+// Standard login - if already logged in
 else if(isset($_SESSION['user_id'])) {
     if(isset($_SESSION['redirect'])) {
         $redirect = $_SESSION['redirect'];
@@ -51,13 +49,24 @@ else if(isset($_SESSION['user_id'])) {
     echo '<p><a href="' . $_SESSION['base_url'] . '?logout">Log Out</a></p></div>';
 }
 
-// Check for standard login
+// Standard login - if initialised login
 else if(isset($_POST["email"]) && isset($_POST["password"])){
-    $_SESSION['base_url'] = "https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+    //$_SESSION['base_url'] = "https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+    if($_SESSION['state'] != $_POST['state']) {
+        echo "[DEBUG] Session state: " . $_SESSION['state'] . "<br/>";
+        echo "[DEBUG] Get state: " . $_GET['state'] . "<br/>";
+        echo "[DEBUG] Get state: " . $_POST['state'] . "<br/>";
+        
+        echo "[DEBUG] Output saved session variables<br/>";
+            foreach ($_SESSION as $key=>$val)
+        echo $key." ".$val."<br/>";
+        die('Authorization server returned an invalid state parameter');
+    }
+    
     include_once("db_connect.php");
     $email = $_POST["email"];
     $password = $_POST["password"];
-    $_POST = array();
+    $_POST = array(); // Remove post arguments for security
     $salt = "1F1XPkkBxcO9OmXUgSSlsExIos70CyWLirEqEWMbug8YYNLmtYz25ToVhCyZK9SuVpidelpk21RE1pTYMVPKOo6jFq7k77zJAgAC0Ce6c4BAMxj622i6MHk4VjSK0y8e";
     $password = hash('sha256', $salt.$password);
     $mysqli = new mysqli("localhost", "root", "root", "TA_development");
@@ -78,13 +87,14 @@ else if(isset($_POST["email"]) && isset($_POST["password"])){
         $stmt->bind_result($name, $surname, $user_type, $user_id);
         if (!empty($stmt->fetch())) {
             echo "Success<br/>";
-            $_SESSION['user_type'] = $user_type;
-            $_SESSION['user_id'] = $user_id;
+            $_SESSION['email'] = $email;
+            $_SESSION['user_type'] = $user_type; //TA Lecturer admin Student
+            $_SESSION['user_id'] = $user_id; //100000001
             $_SESSION['full_name'] = $name . " " . $surname;
+            unset($_SESSION['state']);
             $stmt->free_result();
             $stmt->close();
             $mysqli->close();
-            
             header('Location: '.$_SERVER['REQUEST_URI']);
             die();
         } else {
@@ -97,7 +107,7 @@ else if(isset($_POST["email"]) && isset($_POST["password"])){
     $mysqli->close();
 }
 
-// After we got the code
+// UCL login - after we got the code
 else if(isset($_GET['code']) && !isset($_SESSION['student_id'])) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -108,6 +118,10 @@ else if(isset($_GET['code']) && !isset($_SESSION['student_id'])) {
         echo "[DEBUG] Get state: " . $_GET['state'] . "<br/>";
         echo "[DEBUG] Get state: " . $_POST['state'] . "<br/>";
         die('Authorization server returned an invalid state parameter');
+        
+        echo "[DEBUG] Output saved session variables<br/>";
+            foreach ($_SESSION as $key=>$val)
+        echo $key." ".$val."<br/>";
     }
     if(isset($_GET['error'])) {
       die('Authorization server returned an error: ' . htmlspecialchars($_GET['error']));
@@ -169,6 +183,7 @@ else if(isset($_GET['code']) && !isset($_SESSION['student_id'])) {
                 $_SESSION['student_id'] = $student_id;
                 echo "student_id set: " . $student_id;
             }
+            unset($_SESSION['state']);
             curl_close($ch);
             header('Location: ' . $_SESSION['base_url']);
             die();
@@ -176,13 +191,25 @@ else if(isset($_GET['code']) && !isset($_SESSION['student_id'])) {
     }
 }
 
-// Generate option to log in. Send request to get code
-else if(!isset($_SESSION['student_id'])) {
-    $redirect = $_SERVER['HTTP_REFERER'];
+// Display both login options
+else if(!isset($_SESSION['student_id']) && !isset($_SESSION['user_id'])) {
+    // UCL login - generate option to log in. Send request to get code
+    if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != ""){
+        $redirect = $_SERVER['HTTP_REFERER'];
+        $res = TRUE;
+        // Additional URL checker, doesn't work, needs testing        
+//        $cleaned_url = preg_replace('/[^a-z ]+/i', '', strtolower($redirect));
+//        $pattern = '/troester/';
+//        $res = preg_match($pattern, $cleaned_url);
+    } else {
+        $res = FALSE;
+    }
     session_destroy();
     session_start();
+    if ($res == true) {
+        $_SESSION['redirect'] = $redirect;
+    }
     
-    $_SESSION['redirect'] = $redirect;
     // Base url (with https)
     $_SESSION['base_url'] = "https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
     
@@ -210,8 +237,7 @@ else if(!isset($_SESSION['student_id'])) {
                     <span>Other login</span>
         </button>
     </p>
-    <div class="modal fade" id="myModalHorizontal" tabindex="-1" role="dialog" 
-     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="myModalHorizontal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <!-- Modal Header -->
@@ -226,6 +252,7 @@ else if(!isset($_SESSION['student_id'])) {
                 <!-- Modal Body -->
                 <div class="modal-body">
                     <form method="post">
+                         <input type='hidden' name='state' value='<?php echo $_SESSION['state'];?>' />
                          <label>Enter Email</label>
                          <input type="email" name="email" class="form-control" />  
                          <br />  
@@ -238,9 +265,11 @@ else if(!isset($_SESSION['student_id'])) {
             </div>
         </div>
     </div>
-    
         
 <?php
 }
+echo "[DEBUG] Output saved session variables<br/>";
+foreach ($_SESSION as $key=>$val)
+    echo $key." ".$val."<br/>";
 include("footer.php");
 ?>

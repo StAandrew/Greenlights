@@ -3,7 +3,9 @@ $servername = "localhost";
 $username = "root";
 $password = "root";
 $database = "TA_development";
-$table_name = "credentials";
+
+// Main table name
+$table_name = "all_modules";
 
 //debug enabled
 error_reporting(E_ALL); 
@@ -17,22 +19,17 @@ if ($conn->connect_error) {
 
 // Create table
 $sql = "CREATE TABLE IF NOT EXISTS $table_name (
-    name VARCHAR(64) NOT NULL,
-    surname VARCHAR(64) NOT NULL,
-    email VARCHAR(128) NOT NULL,
-    pass VARCHAR(128) NOT NULL,
-    user_type ENUM('Lecturer', 'TA', 'Student', 'admin'),
-    user_id INT(10) UNSIGNED PRIMARY KEY AUTO_INCREMENT
+    hash VARCHAR(70) NOT NULL PRIMARY KEY,
+    module_name VARCHAR(128) NOT NULL,
+    module_hash VARCHAR(70) NOT NULL,
+    access_user_id INT(10) UNSIGNED NOT NULL,
+    access_user_type ENUM('Lecturer', 'TA', 'Student', 'admin'),
+    student_list_hash VARCHAR(70) NOT NULL
 )";
 if ($conn->query($sql) === TRUE) {
   echo "Table $table_name created successfully<br/>";
 } else {
   echo "Error creating $table_name table: " . $conn->error;
 }
-$sql = "ALTER TABLE $table_name AUTO_INCREMENT=100000001";
-if ($conn->query($sql) === TRUE) {
-  echo "Altered auto_increment<br/>";
-} else {
-  echo "Error creating $table_name table: " . $conn->error;
-}
+
 ?>
