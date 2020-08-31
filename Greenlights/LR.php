@@ -1,5 +1,29 @@
 <html>
 <head>
+<script type="text/javascript">
+function clone()
+{
+   if (); 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+}
+    
+    
+    
+</script>
+    
+    
+    
+    
+    
+    
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
@@ -24,6 +48,8 @@ $("#table_field").on('click','#remove',function(){
 </script>       
 </head>
 <body>
+<?php include("header.php");?>
+<?php include('container.php'); ?>
 <?php 
 $file_name=$_FILES["class_list"]["name"];
 $name=$_POST['modulename']; 
@@ -90,5 +116,7 @@ if(isset($_POST["submit"]))
     </div> 
     </form>  
 </div>
+<?php
+include('footer.php'); ?>
 </body>
 </html>

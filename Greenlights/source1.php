@@ -1,3 +1,5 @@
+<?php include("header.php");?>
+<?php include('container.php'); ?>
 <?php
 $connect = mysqli_connect("localhost", "root", "root", "Greenlights");
 
@@ -22,10 +24,10 @@ $connect = mysqli_connect("localhost", "root", "root", "Greenlights");
     }
 $sql = "SELECT * FROM Ratings";  
 $result = mysqli_query($connect, $sql);
+
 ?>
 <html>  
- <head>  
-  <title>Completed Rating List</title>  
+ <head>   
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />  
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>  
@@ -36,7 +38,8 @@ $result = mysqli_query($connect, $sql);
    <br />  
    <br />  
    <div class="table-responsive">  
-    <h2 align="center">Export MySQL data to Excel in PHP</h2><br /> 
+    <?php echo "<h2>"."<center>".$module." Greenlights Rating"."</h2>"."</center>"; ?>
+ 
     <table class="table table-bordered">
      <tr>  
                          <th>Week</th>  
@@ -64,9 +67,12 @@ $result = mysqli_query($connect, $sql);
     <form method="post" action="export.php">
      <input type="submit" name="export" class="btn btn-success" value="Export" />
      <input type=button onClick="location.href='LA_Modules.php'" value='Go Back to Your Modules' class="btn btn-success">
+    <a href="mailto:ta@example.com?subject=Greenlights_Rating"><input type=button name=send value="Send to TA" class="btn btn=sucess"></a>
     
     </form>
    </div>  
-  </div>  
+  </div>
+<?php
+include('footer.php'); ?>
  </body>  
 </html>
