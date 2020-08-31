@@ -36,7 +36,7 @@ $result = mysqli_query($connect, $sql);
    <br />  
    <br />  
    <div class="table-responsive">  
-    <h2 align="center">Export MySQL data to Excel in PHP</h2><br /> 
+    <h2 align="center">Completed Rating List</h2><br /> 
     <table class="table table-bordered">
      <tr>  
                          <th>Week</th>  
