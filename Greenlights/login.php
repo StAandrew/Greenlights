@@ -1,17 +1,19 @@
 <?php
+// Development environment
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
+// Start session
 session_set_cookie_params(3600,"/"); // in seconds
 session_start();
-//echo "<script type='text/javascript'>alert('Session started base');</script>";
 
 // Based on UCL API, app name: Greenlights
 $client_id = '7769165282747628.1902479455015575';
 $client_secret = 'da4288765c62d139401edae69469e051c986b2efd7b5d43e9e46a21aed65c040';
 $credentials_table = "credentials";
 
-// Endpoints
+// UCL API endpoints
 $authorise_endpoint = 'https://uclapi.com/oauth/authorise';
 $token_endpoint = 'https://uclapi.com/oauth/token';
 $data_endpoint = 'https://uclapi.com/oauth/user/data';
@@ -19,9 +21,9 @@ $student_id_endpoint = 'https://uclapi.com/oauth/user/studentnumber';
 
 // User pressed log out
 if(isset($_GET['logout'])) {
-    $url = $_SESSION['base_url'];
+    $login_url = $_SESSION['login_url'];
     session_destroy();
-    exit(header('Location: ' . $url));
+    exit(header('Location: ' . $login_url));
 }
 
 // UCL login - if there is a student_id, they are logged in, and we show the logged-in view
@@ -31,10 +33,12 @@ if(isset($_SESSION['student_id'])) {
         unset($_SESSION['redirect']);
         exit(header('Location: ' . $redirect));
     }
+    
+    // Display welcome message - logged in via UCL
     include("header.php");
     echo '<div class="welcome-login-text"><p>Welcome, ' . $_SESSION['given_name'] . '</p>';
-    echo '<p>Logged in as ' . $_SESSION['full_name'] . ', ' . substr($_SESSION['student_id'], 1) . '</p>'; 
-    echo '<p><a href="' . $_SESSION['base_url'] . '?logout">Log Out</a></p></div>';
+    echo '<p>Logged in as ' . $_SESSION['full_name'] . ', ' . substr($_SESSION['student_id'], 1) . '</p>';
+    echo '<p><a href="' . $_SESSION['login_url'] . '?logout">Log Out</a></p></div>';
 }
 
 // Standard login - if already logged in
@@ -44,22 +48,24 @@ else if(isset($_SESSION['user_id'])) {
         unset($_SESSION['redirect']);
         exit(header('Location: ' . $redirect));
     }
+    
+    // Display welcome message - logged in via form
     include("header.php");
     echo '<div class="welcome-login-text"><p>Welcome, ' . $_SESSION['full_name'] . '</p>';
     echo '<p>Logged in as ' . $_SESSION['full_name'] . ', ' . substr($_SESSION['user_id'], 1) . '</p>'; 
-    echo '<p><a href="' . $_SESSION['base_url'] . '?logout">Log Out</a></p></div>';
+    echo '<p><a href="' . $_SESSION['login_url'] . '?logout">Log Out</a></p></div>';
 }
 
 // Standard login - if initialised login
 else if(isset($_POST["email"]) && isset($_POST["password"])){
-    //$_SESSION['base_url'] = "https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+    
+    // Raise error if states mismatch - security issue
     if($_SESSION['state'] != $_POST['state']) {
         echo "[DEBUG] Session state: " . $_SESSION['state'] . "<br/>";
         echo "[DEBUG] Get state: " . $_GET['state'] . "<br/>";
         echo "[DEBUG] Post state: " . $_POST['state'] . "<br/>";
         die('Authorization server returned an invalid state parameter');
     }
-    //include_once("db_connect.php");
     
     $email = "";
     $password = "";
@@ -68,16 +74,24 @@ else if(isset($_POST["email"]) && isset($_POST["password"])){
     $_POST = array(); // Remove post arguments for security
     $salt = "1F1XPkkBxcO9OmXUgSSlsExIos70CyWLirEqEWMbug8YYNLmtYz25ToVhCyZK9SuVpidelpk21RE1pTYMVPKOo6jFq7k77zJAgAC0Ce6c4BAMxj622i6MHk4VjSK0y8e";
     $password = hash('sha256', $salt.$password);
+    
+    // Cheking if user exists in a database
     $mysqli = new mysqli("localhost", "root", "root", "TA_development");
     if ($mysqli->connect_errno) {
-        echo "<script type='text/javascript'>alert('Database error: Failed to connect');</script>";
+        showAlert("Database error: Failed to connect");
     }
     $stmt = $mysqli->prepare('SELECT user_type, user_id FROM '. $credentials_table .' WHERE email = ?');
     if (!$stmt) {
-        echo "<script type='text/javascript'>alert('Stmt email prepare failed');</script>";
+        showAlert("Stmt email prepare failed");
     }
     $stmt->bind_param("s", $email);
+    if (!$stmt) {
+        showAlert("Stmt email bind failed");
+    }
     $stmt->execute();
+    if (!$stmt) {
+        showAlert("Stmt email execute failed");
+    }
     if (!empty($stmt->fetch())) {
         $stmt->close();
         
@@ -86,37 +100,46 @@ else if(isset($_POST["email"]) && isset($_POST["password"])){
         $user_type = "";
         $user_id = "";
         
+        // Cheking if passwords match
         $stmt = $mysqli->prepare('SELECT name, surname, user_type, user_id FROM '. $credentials_table .' WHERE email = ? AND pass = ?');
         if (!$stmt) {
-            echo "<script type='text/javascript'>alert('Stmt email password prepare failed');</script>";
+            showAlert("Stmt email password prepare failed");
         }
         $stmt->bind_param("ss", $email, $password);
         if (!$stmt) {
-            echo "<script type='text/javascript'>alert('Stmt email password bind failed');</script>";
+            showAlert("Stmt email password bind failed");
         }
         $stmt->execute();
+        if (!$stmt) {
+            showAlert("Stmt email password execute failed");
+        }
         $stmt->bind_result($name, $surname, $user_type, $user_id);
+        if (!$stmt) {
+            showAlert("Stmt email password bind result failed");
+        }
         if (!empty($stmt->fetch())) {
+            
+            // Email and password match - get user data from database
             $_SESSION['email'] = $email;
-            $_SESSION['user_type'] = $user_type; //TA Lecturer admin Student
+            $_SESSION['user_type'] = $user_type; //types: TA Lecturer admin Student
             $_SESSION['user_id'] = $user_id; //100000001
             $_SESSION['full_name'] = $name . " " . $surname;
             unset($_SESSION['state']);
             $stmt->free_result();
             $stmt->close();
             $mysqli->close();
-            exit(header('Location: ' . $_SESSION['base_url']));
+            exit(header('Location: ' . $_SESSION['login_url']));
         } else {
-            echo "Wrong password";
+            showAlert("Wrong password");
         }
     } else {
-        echo "User was not found";
+        showAlert("User was not found");
     }
     $stmt->close();
     $mysqli->close();
 }
 
-// UCL login - after we got the code
+// UCL login - after we got the code from UCL API
 else if(isset($_GET['code']) && !isset($_SESSION['student_id'])) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -190,14 +213,14 @@ else if(isset($_GET['code']) && !isset($_SESSION['student_id'])) {
             }
             unset($_SESSION['state']);
             curl_close($ch);
-            exit(header('Location: ' . $_SESSION['base_url']));
+            exit(header('Location: ' . $_SESSION['login_url']));
         }
     }
 }
 
 // Display both login options
 else if(!isset($_SESSION['student_id']) && !isset($_SESSION['user_id'])) {
-    include("header.php");
+    
     // UCL login - generate option to log in. Send request to get code
     if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != ""){
         $redirect = $_SERVER['HTTP_REFERER'];
@@ -215,20 +238,37 @@ else if(!isset($_SESSION['student_id']) && !isset($_SESSION['user_id'])) {
         //$_SESSION['redirect'] = $redirect;
     }
     
-    // Base url (with https)
-    $_SESSION['base_url'] = "https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+    // determine if we use http or https
+    $isSecure = false;
+    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+        $isSecure = true;
+    }
+    else if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on') {
+        $isSecure = true;
+    }
+        
+    // localhost and port auto-detect for development environments
+    if ($_SERVER['SERVER_NAME'] == "localhost")
+        $port = ':' . $_SERVER['SERVER_PORT'];
+    else
+        $port = '';
     
-    // Generate state
+    // Login url used for proper logout function
+    $schema = $isSecure ? "https" : "http";
+    $schema .= "://";
+    $_SESSION['login_url'] = $schema . $_SERVER['SERVER_NAME'] . $port . $_SERVER['REQUEST_URI'];
+    
+    // Generate a random state for security
     $_SESSION['state'] = bin2hex(random_bytes(5));
 
-    // Authorise endpoint
+    // UCL SSO Authorise endpoint
     $authorise_url = $authorise_endpoint.'?'.http_build_query([
         'client_id' => $client_id,
         'state' => $_SESSION['state'],
     ]);
-    echo '<p class="welcome-login-text">Welcome to Greenlights system<br/>Please log in:</p>';
-    //echo '<p><a href="' . $authorise_url . '">Log In</a></p>';
-    ?>
+    include("header.php");
+?>
+    <p class="welcome-login-text">Welcome to Greenlights system<br/>Please log in:</p>
     <p>
         <span>
             <a href="<?php echo $authorise_url;?>">
@@ -277,4 +317,10 @@ echo "[DEBUG] Output saved session variables<br/>";
 foreach ($_SESSION as $key=>$val)
     echo $key." ".$val."<br/>";
 include("footer.php");
+
+// Helping functions
+function showAlert($message) {
+    echo "<script type='text/javascript'>alert('$message');</script>";
+    exit(header('Location: ' . $_SESSION['login_url']));
+}
 ?>

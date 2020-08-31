@@ -1,13 +1,14 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 if (session_id() == "") {
+    session_set_cookie_params(3600,"/"); // in seconds
     $status = session_start();
-    echo "<script type='text/javascript'>alert('Session started');</script>";
     if (!$status) {
         echo "<script type='text/javascript'>alert('Error: failed to start session');</script>";
         die();
     }
-} else {
-    //echo "<script type='text/javascript'>alert('Else');</script>";
 }
 ?>
 <!DOCTYPE html>
@@ -39,76 +40,118 @@ if (session_id() == "") {
 // If user changed password
 function displayalert ($message) {
     echo "<script type='text/javascript'>alert('$message');</script>";
+    //echo "<script type='text/javascript'>alert('Please log out and log in again. Contact administrator if problem persists');</script>";
     $_POST = array();
 }
-if(isset($_POST['old_pass']) || isset($_POST['new_pass'])) {
-    if(isset($_POST['old_pass'])) {
-        if (isset($_POST['new_pass'])) {
-            if (isset($_POST['confirm_pass'])) {
-                $new_pass = $_POST['new_pass'];
-                $confirm_pass = $_POST['confirm_pass'];
-                if ($new_pass === $confirm_pass) {
+if(isset($_POST['old_pass'])) {
+    $old_pass = $_POST['old_pass'];
+    $new_pass = $_POST['new_pass'];
+    $confirm_pass = $_POST['confirm_pass'];
+    $_POST = array();
+    if($old_pass != "") {
+        if ($new_pass != "") {
+            if ($confirm_pass != "") {
+                if ($new_pass == $confirm_pass) {
+                    // Validate password
                     $uppercase = preg_match('@[A-Z]@', $new_pass);
                     $lowercase = preg_match('@[a-z]@', $new_pass);
-                    $number    = preg_match('@[0-9]@', $new_pass);                    
-                    //if($uppercase && $lowercase && $number && strlen($password) >= 8) {
-                    if (true) {
+                    $number    = preg_match('@[0-9]@', $new_pass);
+                    if($uppercase && $lowercase && $number && strlen($new_pass) >= 8) {
                         $credentials_table = "credentials";
                         $user_id = $_SESSION['user_id'];
                         $email = $_SESSION['email'];
-                        $old_pass = $_POST['old_pass'];
                         $stored_pass = "";
                         $salt = "1F1XPkkBxcO9OmXUgSSlsExIos70CyWLirEqEWMbug8YYNLmtYz25ToVhCyZK9SuVpidelpk21RE1pTYMVPKOo6jFq7k77zJAgAC0Ce6c4BAMxj622i6MHk4VjSK0y8e";
                         $old_pass = hash('sha256', $salt.$old_pass);
-                        // connect
-                        $mysqli = new mysqli("localhost", "root", "root", "TA_development");
-                        if ($mysqli->connect_errno) {
-                            displayalert ("Database error: Failed to connect: $mysqli->connect_errno");
-                        }
-                        // prepare
-                        if (!$stmt = $mysqli->prepare('SELECT pass FROM '. $credentials_table .' WHERE user_id = ?')) {
-                            displayalert ("Database error: Prepare failed: $mysqli->errno");
-                        }
-                        // bind
-                        if (!$stmt->bind_param("s", $user_id)) {
-                            displayalert ("Database error: Bind param failed $stmt->errno");
-                        }
-                        // execute
-                        if (!$stmt->execute()) {
-                            displayalert ("Database error: Execute failed $stmt->errno");
-                        }
-                        if (!$stmt->bind_result($stored_pass)) {
-                            displayalert ("Database error: Bind result failed $stmt->errno");
-                        }
-                        $stmt->close();
-                        //!empty($stmt->fetch())
+                        $new_pass = hash('sha256', $salt.$new_pass);
+                        if ($old_pass != $new_pass) {
+                            // connect
+                            $mysqli = new mysqli("localhost", "root", "root", "TA_development");
+                            if ($mysqli->connect_errno) {
+                                displayalert ("Database error: Failed to connect: $mysqli->connect_errno");
+                            }
+                            // prepare
+                            if (!$stmt = $mysqli->prepare('SELECT pass FROM '. $credentials_table .' WHERE user_id = ?')) {
+                                displayalert ("Database error: get password prepare failed: $mysqli->errno");
+                            }
+                            // bind
+                            if (!$stmt->bind_param("s", $user_id)) {
+                                displayalert ("Database error: get password bind_param failed $stmt->errno");
+                            }
+                            // execute
+                            if (!$stmt->execute()) {
+                                displayalert ("Database error: get password execute failed $stmt->errno");
+                            }
+                            // bind result
+                            if (!$stmt->bind_result($stored_pass)) {
+                                displayalert ("Database error: get password bind_result failed $stmt->errno");
+                            }
+                            // fetch
+                            if (!$stmt->fetch()) {
+                                displayalert ("Database error: get password fetch failed $stmt->errno");
+                            }
+                            $stmt->close();
+                            if ($old_pass === $stored_pass) {
 
-                        $message = "old pass: <br/>".$old_pass." stored pass: <br/>".$stored_pass;
-                        echo "<script type='text/javascript'>alert('$message');</script>";
-                        die();
-                        if ($old_pass === $stored_pass) {
-                            // Old passwords match
-                            $new_pass = $_POST['new_pass'];
-                            $new_pass = hash('sha256', $salt.$new_pass);
-                            $stmt = $mysqli->prepare('UPDATE '. $credentials_table .' SET pass = ? WHERE user_id = ?');
-                            $stmt->bind_param("ss", $new_pass, $user_id);
-                            $stmt->execute();
-                            if (!empty($stmt->fetch())) {
+                                // Old passwords did match
+
+                                // Use email as additional user validation
+                                // prepare
+                                if (!$stmt = $mysqli->prepare('UPDATE '. $credentials_table .' SET pass = ? WHERE user_id = ? AND email = ?')) {
+                                    displayalert ("Database error: set password prepare failed: $mysqli->errno");
+                                }
+                                // bind param
+                                if (!$stmt->bind_param("sss", $new_pass, $user_id, $email)) {
+                                    displayalert ("Database error: get password bind_result failed $stmt->errno");
+                                }
+                                // execute
+                                if (!$stmt->execute()) {
+                                    displayalert ("Database error: get password execute failed $stmt->errno");
+                                }
+                                $stmt->fetch();
                                 $stmt->free_result();
                                 $stmt->close();
-                                $mysqli->close();
-                                displayalert ("Success");
+
+                                // Check if table was updated
+                                $updated_pass = "";
+                                // prepare
+                                if (!$stmt = $mysqli->prepare('SELECT pass FROM '. $credentials_table .' WHERE user_id = ?')) {
+                                    displayalert ("Database error: get password prepare failed: $mysqli->errno");
+                                }
+                                // bind
+                                if (!$stmt->bind_param("s", $user_id)) {
+                                    displayalert ("Database error: get password bind_param failed $stmt->errno");
+                                }
+                                // execute
+                                if (!$stmt->execute()) {
+                                    displayalert ("Database error: get password execute failed $stmt->errno");
+                                }
+                                // bind result
+                                if (!$stmt->bind_result($updated_pass)) {
+                                    displayalert ("Database error: get password bind_result failed $stmt->errno");
+                                }
+                                // fetch
+                                if (!$stmt->fetch()) {
+                                    displayalert ("Database error: get password fetch failed $stmt->errno");
+                                }
+                                $stmt->close();
+                                if ($updated_pass === $new_pass) {
+                                    echo "<script type='text/javascript'>alert('Password successfully changed');</script>";
+                                    $mysqli->close();
+                                } else {
+                                    displayalert ("Database error: password mismatch");
+                                }
                             } else {
-                                displayalert ("Error: can't connect to a database");
+                                displayalert ("Old password is wrong");
                             }
                         } else {
-                            displayalert ("Old password is wrong");
+                            displayalert ("New password cannot be old password");
                         }
                     } else {
-                        displayalert ("Password doesn't meet the requirements");
+                        displayalert ("Password does not meet the requirements");
                     }
                 } else {
-                    displayalert ("Passwords don't match");
+                    displayalert ("Passwords do not match");
                 }
             } else {
                 displayalert ("Please confirm new password");
@@ -138,18 +181,21 @@ if(isset($_POST['old_pass']) || isset($_POST['new_pass'])) {
 
                 <div class="navbar-collapse collapse">
                   <ul class="nav navbar-nav">
-<!--                    <li class="active"><a href="http://www.ucl.ac.uk">Home</a></li>-->
                     <?php
                         $login_url = 'login.php';
                         if(isset($_SESSION['student_id'])) {
-                            echo '<li class="inactive"><a>Welcome, ' . $_SESSION['given_name'] . '</li>';
+                            // Logged in via UCL
+                            echo '<li class="inactive"><a href="home.php">Home</a></li>';
+                            echo '<li class="inactive"><a href="'. $_SESSION['login_url'] .'">Welcome, ' . $_SESSION['given_name'] . '</a></li>';
                             echo '<li class="inactive"><a>' . substr($_SESSION['student_id'], 1) . '</li>';
-                            echo '<li class="inactive"><a href="' . $_SESSION['base_url'] . '?logout">Log Out</a></li>';
+                            echo '<li class="inactive"><a href="'. $_SESSION['login_url'] .'?logout">Log Out</a></li>';
                         } else if(isset($_SESSION['user_id'])) {
-                            echo '<li class="inactive"><a>Welcome, ' . $_SESSION['full_name'] . '</li>';
-                            echo '<li class="inactive"><a>' . substr($_SESSION['user_id'], 1) . '</li>';
+                            // Logged in via form
+                            echo '<li class="inactive"><a href="home.php">Home</a></li>';
+                            echo '<li class="inactive"><a href="'. $_SESSION['login_url'] .'">Welcome, '. $_SESSION['full_name'] .'</a></li>';
+                            echo '<li class="inactive"><a>'. substr($_SESSION['user_id'], 1) .'</li>';
                             echo '<li class="inactive" style="cursor: pointer"><a data-toggle="modal" data-target="#changePasswordModal" >Change password</li>';
-                            echo '<li class="inactive"><a href="' . $_SESSION['base_url'] . '?logout">Log Out</a></li>';
+                            echo '<li class="inactive"><a href="'. $_SESSION['login_url'] .'?logout">Log Out</a></li>';
                         } else {
                             echo '<li class="inactive"><a href="'. $login_url .'">Login</a></li>';
                         }

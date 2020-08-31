@@ -1,6 +1,4 @@
 <?php
-include("header.php");
-
 if(isset($_SESSION['user_id'])) {
     echo "User id set<br>";
 //    echo "[DEBUG] Output saved session variables<br/>";
@@ -16,7 +14,7 @@ if(isset($_SESSION['user_id'])) {
 //    foreach ($_GLOBAL as $key=>$val)
 //        echo $key." ".$val."<br/>";
 }
-
+include("header.php");
 if(isset($_SESSION['user_type'])) {
     if ($_SESSION['user_type'] == "Student") {
         echo "logged in as Student";
@@ -32,12 +30,11 @@ if(isset($_SESSION['user_type'])) {
     }
 } else {
     // Redirect to login
-    if (isset($_SESSION['base_url']))
-        header('Location: login.php');
+    if (isset($_SESSION['login_url']))
+        exit(header('Location: ' . $_SESSION['login_url']));
     else
         echo "Please log in";
 }
-
 echo "[DEBUG] Output saved session variables<br/>";
 foreach ($_SESSION as $key=>$val)
     echo $key." ".$val."<br/>";
