@@ -1,14 +1,15 @@
 <?php
-include("header.php");
-if($_SESSION['user_type'] == "Lecturer") {
-    
+include_once("start_session.php");
+if(isset($_SESSION['user_type']) && isset($_SESSION['login_url'])) {
+    if($_SESSION['user_type'] != "Lecturer") {
+            exit(header('Location: ' . $_SESSION['login_url']));
+    }
 } else {
-    // Redirect to login
-    if (isset($_SESSION['base_url']))
-        header('Location: login.php');
-    else
-        echo "Please log in";
+    include("header.php");
+    echo "Please log in";
+    die();
 }
+include("header.php");
 ?>
 <form name=course_entry method=post action="Lecturer_Rating.php" enctype="multipart/form-data">
     <h3>Add new module</h3>
@@ -21,6 +22,12 @@ if($_SESSION['user_type'] == "Lecturer") {
         <p>Please upload the relevant class list:<br>
             <input type=file name=file accept=".csv">
         </p>
+        <p>Do you want to clone a Rating List that you have already created?
+            <br>
+            <input type=radio name=clone value=yes> Yes 
+            <br>
+            <input type=radio name=clone value=no checked> No   
+        <p>
     <input type=submit name=submit value="Import Class List and Add New Module">
 </form>
 
