@@ -1,3 +1,15 @@
+<?php
+if (session_id() == "") {
+    $status = session_start();
+    echo "<script type='text/javascript'>alert('Session started');</script>";
+    if (!$status) {
+        echo "<script type='text/javascript'>alert('Error: failed to start session');</script>";
+        die();
+    }
+} else {
+    //echo "<script type='text/javascript'>alert('Else');</script>";
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,8 +53,6 @@ if(isset($_POST['old_pass']) || isset($_POST['new_pass'])) {
                     $number    = preg_match('@[0-9]@', $new_pass);                    
                     //if($uppercase && $lowercase && $number && strlen($password) >= 8) {
                     if (true) {
-                        if (session_id() == "")
-                            session_start();
                         $credentials_table = "credentials";
                         $user_id = $_SESSION['user_id'];
                         $email = $_SESSION['email'];
@@ -130,9 +140,7 @@ if(isset($_POST['old_pass']) || isset($_POST['new_pass'])) {
                   <ul class="nav navbar-nav">
 <!--                    <li class="active"><a href="http://www.ucl.ac.uk">Home</a></li>-->
                     <?php
-                    if (session_id() == "")
-                        session_start();
-                      $login_url = 'login.php';
+                        $login_url = 'login.php';
                         if(isset($_SESSION['student_id'])) {
                             echo '<li class="inactive"><a>Welcome, ' . $_SESSION['given_name'] . '</li>';
                             echo '<li class="inactive"><a>' . substr($_SESSION['student_id'], 1) . '</li>';
