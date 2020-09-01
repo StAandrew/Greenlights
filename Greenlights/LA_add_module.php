@@ -87,7 +87,7 @@ if(isset($_POST["submit"])) {
 ?>  
 
 <div class=container>
-    <form class="insert-form" id="insert_form" method=post action="<?php echo $_SERVER['PHP_SELF']; ?>">
+    <form class="insert-form" id="insert_form" method=post action="source1.php">
         <hr>
         <h1>Testing</h1>
         <hr>
@@ -101,31 +101,6 @@ if(isset($_POST["submit"])) {
                     <th>Estimated Time for task</th>
                     <th>Add/Remove a Row</th>
                 </tr>
-    <?php
-
-    $conn=mysqli_connect("localhost","root","root","Greenlights");
-        
-    if(isset($_POST['submit'])) {
-        $week=$_POST['week'];
-        $event=$_POST['teach_event']; 
-        $task=$_POST['task']; 
-        $gi=$_POST['gi']; 
-        $est_time=$_POST['est_time'];      
-        foreach($week as $key => $value) {
-            $sql="INSERT INTO Ratings (Week, Teaching_Event, Task, Group_Individual, Estimated_Time) 
-                    VALUES ('".$value."', '".$event[$key]."','".$task[$key]."','".$gi[$key]."','".$est_time[$key]."')";
-            $sql=mysqli_query($conn,$sql);
-            if ($sql=='true') {
-                echo "<font color=Green><b><center><h3>Data added successfully</h3></center></b></font>";
-            }
-            else {
-             echo "<font color=Red><b><center><h3>Data could not be added. Please try again.</h3></center></b></font>";
-            }
-        }    
-    }
-?>
-        
-        
                 <tr>
                     <td><input class="form-control" type=text name=week[] required></td>     
                     <td><input class="form-control" type=text name=teach_event[]  required></td>
@@ -137,73 +112,10 @@ if(isset($_POST["submit"])) {
             </table>
             <center>
                 <input class="btn btn-success" type=submit name=submit id="submit" value=Submit> 
-                <br>
-                <br>
-                <br>
-                <input class="btn btn-success" type=button name=download id="download" value="Download Rating Table">
             </center>
         </div> 
     </form>
-    <table class="table table-striped">
-        <tr>
-            <th>Week</th>
-            <th>Teaching Event</th>
-            <th>Task</th>
-            <th>Group/Individual</th>
-            <th>Estimated Time for task</th>
-        </tr>
-<?php
-$select="SELECT * FROM Ratings";
-$result=mysqli_query($conn,$select);
-while ($row = mysqli_fetch_array($result)) {
-?>
-        <tr>
-            <td> <?php echo $row['Week']; ?> </td>
-            <td> <?php echo $row['Teaching_Event']; ?> </td>
-            <td> <?php echo $row['Task']; ?> </td>
-            <td> <?php echo $row['Group_Individual']; ?> </td>
-            <td> <?php echo $row['Estimated_Time']; ?> </td>   
-        </tr>  
-     
-<?php    
-}     
-?>
-    </table>  
 </div>
-
-<?php  
-//export.php  
-$conn = mysqli_connect("localhost", "root", "root", "Greenlights");
-$output = '';
-if(isset($_POST['download'])) {
-    $query = "SELECT * FROM Ratings";
-    $result = mysqli_query($conn, $query);
-    if(mysqli_num_rows($result) > 0) {
-        $output .= '<table class="table" bordered="1">  
-                        <tr>  
-                            <th>Week</th>  
-                            <th>Teaching Event</th>  
-                            <th>Task</th>  
-                            <th>Group or Individual</th>
-                            <th>Estimated Time</th>
-                        </tr>';
-        while($row = mysqli_fetch_array($result)) {
-            $output .= '<tr>  
-                            <td>'.$row["Week"].'</td>  
-                            <td>'.$row["Teaching_Event"].'</td>  
-                            <td>'.$row["Task"].'</td>  
-                            <td>'.$row["Group_Individual"].'</td>  
-                            <td>'.$row["Estimated_Time"].'</td>
-                        </tr>';
-        }
-        $output .= '</table>';
-        header('Content-Type: application/xls');
-        header('Content-Disposition: attachment; filename=rating.xls');
-        echo $output;
-    }
-}
-?>
-
 <script 
         type="text/javascript" 
         src="LA_custom_table_edit.js">

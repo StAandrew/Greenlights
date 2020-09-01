@@ -1,94 +1,140 @@
-<html>
-<head>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-
-<script type=text/javascript>
-    $(document).ready(function(){
-var html='<tr><td><input type=text name=week[]  required>  </td><td><input type=text name=teach_event[]  required> </td> <td><input type=text name=task[]  required> </td><td><input type=text name=gi[]  required>  </td><td><input type=text name=est_time[]  required>  </td><td><input type=button name=remove id=remove value=remove class="btn btn-danger"></td></tr>';  
-
-        
-$("#add").click(function(){
-    $("#table_field").append(html);
-
- }); 
-        
-$("#table_field").on('click','#remove',function(){
-    $(this).closest('tr').remove();
-
-});
-});
-</script>       
-</head>
-<body>
 <?php 
-$file_name=$_FILES["class_list"]["name"];
-$name=$_POST['modulename']; 
-$weeks=$_POST['weeks'];
-echo  "<center>"."<h1>".$name." - ".$weeks." weeks"."</h1>"."</center>";
-    
-$connect = mysqli_connect("localhost", "root", "root", "Greenlights");
-if(isset($_POST["submit"]))
-{
- if($_FILES['file']['name'])
- {
-  $filename = explode(".", $_FILES['file']['name']);
-  if($filename[1] == 'csv')
-  {
-   $handle = fopen($_FILES['file']['tmp_name'], "r");
-   while($data = fgetcsv($handle))
-   {
-    $studentID = mysqli_real_escape_string($connect, $data[0]);  
-    $fname = mysqli_real_escape_string($connect, $data[1]);
-    $lname = mysqli_real_escape_string($connect, $data[2]);
-    $email = mysqli_real_escape_string($connect, $data[3]);
-    $course_reg = mysqli_real_escape_string($connect, $data[4]);
-    $course_year = mysqli_real_escape_string($connect, $data[5]);
-    $query = "INSERT into classlist(student_id, first_name, last_name, email, course_registration, course_year) values('$studentID','$fname','$lname','$email','$course_reg','$course_year')";
-    mysqli_query($connect, $query);
-   }
-   fclose($handle);
-   echo "<script>alert('Class List Successfully Imported');</script>";
-  }
- }
-}
-?>  
+include_once("enable_debug.php");
 
-<div class=container>
+include_once("start_session.php");
+include_once("lecturer_check.php");
+include_once("db_connect.php");
+include("header.php");
+
+// Get module name
+if (isset($_POST['modulename'])) {
+    $name = $_POST['modulename']; 
+} else
+    die("No module name");
+
+// Generate a hash of the table for the module
+$to_hash = str_replace('.', '', str_replace(':', '', str_replace('-', '', str_replace(' ', '', date("Y-m-d H:i:s").microtime())))); //get accurate date
+$to_hash .= "studentstable";
+$to_hash .= $user_id; //add lecturer's id
+$student_list_hash = hash('sha256', $to_hash);
+
+// Create student table named by student hash
+$sql = "CREATE TABLE $student_list_hash (
+    student_id INT(8) UNSIGNED PRIMARY KEY,
+    firstname VARCHAR(128) NOT NULL,
+    lastname VARCHAR(128) NOT NULL,
+    email VARCHAR(128) NOT NULL,
+    course_code VARCHAR(10) NOT NULL,
+    year SMALLINT(2) NOT NULL
+)";
+if ($conn->query($sql) === TRUE) {
+    $success = true;
+} else {
+    die ("Error creating table: " . $conn->error);
+    $success = false;
+}
+    
+// Populate student table with data from file
+if(isset($_POST["submit"])) {
+    if (isset($_FILES["file"])) {
+        // Check for errors
+        if ($_FILES["file"]["error"] > 0) {
+            echo "There was an error uploading the file. Return Code: " . $_FILES["file"]["error"] . "<br />";
+            die();
+        }
+        // Check if file already uploaded
+        if (file_exists("upload/" . $_FILES["file"]["name"])) {
+            echo $_FILES["file"]["name"] . " already exists. ";
+            die();
+        }
+        
+        if($_FILES['file']['name']) {
+            $filename = explode(".", $_FILES['file']['name']);
+            if($filename[1] == 'csv') {
+                $temp = $_FILES["file"]["tmp_name"];
+                $file = new SplFileObject($temp);
+                $file->setFlags(SplFileObject::READ_CSV);
+                $csv = new LimitIterator($file, 1); // Skips first row
+                
+                foreach ($csv as $row) {
+                    $data = explode(";", $row[0]);
+                    
+                    $studentID = $data[0]; 
+                    $firstname = $data[1];
+                    $lastname = $data[2];
+                    $email = $data[3];
+                    $course_code = $data[4];
+                    $course_year = $data[5];
+
+                    $sql = "INSERT INTO $student_list_hash (student_id, firstname, lastname, email, course_code, year) VALUES ('$studentID','$firstname','$lastname','$email','$course_code','$course_year')";
+                    if ($conn->query($sql) === TRUE) {
+                        $success = true;
+                    } else {
+                        die ("Error creating table: " . $conn->error);
+                        $success = false;
+                    }
+                }
+                if (!$success)
+                    throwError("Failed to save to file", $student_list_hash);
+            } else {
+                throwError("Filename not .csv", $student_list_hash);
+            }
+        } else {
+            throwError("File not found", $student_list_hash);
+        }
+    } else {
+        throwError("FILES is not set", $student_list_hash);
+    }
+} else {
+    throwError("No submit in POST", $student_list_hash);
+}
+
+// Function to throw error if there is a problem with students table
+function throwError ($message, $hash) {
+    include_once("db_connect.php");
+    echo 'Error: '. $message;
+    $sql = "DROP TABLE IF EXISTS $hash";
+    $conn->query($sql);
+    $_POST = array();
+    die();
+}
+?>
 <form class="insert_form" id="insert_form" method=post action="source1.php">
-<hr>
-<h1>Testing</h1>
+    <hr>
+    <h1>
+        <?php echo $name;?>
+    </h1>
     <hr>
     <div class="input-field">
-    <table class="table table-bordered" id="table_field">
-    <tr>
-    <th>Week</th>
-    <th>Teaching Event</th>
-    <th>Task</th>
-    <th>Group/Individual</th>
-    <th>Estimated Time for task</th>
-    <th>Add/Remove a Row</th>
-    </tr>      
-        
-    <tr>
-        <td><input class="form-control" type=text name=week[] required>  </td>     
-        <td><input class="form-control" type=text name=teach_event[]  required> </td> <td><input class="form-control" type=text name=task[]  required length=50 > </td>  
-        <td><input class="form-control" type=text name=gi[]  required>  </td>  
-        <td><input class="form-control" type=text name=est_time[]  required>  </td> 
-        <td><input class="btn btn-warning" type=button name=add id=add value=Add>  </td></tr>
-        
-        
-    </table>
-    <center>
-        <input class="btn btn-success" type=submit name=submit id="submit"
-       value=Submit> 
+        <table class="table table-bordered" id="table_field">
+            <tr>
+                <th>Week number</th>
+                <th>Teaching Event</th>
+                <th>Task</th>
+                <th>Group or Individual (G/I)</th>
+                <th>Estimated time for a task (minutes)</th>
+                <th>Add/Remove row</th>
+            </tr>
+            <tr>
+                <input type='hidden' name='module_name' value='<?php echo $_POST['modulename'];?>' />
+                <input type='hidden' name='student_list_hash' value='<?php echo $student_list_hash;?>' />
+                <td><input class="form-control" type=text name=week[] required>  </td>     
+                <td><input class="form-control" type=text name=session[]  required> </td> 
+                <td><input class="form-control" type=text name=task[]  required length=50 > </td>  
+                <td><input class="form-control" type=text name=task_type[]  required>  </td>  
+                <td><input class="form-control" type=text name=task_duration[]  required>  </td> 
+                <td><input class="btn btn-warning" type=button name=add id=add value=Add>  </td>
+            </tr>
+        </table>
+        <center>
+            <input class="btn btn-success" type=submit name=submit id="submit" value=Submit> 
         </center>
-    
     </div> 
-    </form>  
-</div>
-</body>
-</html>
+</form>  
+<script 
+    type="text/javascript" 
+    src="LA_custom_table_edit.js">
+</script>
+<?php
+    include("footer.php");
+?>
