@@ -5,14 +5,14 @@ For authentication, the website uses UCL SSO as well as login via form
   
 Naming conventions:  
 There are 3 'main' tables:  
-⋅⋅*All students.  
-⋅⋅*All modules.  
-⋅⋅*Login credentials.  
+⋅⋅* All students  
+⋅⋅* All modules   
+⋅⋅* Login credentials  
 <br>
 And a lot of ables are named using sha256, where the first character is replaced accordingly:  
-⋅⋅*Per-module tables begin with 'm'.  
-⋅⋅*Per student list tables begin with 'l'.  
-⋅⋅*Per-student per-module tables begin with 's'.  
+⋅⋅* Per-module tables begin with 'm'  
+⋅⋅* Per student list tables begin with 'l'  
+⋅⋅* Per-student per-module tables begin with 's'  
 <br>
 
 Tables have this structure:  
