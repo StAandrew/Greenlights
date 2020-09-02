@@ -1,6 +1,7 @@
 <?php
-include_once("enable_debug.php");
-include_once("start_session.php");
+include_once("inc/enable_debug.php");
+include_once("inc/start_session.php");
+include_once("inc/db_connect.php");
 
 // Based on UCL API, app name: Greenlights
 $client_id = '7769165282747628.1902479455015575';
@@ -29,9 +30,9 @@ if(isset($_SESSION['student_id'])) {
     }
     
     // Display welcome message - logged in via UCL
-    include("header.php");
+    include("inc/header.php");
     echo '<div class="welcome-login-text"><p>Welcome, ' . $_SESSION['given_name'] . '</p>';
-    echo '<p>Logged in as ' . $_SESSION['full_name'] . ', ' . substr($_SESSION['student_id'], 1) . '</p>';
+    echo '<p>Logged in as ' . $_SESSION['full_name'] . ', '. $_SESSION['student_id']. '</p>';
     echo '<p><a href="' . $_SESSION['login_url'] . '?logout">Log Out</a></p></div>';
 }
 
@@ -44,9 +45,9 @@ else if(isset($_SESSION['user_id'])) {
     }
     
     // Display welcome message - logged in via form
-    include("header.php");
+    include("inc/header.php");
     echo '<div class="welcome-login-text"><p>Welcome, ' . $_SESSION['full_name'] . '</p>';
-    echo '<p>Logged in as ' . $_SESSION['full_name'] . ', ' . substr($_SESSION['user_id'], 1) . '</p>'; 
+    echo '<p>Logged in as ' . $_SESSION['full_name'] . ', ' . $_SESSION['user_id'] . '</p>'; 
     echo '<p><a href="' . $_SESSION['login_url'] . '?logout">Log Out</a></p></div>';
 }
 
@@ -95,7 +96,7 @@ else if(isset($_POST["email"]) && isset($_POST["password"])){
         $user_id = "";
         
         // Cheking if passwords match
-        $stmt = $mysqli->prepare('SELECT name, surname, user_type, user_id FROM '. $credentials_table .' WHERE email = ? AND pass = ?');
+        $stmt = $mysqli->prepare('SELECT firstname, lastname, user_type, user_id FROM '. $credentials_table .' WHERE email = ? AND pass = ?');
         if (!$stmt) {
             showAlert("Stmt email password prepare failed");
         }
@@ -202,8 +203,11 @@ else if(isset($_GET['code']) && !isset($_SESSION['student_id'])) {
                 die('Authorization error: ' . $json_response['error']);
             } else {
                 $student_id = $json_response['student_number'];
+                // UCL API gives us 9 digits in format 019289473
+                // We use just 8 digits and dont need the first 0
+                $student_id = substr($student_id, 1);
                 $_SESSION['student_id'] = $student_id;
-                echo "student_id set: " . $student_id;
+                //echo "student_id set: " . $student_id;
             }
             unset($_SESSION['state']);
             curl_close($ch);
@@ -260,7 +264,7 @@ else if(!isset($_SESSION['student_id']) && !isset($_SESSION['user_id'])) {
         'client_id' => $client_id,
         'state' => $_SESSION['state'],
     ]);
-    include("header.php");
+    include("inc/header.php");
 ?>
     <p class="welcome-login-text">Welcome to Greenlights system<br/>Please log in:</p>
     <p>
@@ -310,7 +314,7 @@ else if(!isset($_SESSION['student_id']) && !isset($_SESSION['user_id'])) {
 echo "[DEBUG] Output saved session variables<br/>";
 foreach ($_SESSION as $key=>$val)
     echo $key." ".$val."<br/>";
-include("footer.php");
+include("inc/footer.php");
 
 // Helping functions
 function showAlert($message) {

@@ -1,5 +1,5 @@
 <?php
-include_once("start_session.php");
+include_once("inc/start_session.php");
 if(isset($_SESSION['user_id'])) {
 //    echo "[DEBUG] Output saved session variables<br/>";
 //    foreach ($_SESSION as $key=>$val)
@@ -33,7 +33,7 @@ if(isset($_SESSION['user_type'])) {
     if (isset($_SESSION['login_url']))
         exit(header('Location: ' . $_SESSION['login_url']));
 }
-include("header.php");
+include("inc/header.php");
 echo "Please log in";
 echo "[DEBUG] Output saved session variables<br/>";
 foreach ($_SESSION as $key=>$val)
@@ -43,5 +43,5 @@ foreach ($_POST as $key=>$val)
 foreach ($_GET as $key=>$val)
     echo $key." ".$val."<br/>";
 
-include("footer.php");
+include("inc/footer.php");
 ?>

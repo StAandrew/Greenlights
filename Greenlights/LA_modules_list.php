@@ -1,22 +1,22 @@
 <?php
-include_once("start_session.php");
-include_once("lecturer_check.php");
-include_once("db_connect.php");
-include("header.php");
+include_once("inc/start_session.php");
+include_once("inc/lecturer_check.php");
+include_once("inc/db_connect.php");
+include("inc/header.php");
 ?>
 <h3>
 	<font color=grey>Your Modules</font>
 </h3>
 <?php
-    $sql = "SELECT module_name 
+    $sql = "SELECT module_name, module_hash, student_list_hash
             FROM $all_modules_table_name
             WHERE access_user_id=$user_id";  
     $result = mysqli_query($conn, $sql);
     while($row = mysqli_fetch_array($result)) {
-        echo $row[0] . "<br/>";
+        echo '<a href=LA_module_edit.php?module='. $row['module_hash'] .'&student_list='. $row['student_list_hash'] .'>'. $row['module_name'] .'</a><br>';
     }
 ?>
-<form name=course_entry method=post action="LR.php" enctype="multipart/form-data">
+<form name=course_entry method=post action="LA_add_module_1.php" enctype="multipart/form-data">
     <h3>
         <font color=grey>Add new module</font>
     </h3>
@@ -36,5 +36,5 @@ include("header.php");
 </form>
 
 <?php
-include("footer.php");
+include("inc/footer.php");
 ?>

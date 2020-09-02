@@ -2,7 +2,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-include_once("start_session.php");
+include_once("inc/start_session.php");
 ?>
 <!DOCTYPE html>
 <html>
@@ -14,7 +14,7 @@ include_once("start_session.php");
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="dist/jquery.tabledit.js"></script>
+<script type="text/javascript" src="js/jquery.tabledit.js"></script>
 <!--ta end-->
     
 <!--lecturer-->
@@ -173,13 +173,13 @@ if(isset($_POST['old_pass'])) {
                             // Logged in via UCL
                             echo '<li class="inactive"><a href="home.php">Home</a></li>';
                             echo '<li class="inactive"><a href="'. $_SESSION['login_url'] .'">Welcome, ' . $_SESSION['given_name'] . '</a></li>';
-                            echo '<li class="inactive"><a>' . substr($_SESSION['student_id'], 1) . '</li>';
+                            echo '<li class="inactive"><a>' . $_SESSION['student_id'] . '</li>';
                             echo '<li class="inactive"><a href="'. $_SESSION['login_url'] .'?logout">Log Out</a></li>';
                         } else if(isset($_SESSION['user_id'])) {
                             // Logged in via form
                             echo '<li class="inactive"><a href="home.php">Home</a></li>';
                             echo '<li class="inactive"><a href="'. $_SESSION['login_url'] .'">Welcome, '. $_SESSION['full_name'] .'</a></li>';
-                            echo '<li class="inactive"><a>'. substr($_SESSION['user_id'], 1) .'</li>';
+                            echo '<li class="inactive"><a>'. $_SESSION['user_id'] .'</li>';
                             echo '<li class="inactive" style="cursor: pointer"><a data-toggle="modal" data-target="#changePasswordModal" >Change password</li>';
                             echo '<li class="inactive"><a href="'. $_SESSION['login_url'] .'?logout">Log Out</a></li>';
                         } else {

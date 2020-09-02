@@ -1,8 +1,8 @@
 <?php
-include_once("enable_debug.php");
+include_once("inc/enable_debug.php");
 
-include_once("start_session.php");
-include_once("db_connect.php");
+include_once("inc/start_session.php");
+include_once("inc/db_connect.php");
 
 // Check for login
 if(isset($_SESSION['student_id']) || isset($_SESSION['user_id'])) {
@@ -21,7 +21,7 @@ if(isset($_SESSION['student_id']) || isset($_SESSION['user_id'])) {
     header('Location: login.php');
     die();
 }
-include("header.php");
+include("inc/header.php");
 
 // Get all modules of this student
 $sql = "SELECT firstname, lastname, year, module_name, student_table_hash
@@ -42,4 +42,5 @@ if ($result = $conn->query($sql)) {
     print "No information available yet";
     die();
 }
+include("inc/footer.php");
 ?>

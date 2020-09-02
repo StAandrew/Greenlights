@@ -1,10 +1,10 @@
 <?php
-include_once("enable_debug.php");
+include_once("inc/enable_debug.php");
 
-include_once("start_session.php");
-include_once("lecturer_check.php");
-include_once("db_connect.php");
-include("header.php");
+include_once("inc/start_session.php");
+include_once("inc/lecturer_check.php");
+include_once("inc/db_connect.php");
+include("inc/header.php");
 
 // Get module name and number of weeks and students table hash
 if (isset($_POST['module_name']) && isset($_POST['student_list_hash'])) {
@@ -54,12 +54,6 @@ if(isset($_POST['submit'])) {
     $arr_task = $_POST['task'];
     $arr_task_duration = $_POST['task_duration']; 
     $arr_task_type = $_POST['task_type'];
-    
-    print_r($arr_week);
-    print_r($arr_session); //?
-    print_r($arr_task);
-    print_r($arr_task_duration); //?
-    print_r($arr_task_type); //?
 
     $num = sizeof($arr_week); //to help iterate over rows
     $success = false; //throws error if loop doesnt initialise
@@ -214,5 +208,5 @@ if ($big_result->num_rows > 0) {
 echo "done";
 
 $conn->close();
-include("footer.php");
+include("inc/footer.php");
 ?>

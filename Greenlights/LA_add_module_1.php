@@ -1,10 +1,10 @@
 <?php 
-include_once("enable_debug.php");
+include_once("inc/enable_debug.php");
 
-include_once("start_session.php");
-include_once("lecturer_check.php");
-include_once("db_connect.php");
-include("header.php");
+include_once("inc/start_session.php");
+include_once("inc/lecturer_check.php");
+include_once("inc/db_connect.php");
+include("inc/header.php");
 
 // Get module name
 if (isset($_POST['modulename'])) {
@@ -17,6 +17,8 @@ $to_hash = str_replace('.', '', str_replace(':', '', str_replace('-', '', str_re
 $to_hash .= "studentstable";
 $to_hash .= $user_id; //add lecturer's id
 $student_list_hash = hash('sha256', $to_hash);
+$student_list_hash = substr($student_list_hash, 1);
+$student_list_hash = "l" . $student_list_hash;
 
 // Create student table named by student hash
 $sql = "CREATE TABLE $student_list_hash (
@@ -99,7 +101,7 @@ function throwError ($message, $hash) {
     die();
 }
 ?>
-<form class="insert_form" id="insert_form" method=post action="source1.php">
+<form class="insert_form" id="insert_form" method=post action="LA_add_module_2.php">
     <hr>
     <h1>
         <?php echo $name;?>
@@ -133,8 +135,8 @@ function throwError ($message, $hash) {
 </form>  
 <script 
     type="text/javascript" 
-    src="LA_custom_table_edit.js">
+    src="js/LA_custom_table_edit.js">
 </script>
 <?php
-    include("footer.php");
+    include("inc/footer.php");
 ?>

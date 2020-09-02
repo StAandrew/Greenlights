@@ -1,9 +1,9 @@
 <?php
-include_once("enable_debug.php");
+include_once("inc/enable_debug.php");
 
-include_once("start_session.php");
-include_once("db_connect.php");
-include_once("header.php");
+include_once("inc/start_session.php");
+include_once("inc/db_connect.php");
+include_once("inc/header.php");
 
 // Check for login
 if(isset($_SESSION['student_id']) || isset($_SESSION['user_id'])) {
@@ -18,7 +18,6 @@ if(isset($_SESSION['student_id']) || isset($_SESSION['user_id'])) {
         die();
     }
 } else {
-    echo "two";
     header('Location: login.php');
     die();
 }
@@ -82,5 +81,5 @@ if ($result->num_rows > 0) {
         </div>
 <?php
 $conn->close();
-include("footer.php");
+include("inc/footer.php");
 ?>
