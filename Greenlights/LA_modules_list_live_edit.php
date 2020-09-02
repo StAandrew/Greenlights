@@ -1,5 +1,6 @@
 <?php
-include_once("inc/db_connect.php");
+include("inc/enalbe_debug.php");
+include("inc/db_connect.php");
 $module = $_GET['module'];
 $input = filter_input_array(INPUT_POST);
 if ($input['action'] == 'edit') {	
@@ -16,7 +17,7 @@ if ($input['action'] == 'edit') {
 		$update_field.= "task_type='".$input['task_type']."'";
 	} 
 	if($update_field && $input['id']) {
-		$sql_query = "UPDATE TA_development." . $module . " SET $update_field WHERE num='" . $input['id'] . "'";
+		$sql_query = 'UPDATE '. $module .' SET '. $update_field .' WHERE num=' . $input['id'];
 		mysqli_query($conn, $sql_query) or die("database error:". mysqli_error($conn));
 	}
 }

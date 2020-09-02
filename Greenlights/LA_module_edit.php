@@ -26,6 +26,7 @@ if (isset($_GET['module']) && isset($_GET['student_list'])) {
         <table id="data_table" class="table table-striped">
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Week</th>
                     <th>Teaching event</th>
                     <th>Task</th>
@@ -40,6 +41,7 @@ $sql = "SELECT num, week, session, task, task_duration, task_type
 $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
 while( $row = mysqli_fetch_assoc($resultset) ) {
         print '<tr id="' . $row['num'] . '">';
+            print '<td>' . $row['num'] . '</td>';
             print '<td>' . $row['week'] . '</td>';
             print '<td>' . $row['session'] . '</td>';
             print '<td>' . $row['task'] . '</td>';
@@ -49,21 +51,20 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
 }
 ?>
             </tbody>
-            </table>
-            <div style="margin:50px 0px 0px 0px;">
-                <a class="btn btn-default read-more" style="background:#3399ff;color:white" href="http://ucl.ac.uk">Save</a>
-            </div>
+        </table>
+        <div style="margin:50px 0px 0px 0px;">
+            <a class="btn btn-default read-more" style="background:#3399ff;color:white" href="http://ucl.ac.uk">Save</a>
         </div>
-        <script 
-                type="text/javascript" 
-                src="js/LA_module_edit_table_edit.js">
-        </script>
-
+    </div>
+    <script 
+            type="text/javascript" 
+            src="js/LA_module_edit_table_edit.js">
+    </script>
 
 <?php
-// Add add TA function, sae to $all_modules_table_name
-// when pressed save, fetch all tables from $all_students_table_name, and update all of them
 
+// Add add TA function, save to $all_modules_table_name
+// when pressed save, fetch all tables from $all_students_table_name, and update all of them
 
 include("inc/footer.php");
 ?>

@@ -116,7 +116,7 @@ if(isset($_POST['submit'])) {
 
 // Function to throw error if there is a problem with a table
 function throwErrorQuit ($message, $hash) {
-    include("db_connect.php");
+    include("inc/db_connect.php");
     echo "Error: $message";
     $sql = "DELETE FROM $all_modules_table_name WHERE module_hash=$hash";
     $conn->query($sql);
