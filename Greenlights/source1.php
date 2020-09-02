@@ -20,6 +20,8 @@ $to_hash .= "moduletable";
 $to_hash .= preg_replace('/\s+/', '_', $module_name); //replace spaces by underscores
 $to_hash .= $user_id; //add lecturer's id
 $module_table_hash = hash('sha256', $to_hash);
+$module_table_hash = substr($module_table_hash, 1);
+$module_table_hash = "m" . $module_table_hash;
 
 // Save to main table (all modules table)
 $sql = "INSERT INTO $all_modules_table_name (module_name, module_hash, access_user_id, access_user_type, student_list_hash) 
@@ -50,8 +52,14 @@ if(isset($_POST['submit'])) {
     $arr_week = $_POST['week'];
     $arr_session = $_POST['session'];
     $arr_task = $_POST['task'];
-    $arr_task_type = $_POST['task_type'];
     $arr_task_duration = $_POST['task_duration']; 
+    $arr_task_type = $_POST['task_type'];
+    
+    print_r($arr_week);
+    print_r($arr_session); //?
+    print_r($arr_task);
+    print_r($arr_task_duration); //?
+    print_r($arr_task_type); //?
 
     $num = sizeof($arr_week); //to help iterate over rows
     $success = false; //throws error if loop doesnt initialise
@@ -143,6 +151,8 @@ if ($big_result->num_rows > 0) {
         $to_hash .= "studenttable";
         $to_hash .= $student_id . $firstname . $lastname;
         $one_student_table_hash = hash('sha256', $to_hash);
+        $one_student_table_hash = substr($one_student_table_hash, 1);
+        $one_student_table_hash = "s" . $one_student_table_hash;
         
         //create table for student
         $sql = "CREATE TABLE $one_student_table_hash (
@@ -203,5 +213,6 @@ if ($big_result->num_rows > 0) {
 }
 echo "done";
 
+$conn->close();
 include("footer.php");
 ?>

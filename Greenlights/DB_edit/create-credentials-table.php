@@ -17,12 +17,12 @@ if ($conn->connect_error) {
 
 // Create table
 $sql = "CREATE TABLE IF NOT EXISTS $table_name (
-    name VARCHAR(64) NOT NULL,
-    surname VARCHAR(64) NOT NULL,
+    user_id INT(10) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    firstname VARCHAR(64) NOT NULL,
+    lastname VARCHAR(64) NOT NULL,
     email VARCHAR(128) NOT NULL,
     pass VARCHAR(128) NOT NULL,
-    user_type ENUM('Lecturer', 'TA', 'Student', 'admin'),
-    user_id INT(10) UNSIGNED PRIMARY KEY AUTO_INCREMENT
+    user_type ENUM('Lecturer', 'TA', 'Student', 'admin')
 )";
 if ($conn->query($sql) === TRUE) {
   echo "Table $table_name created successfully<br/>";

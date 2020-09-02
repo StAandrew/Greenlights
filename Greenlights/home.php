@@ -16,7 +16,7 @@ if(isset($_SESSION['user_id'])) {
 }
 $lecturer_home = "LA_modules_list.php";
 $ta_home = "TA_student_session_view.php";
-$student_home = "student_view.php";
+$student_home = "student_modules_list.php";
 
 if(isset($_SESSION['user_type'])) {
     if ($_SESSION['user_type'] == "Student") {

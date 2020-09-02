@@ -20,7 +20,7 @@ $student_list_hash = hash('sha256', $to_hash);
 
 // Create student table named by student hash
 $sql = "CREATE TABLE $student_list_hash (
-    student_id INT(8) UNSIGNED PRIMARY KEY,
+    student_id INT(9) UNSIGNED PRIMARY KEY,
     firstname VARCHAR(128) NOT NULL,
     lastname VARCHAR(128) NOT NULL,
     email VARCHAR(128) NOT NULL,
@@ -107,22 +107,22 @@ function throwError ($message, $hash) {
     <hr>
     <div class="input-field">
         <table class="table table-bordered" id="table_field">
+            <input type='hidden' name='module_name' value='<?php echo $_POST['modulename'];?>' />
+            <input type='hidden' name='student_list_hash' value='<?php echo $student_list_hash;?>' />
             <tr>
                 <th>Week number</th>
                 <th>Teaching Event</th>
                 <th>Task</th>
-                <th>Group or Individual (G/I)</th>
                 <th>Estimated time for a task (minutes)</th>
+                <th>Group or Individual (G/I)</th>
                 <th>Add/Remove row</th>
             </tr>
             <tr>
-                <input type='hidden' name='module_name' value='<?php echo $_POST['modulename'];?>' />
-                <input type='hidden' name='student_list_hash' value='<?php echo $student_list_hash;?>' />
                 <td><input class="form-control" type=text name=week[] required>  </td>     
                 <td><input class="form-control" type=text name=session[]  required> </td> 
-                <td><input class="form-control" type=text name=task[]  required length=50 > </td>  
-                <td><input class="form-control" type=text name=task_type[]  required>  </td>  
+                <td><input class="form-control" type=text name=task[]  required length=50 > </td>
                 <td><input class="form-control" type=text name=task_duration[]  required>  </td> 
+                <td><input class="form-control" type=text name=task_type[]  required>  </td>  
                 <td><input class="btn btn-warning" type=button name=add id=add value=Add>  </td>
             </tr>
         </table>

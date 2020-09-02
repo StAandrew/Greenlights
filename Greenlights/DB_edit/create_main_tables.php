@@ -8,7 +8,7 @@ $sql = "CREATE TABLE IF NOT EXISTS $all_modules_table_name (
     module_name VARCHAR(128) NOT NULL,
     module_hash VARCHAR(70) NOT NULL,
     access_user_id INT(10) UNSIGNED NOT NULL,
-    access_user_type ENUM('Lecturer', 'TA', 'Student', 'admin'),
+    access_user_type ENUM('Lecturer', 'TA', 'Student', 'admin') NOT NULL,
     student_list_hash VARCHAR(70) NOT NULL
 )";
 if ($conn->query($sql) === TRUE) {
@@ -20,7 +20,7 @@ if ($conn->query($sql) === TRUE) {
 // Create all students table
 $sql = "CREATE TABLE IF NOT EXISTS $all_students_table_name (
     num INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    student_id INT(10) UNSIGNED NOT NULL,
+    student_id INT(9) UNSIGNED NOT NULL,
     firstname VARCHAR(128) NOT NULL,
     lastname VARCHAR(128) NOT NULL,
     email VARCHAR(128) NOT NULL,
@@ -36,4 +36,26 @@ if ($conn->query($sql) === TRUE) {
   echo "Error creating table: " . $conn->error;
 }
 
+// Create credentials table
+$sql = "CREATE TABLE IF NOT EXISTS $table_name (
+    user_id INT(10) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    firstname VARCHAR(64) NOT NULL,
+    lastname VARCHAR(64) NOT NULL,
+    email VARCHAR(128) NOT NULL,
+    pass VARCHAR(128) NOT NULL,
+    user_type ENUM('Lecturer', 'TA', 'Student', 'admin')
+)";
+if ($conn->query($sql) === TRUE) {
+  echo "Table $table_name created successfully<br/>";
+} else {
+  echo "Error creating $table_name table: " . $conn->error;
+}
+$sql = "ALTER TABLE $table_name AUTO_INCREMENT=100000001";
+if ($conn->query($sql) === TRUE) {
+  echo "Altered auto_increment<br/>";
+} else {
+  echo "Error creating $table_name table: " . $conn->error;
+}
+
+$conn->close();
 ?>

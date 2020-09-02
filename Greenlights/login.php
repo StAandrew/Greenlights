@@ -1,12 +1,6 @@
 <?php
-// Development environment
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-// Start session
-session_set_cookie_params(3600,"/"); // in seconds
-session_start();
+include_once("enable_debug.php");
+include_once("start_session.php");
 
 // Based on UCL API, app name: Greenlights
 $client_id = '7769165282747628.1902479455015575';
