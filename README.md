@@ -10,7 +10,7 @@ There are 3 'main' tables:
 * Login credentials  
 <br>  
 
-And a lot of ables are named using sha256, where the first character is replaced accordingly:  
+And a lot of tables are named using sha256, where the first character is replaced accordingly:  
 * Per-module tables begin with 'm'  
 * Per student list tables begin with 'l'  
 * Per-student per-module tables begin with 's'  
