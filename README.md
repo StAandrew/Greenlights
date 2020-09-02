@@ -4,15 +4,16 @@ Central repository for all UCL Greenlights files
 For authentication, the website uses UCL SSO as well as login via form 
   
 Naming conventions:  
-Tables are named using sha256, where the first character is replaced accordingly:  
-    Per-module tables begin with 'm'  
-    Per student list tables begin with 'l'  
-    Per-student per-module tables begin with 's'  
-Moreover, there are 3 'main' tables:
-    All students
-    All modules
-    Login credentials
-
+There are 3 'main' tables:  
+⋅⋅*All students.  
+⋅⋅*All modules.  
+⋅⋅*Login credentials.  
+<br>
+And a lot of ables are named using sha256, where the first character is replaced accordingly:  
+⋅⋅*Per-module tables begin with 'm'.  
+⋅⋅*Per student list tables begin with 'l'.  
+⋅⋅*Per-student per-module tables begin with 's'.  
+<br>
 
 Tables have this structure:  
 **All modules table:**  
@@ -60,4 +61,11 @@ Tables have this structure:
 |      INT     |INT(2)|VARCHAR(128)|VARCHAR(256)|SMALLINT(3) | ENUM | SMALLINT(4) |VARCHAR(1)|SMALLINT(4)|VARCHAR(256)|VARCHAR(256)|  DATETIME  |     INT(3)     |
 |PRIMARY KEY|NOT NULL|NOT NULL  |  NOT NULL  | NOT NULL|DEFAULT NULL|NOT NULL|DEFAULT 'I'|DEFAULT NULL|DEFAULT NULL|DEFAULT NULL|DEFAULT NULL|DEFAULT NULL    |
 |AUTO_INCREMENT|UNSIGNED|          |            |     |('Green', 'Amber', 'Red') |
-
+  
+Default login credentials:
+|   login    |password|
+|:----------:|:------:|
+| admin@ucl  |ucladmin|
+|lecturer@ucl|ucladmin|
+|   ta@ucl   |ucladmin|
+| student@ucl|ucladmin|
