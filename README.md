@@ -14,7 +14,7 @@ Moreover, there are 3 'main' tables:
     Login credentials
 
 
-Tables have this structure: 
+Tables have this structure:  
 All modules table:  
 |     num      |module_name |module_hash |access_user_id|            access_user_type               |student_list_hash|
 |:------------:|:----------:|:----------:|:------------:|:-----------------------------------------:|:---------------:|
@@ -23,8 +23,9 @@ All modules table:
 |AUTO_INCREMENT|            |            |    UNSIGNED  |
 |PRIMARY KEY   |
   
-All students table:   
+All students table:  
 |  num   |student_id|  firstname |  lastname  |   email    |course_code|    year   |module_name |module_hash|student_table_hash|
+|:------:|:--------:|:----------:|:----------:|:----------:|:---------:|:---------:|:----------:|:---------:|:----------------:|
 |  INT   |  INT(9)  |VARCHAR(128)|VARCHAR(128)|VARCHAR(128)|VARCHAR(10)|SMALLINT(2)|VARCHAR(128)|VARCHAR(64)|    VARCHAR(64)   |
 |NOT NULL| NOT NULL |  NOT NULL  |  NOT NULL  |  NOT NULL  |  NOT NULL |  NOT NULL |  NOT NULL  |  NOT NULL |      NOT NULL    |
 |AUTO_INCREMENT| 
@@ -32,7 +33,7 @@ All students table:
   
 Credentials table:  
 |   user_id    | firstname |  lastname  |    email   |    pass    |            user_type                      |
-|:------------:|:---------:|:----------:|:------- --:|:----------:|:-----------------------------------------:|
+|:------------:|:---------:|:----------:|:----------:|:----------:|:-----------------------------------------:|
 |    INT(10)   |VARCHAR(64)|VARCHAR(128)|VARCHAR(128)|VARCHAR(128)| ENUM('Lecturer', 'TA', 'Student', 'admin')|
 ||PRIMARY KEY  |  NOT NULL |  NOT NULL  |   NOT NULL |  NOT NULL  |              NOT NULL                     |
 |AUTO_INCREMENT|
