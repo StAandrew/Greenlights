@@ -16,14 +16,14 @@ if (isset($_GET['module']) && isset($_GET['student_list']) && isset($_GET['modul
     echo "Error: get arguments was not found";
     die();
 }
-
-echo "Module: " . $module_name . "<br/>";
-        ?>
-        <table id="joint-table" width="1200">
+?>
+<h4 style="margin-top:20px; color:gray">Module: <?php echo $module_name; ?></h4>
+    <div style="margin-top: 10px">
+        <table id="joint-table" width="100%" style="position:relative; top:0;">
             <tr>
                 <div class=left-table>
-                    <td style="width:50%">
-                        <table id="left-table" class="table table-striped">
+                    <td style="width:50%; position:relative; top:0">
+                        <table id="left-table" class="table table-striped" style="border-right:solid lightgrey 0.5px; border-bottom:solid lightgrey 0.5px; border-left:solid lightgrey 0.5px;">
                             <tr>
                                 <th>Student</th>
                             </tr>
@@ -85,8 +85,8 @@ if ($big_result->num_rows > 0) {
                     </td>
                 </div>
                 <div class=right-table>
-                    <td style="width:50%">
-                        <table id="right-table" class="table table-striped">
+                    <td style="position:absolute; width:50%; top:0">
+                        <table id="right-table" class="table table-striped" style="border-right:solid lightgrey 0.5px; border-bottom:solid lightgrey 0.5px;">
                             <tr>
                                 <th>Session</th>
                             </tr>
@@ -114,6 +114,7 @@ if ($result->num_rows > 0) {
                     </td>
                 </div>
         </table>
+    </div>
 <?php
 include("inc/footer.php");
 $conn->close();

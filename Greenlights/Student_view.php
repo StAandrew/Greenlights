@@ -30,8 +30,7 @@ if (isset($_GET['id'])) {
     die();
 }
 ?>
-        <div class="container home">
-            <table width="2000" class="table table-striped">
+            <table class="table table-striped">
                 <thead>
                 <tr>
                     <th>Week</th>
@@ -40,7 +39,7 @@ if (isset($_GET['id'])) {
                     <th>Group number</th>
                     <th>Rating</th>
                     <th>Task expected (minutes)</th>
-                    <th>Task actual (minutes)</th>
+                    <th>Task took (minutes)</th>
                     <th>Task type (Group/Individual)</th>
                     <th>Comment</th>
                     <th>Action</th>
@@ -78,7 +77,6 @@ if ($result->num_rows > 0) {
 ?>
                 </tbody>
             </table>
-        </div>
 <?php
 $conn->close();
 include("inc/footer.php");

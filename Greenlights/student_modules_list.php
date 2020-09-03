@@ -22,7 +22,11 @@ if(isset($_SESSION['student_id']) || isset($_SESSION['user_id'])) {
     die();
 }
 include("inc/header.php");
-
+?>
+<h3>
+	<font color=grey>Your Modules</font>
+</h3>
+<?php
 // Get all modules of this student
 $sql = "SELECT firstname, lastname, year, module_name, student_table_hash
         FROM $all_students_table_name

@@ -40,7 +40,6 @@ if ($result->num_rows > 0) {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }
 ?>
-<div class="container home">	
         <table id="data_table" class="table table-striped">
             <thead>
                 <tr>
@@ -179,7 +178,6 @@ if ($stud_result->num_rows > 0) {
 
                 </tbody>
             </table>
-        </div>
     </body>
 <?php
 include("inc/footer.php");
