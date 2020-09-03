@@ -1,7 +1,6 @@
 <?php
-include_once("db_connect.php");
-$student_id = $_GET['student_id'];
-echo $student_id;
+include_once("inc/db_connect.php");
+$table = $_GET['table'];
 $input = filter_input_array(INPUT_POST);
 if ($input['action'] == 'edit') {	
 	$update_field='';
@@ -23,8 +22,10 @@ if ($input['action'] == 'edit') {
         else if($input['rating'] == 'R' || $input['rating'] == 'r' || $input['rating'] == 'red')
             $input['rating'] = 'Red';
 		$update_field.= "rating='".$input['rating']."'";
-	} else if(isset($input['task_expected'])) {
-		$update_field.= "task_expected='".$input['task_expected']."'";
+	} else if(isset($input['task_duration'])) {
+		$update_field.= "task_duration='".$input['task_duration']."'";
+	} else if(isset($input['task_type'])) {
+		$update_field.= "task_type='".$input['task_type']."'";
 	} else if(isset($input['task_actual'])) {
 		$update_field.= "task_actual='".$input['task_actual']."'";
 	} else if(isset($input['comment'])) {
@@ -37,7 +38,7 @@ if ($input['action'] == 'edit') {
 		$update_field.= "meeting_duration='".$input['meeting_duration']."'";
 	}
 	if($update_field && $input['id']) {
-		$sql_query = "UPDATE TA_development.s" . $student_id . " SET $update_field WHERE id='" . $input['id'] . "'";	
+		$sql_query = 'UPDATE ' . $table . ' SET ' . $update_field . 'WHERE id=' . $input['id'];
 		mysqli_query($conn, $sql_query) or die("database error:". mysqli_error($conn));
 	}
 }

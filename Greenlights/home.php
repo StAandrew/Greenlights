@@ -15,7 +15,7 @@ if(isset($_SESSION['user_id'])) {
 //        echo $key." ".$val."<br/>";
 }
 $lecturer_home = "LA_modules_list.php";
-$ta_home = "TA_student_session_view.php";
+$ta_home = "TA_modules_list.php";
 $student_home = "student_modules_list.php";
 
 if(isset($_SESSION['user_type'])) {

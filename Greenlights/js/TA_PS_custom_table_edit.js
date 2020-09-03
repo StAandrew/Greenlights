@@ -4,15 +4,15 @@ $(document).ready(function(){
 		editButton: false,   		
 		columns: {
 		  identifier: [0, 'id'],                    
-		  editable: [[3, 'group_number'], 
-                     [4, 'rating'],
-                     [6, 'task_actual'], 
-                     [7, 'comment'], 
-                     [8, 'actions'],
-                     [9, 'meeting_date'],
-                     [10, 'meeting_duration']]
+		  editable: [[4, 'group_number'], 
+                     [5, 'rating'],
+                     [8, 'task_actual'], 
+                     [9, 'comment'], 
+                     [10, 'actions'],
+                     [11, 'meeting_date'],
+                     [12, 'meeting_duration']]
 		},
 		hideIdentifier: false,
-		url: 'TA_PS_live_edit.php?student_id=' + $('#js-helper').data('student-id')		
+		url: 'TA_PS_live_edit.php?table=' + $('#js-helper').data('table-id')		
 	});
-}); 
+});

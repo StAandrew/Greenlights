@@ -1,6 +1,6 @@
 <?php
 include_once("inc/enable_debug.php");
-include_once("inc/start_session.php");
+include("inc/start_session.php");
 include_once("inc/db_connect.php");
 
 // Based on UCL API, app name: Greenlights
@@ -33,7 +33,7 @@ if(isset($_SESSION['student_id'])) {
     include("inc/header.php");
     echo '<div class="welcome-login-text"><p>Welcome, ' . $_SESSION['given_name'] . '</p>';
     echo '<p>Logged in as ' . $_SESSION['full_name'] . ', '. $_SESSION['student_id']. '</p>';
-    echo '<p><a href="' . $_SESSION['login_url'] . '?logout">Log Out</a></p></div>';
+    echo '<p><a href="./login.php?logout">Log Out</a></p></div>';
 }
 
 // Standard login - if already logged in
@@ -311,9 +311,10 @@ else if(!isset($_SESSION['student_id']) && !isset($_SESSION['user_id'])) {
         
 <?php
 }
-echo "[DEBUG] Output saved session variables<br/>";
-foreach ($_SESSION as $key=>$val)
-    echo $key." ".$val."<br/>";
+
+//echo "[DEBUG] Output saved session variables<br/>";
+//foreach ($_SESSION as $key=>$val)
+//    echo $key." ".$val."<br/>";
 include("inc/footer.php");
 
 // Helping functions

@@ -1,33 +1,29 @@
 <?php //per student view
-include("header.php");
-$module = $_GET['m'];
-$students_name = $_GET['s'];
-$student_id = $_GET['student_id'];
-include_once("db_connect.php");
+include_once("inc/start_session.php");
+include_once("inc/ta_check.php");
+include_once("inc/db_connect.php");
+include("inc/header.php");
 
-$user_id = "";
-if(isset($_SESSION['user_id'])) {
-    if($_SESSION['user_type'] === "TA" || $_SESSION['user_type'] === "Lecturer" || $_SESSION['user_type'] === "admin") {
-        $user_id = $_SESSION['user_id'];
-    } else {
-        header('Location: login.php');
-        die();
-    }
+// Check get arguments
+if (isset($_GET['module_hash']) && isset($_GET['student_list_hash']) && isset($_GET['student_table_hash']) && isset($_GET['student_id'])) {
+    $module_hash = $_GET['module_hash'];
+    $student_list_hash = $_GET['student_list_hash'];
+    $student_table_hash = $_GET['student_table_hash'];
+    $student_id = $_GET['student_id'];
 } else {
-    header('Location: login.php');
+    echo "Error: get arguments was not found";
     die();
 }
 
 // Get one students info
-$sql = "SELECT id, firstname, lastname, email, course_code, year
-        FROM $students_name
-        WHERE id = $student_id
-        ORDER BY id DESC
-        LIMIT 0, 1";
+$sql = "SELECT module_name, firstname, lastname, email, course_code, year
+        FROM $all_students_table_name
+        WHERE student_id = $student_id
+        AND student_table_hash=\"".$student_table_hash."\"";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $id = $row['id'];
+        $module_name = $row['module_name'];
         $firstname = $row['firstname'];
         $lastname = $row['lastname'];
         $email = $row['email'];
@@ -36,32 +32,30 @@ if ($result->num_rows > 0) {
     }
 } else {
     echo "Error: " . $sql . "<br/>" . $conn->error;
+    die();
 }
-
-// Create table name
-$table = "s" . $id;
-// Echo student info:
-print "Student name: " . $firstname . " " . $lastname . "<br/>";
-print "Student id: " . $id . "<br/>";
-print "Email: " . $email . "<br/>";
-print "Course code: " . $course_code . "<br/>";
-print "Year: " . $year . "<br/>";
+echo "<h2>Module: " . $module_name ."</h2>";
+echo "Student name: " . $firstname . " " . $lastname ."<br/>";
+echo "Email: " . $email ."<br/>";
+echo "Course code: " . $course_code ."<br/>";
+echo "Year of studies: " . $year ."<br/>";
 ?>     
     <div id="js-helper"
-         data-student-id="<?php echo htmlspecialchars($student_id); ?>">
+         data-table-id="<?php echo htmlspecialchars($student_table_hash); ?>">
     </div>
     <div id="table_view">	
         <table id="data_table" class="table table-striped">
             <thead>
                 <tr>
-<!--                <th>Unique id</th>-->
+                    <th>Unique id</th>
                     <th>Week</th>
                     <th>Session</th>
                     <th>Task</th>
                     <th>Group number</th>
                     <th>Rating</th>
-                    <th>Task expected</th>
-                    <th>Task actual</th>
+                    <th>Task duration (minutes)</th>
+                    <th>Task type(G/I)</th>
+                    <th>Task took (minutes)</th>
                     <th>Comment</th>
                     <th>Actions</th>
                     <th>Meeting date</th>
@@ -79,14 +73,12 @@ print "Year: " . $year . "<br/>";
 //  actions
 //  meeting_date
 //  meeting_duration
-$sql_query = "SELECT id, week, session, task, group_number, rating, 
-        task_expected, task_actual, 
-        comment, actions, meeting_date, meeting_duration
-        FROM $table";
+$sql_query = "SELECT id, week, session, task, group_number, rating, task_duration, task_type, task_actual, comment, actions, meeting_date, meeting_duration
+        FROM $student_table_hash";
 $resultset = mysqli_query($conn, $sql_query) or die("database error:". mysqli_error($conn));
 while( $row = mysqli_fetch_assoc($resultset) ) {
         print '<tr id="' . $row['id'] . '">';
-            //print '<td>' . $row['id'] . '</td>';
+            print '<td>' . $row['id'] . '</td>';
             print '<td>' . $row['week'] . '</td>';
             print '<td>' . $row['session'] . '</td>';
             print '<td>' . $row['task'] . '</td>';
@@ -95,7 +87,8 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
             else
                 print '<td>' . $row['group_number'] . '</td>';
             print '<td>' . $row['rating'] . '</td>'; 
-            print '<td>' . $row['task_expected'] . '</td>';
+            print '<td>' . $row['task_duration'] . '</td>';
+            print '<td>' . $row['task_type'] . '</td>';
             print '<td>' . $row['task_actual'] . '</td>';
             print '<td style="word-wrap: break-word; min-width: 160px; max-width: 160px";>' . $row['comment'] . '</td>'; 
             print '<td>' . $row['actions'] . '</td>'; 
@@ -106,15 +99,12 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
 ?>
             </tbody>
             </table>
-            <div style="margin:50px 0px 0px 0px;">
-                <a class="btn btn-default read-more" style="background:#3399ff;color:white" href="http://ucl.ac.uk">Back</a>
-            </div>
         </div> 
         <script 
                 type="text/javascript" 
-                src="TA_PS_custom_table_edit.js">
+                src="js/TA_PS_custom_table_edit.js">
         </script>
 <?php
-include('footer.php');
+include('inc/footer.php');
 $conn->close();
 ?>

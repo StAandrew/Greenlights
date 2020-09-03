@@ -6,7 +6,6 @@ include_once("inc/lecturer_check.php");
 include_once("inc/db_connect.php");
 include("inc/header.php");
 
-echo "<h2>Page is not finished - do not use</h4>";
 
 // TODO: pass module name as get argument
 // Get hash - table name

@@ -1,5 +1,4 @@
 <?php
-include("inc/enalbe_debug.php");
 include("inc/db_connect.php");
 $module = $_GET['module'];
 $input = filter_input_array(INPUT_POST);

@@ -1,33 +1,35 @@
 <?php
-$module = $_GET['m'];
-$students_name = $_GET['s'];
-$session = $_GET['session'];
-include_once("db_connect.php");
-include("header.php");
-if(isset($_SESSION['user_id'])) {
-    if($_SESSION['user_type'] === "TA" || $_SESSION['user_type'] === "Lecturer" || $_SESSION['user_type'] === "admin") {
-        $user_id = $_SESSION['user_id'];
-    } else {
-        header('Location: login.php');
-        die();
-    }
+include_once("inc/enable_debug.php");
+
+include_once("inc/start_session.php");
+include_once("inc/ta_check.php");
+include_once("inc/db_connect.php");
+include("inc/header.php");
+
+
+if (isset($_GET['session']) && isset($_GET['module_name']) && isset($_GET['module_hash']) && isset($_GET['student_list_hash'])) {
+    $session = $_GET['session'];
+    $session = str_replace('_', ' ', $session);
+    $module_name = $_GET['module_name'];
+    $module_hash = $_GET['module_hash'];
+    $student_list_hash = $_GET['student_list_hash'];
 } else {
-    header('Location: login.php');
+    echo "Error: get arguments was not found";
     die();
 }
 ?>
     <body>
         <?php 
-            echo "Module: " . $module . "<br/>";
-            echo "Student list: " . $students_name . "<br/>";
-            echo "Session: " . $session;
+            echo "Module: " . $module_name . "<br/>";
+            echo "Session: " . $session . "<br/>";
         ?>
 <?php
-// Fetch sessions and tasks
+    
+// Get tasks for this module from $module_hash
 $tasks = array();
 $sql = "SELECT week, session, task
-        FROM $module
-        WHERE session = '$session'";
+        FROM $module_hash
+        WHERE session='$session'";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
@@ -58,21 +60,37 @@ foreach($tasks as $item) {
             </thead>
             <tbody>
 <?php
-// Fetch students data
-$sql = "SELECT id, firstname, lastname, email, course_code, year
-        FROM $students_name";
+    
+// For each student from $student_list_hash get their firstname, surname and id
+// then get rest of info from their respective table which we get from $all_students_table_name
+$sql = "SELECT student_id, firstname, lastname, course_code, year
+        FROM $student_list_hash";
 $stud_result = $conn->query($sql);
 if ($stud_result->num_rows > 0) {
-    // Loop through every student in the database
+    // Get rest of info
     while ($stud = $stud_result->fetch_assoc()) {
-        $table = "s" . $stud['id'];
+        $student_id = $stud['student_id'];
+        //get their table name
+        $sql = "SELECT student_id, student_table_hash
+        FROM $all_students_table_name
+        WHERE student_id='$student_id'
+        AND module_hash='$module_hash'";
+        $small_result = $conn->query($sql);
+        if ($small_result->num_rows > 0) {
+            while ($sm = $small_result->fetch_assoc()) {
+                $table = $sm['student_table_hash'];
+            }
+        } else {
+            echo "SQL error: " . $sql . "<br>" . $conn->error;
+        }
+        
         $name = $stud['firstname'][0] . ". " . $stud['lastname'];
         $course_code = $stud['course_code'];
         $year = $stud['year'];
         
         print '<tr>';
         print '<td>' . $name . '</td>';
-        print '<td>' . $stud['id'] . '</td>';
+        print '<td>' . $stud['student_id'] . '</td>';
         $date = 0;
         
         $red_threshold = 0.3; // 0-50% of all ratings
@@ -104,16 +122,17 @@ if ($stud_result->num_rows > 0) {
                         $rating_num += 1;
                     } else {
                         //Error
-                        $overall_rating = -1;
+                        $overall_rating = 0;
                         break;
                     }
                 }
                 if ($rating_num != 0) {
-                        $overall_rating = $overall_rating/3*$rating_num;
-                    }
-                $amber_num = $amber_num / $rating_num;
-                $red_num = $red_num / $rating_num;
-                $green_num = $green_num / $rating_num;
+                    $overall_rating = $overall_rating/3*$rating_num;
+                    
+                    $amber_num = $amber_num / $rating_num;
+                    $red_num = $red_num / $rating_num;
+                    $green_num = $green_num / $rating_num;
+                }
 //                if ($overall_rating == -1 || $rating_num == 0)
 //                    $overall_rating = "Unknown";
 //                // Check for red and amber thresholds
@@ -148,7 +167,7 @@ if ($stud_result->num_rows > 0) {
                     print '<td>' . $row['rating'] . '</td>';
                 }
             } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
+                echo "Error: " . $sql . "<br>" . $conn->error;
             }
         }
         print '</tr>';
@@ -162,7 +181,7 @@ if ($stud_result->num_rows > 0) {
             </table>
         </div>
     </body>
-</html>
 <?php
+include("inc/footer.php");
 $conn->close();
 ?>

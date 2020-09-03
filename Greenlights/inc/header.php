@@ -171,19 +171,19 @@ if(isset($_POST['old_pass'])) {
                         $login_url = 'login.php';
                         if(isset($_SESSION['student_id'])) {
                             // Logged in via UCL
-                            echo '<li class="inactive"><a href="home.php">Home</a></li>';
-                            echo '<li class="inactive"><a href="'. $_SESSION['login_url'] .'">Welcome, ' . $_SESSION['given_name'] . '</a></li>';
+                            echo '<li class="inactive"><a href="./home.php">Home</a></li>';
+                            echo '<li class="inactive"><a href="./login.php">Welcome, ' . $_SESSION['given_name'] . '</a></li>';
                             echo '<li class="inactive"><a>' . $_SESSION['student_id'] . '</li>';
-                            echo '<li class="inactive"><a href="'. $_SESSION['login_url'] .'?logout">Log Out</a></li>';
+                            echo '<li class="inactive"><a href="./login.php?logout">Log Out</a></li>';
                         } else if(isset($_SESSION['user_id'])) {
                             // Logged in via form
                             echo '<li class="inactive"><a href="home.php">Home</a></li>';
-                            echo '<li class="inactive"><a href="'. $_SESSION['login_url'] .'">Welcome, '. $_SESSION['full_name'] .'</a></li>';
+                            echo '<li class="inactive"><a href="./login.php">Welcome, '. $_SESSION['full_name'] .'</a></li>';
                             echo '<li class="inactive"><a>'. $_SESSION['user_id'] .'</li>';
                             echo '<li class="inactive" style="cursor: pointer"><a data-toggle="modal" data-target="#changePasswordModal" >Change password</li>';
-                            echo '<li class="inactive"><a href="'. $_SESSION['login_url'] .'?logout">Log Out</a></li>';
+                            echo '<li class="inactive"><a href="./login.php?logout">Log Out</a></li>';
                         } else {
-                            echo '<li class="inactive"><a href="'. $login_url .'">Login</a></li>';
+                            echo '<li class="inactive"><a href="./login.php">Login</a></li>';
                         }
                     ?>
                     </ul>

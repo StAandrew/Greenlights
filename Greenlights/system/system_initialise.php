@@ -74,9 +74,9 @@ if ($conn->query($sql) === TRUE) {
 
 // Add default users
 include("register-user.php");
-registerUser("admin@ucl", "ucladmin", "admin", "Name", "Surname", "");
-registerUser("lecturer@ucl", "ucladmin", "Lecturer", "Name", "Surname", "");
-registerUser("ta@ucl", "ucladmin", "TA", "Name", "Surname", "");
-registerUser("student@ucl", "ucladmin", "Student", "Name", "Surname", "18293867");
+registerUser("admin@ucl", "ucladmin", "admin", "Admin", "Surname", "");
+registerUser("lecturer@ucl", "ucladmin", "Lecturer", "Lecturer", "Surname", "");
+registerUser("ta@ucl", "ucladmin", "TA", "TA", "Surname", "");
+registerUser("student@ucl", "ucladmin", "Student", "Student", "Surname", "18293867");
 $conn->close();
 ?>
