@@ -4,7 +4,7 @@ include_once("inc/enable_debug.php");
 include_once("inc/start_session.php");
 include_once("inc/lecturer_check.php");
 include_once("inc/db_connect.php");
-include("inc/header.php");
+include_once("inc/header.php");
 
 // Get module name and number of weeks and students table hash
 if (isset($_POST['module_name']) && isset($_POST['student_list_hash'])) {
@@ -207,6 +207,6 @@ if ($big_result->num_rows > 0) {
 }
 echo "done";
 
-$conn->close();
 include("inc/footer.php");
+$conn->close();
 ?>

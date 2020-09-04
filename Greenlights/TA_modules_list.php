@@ -7,6 +7,8 @@ include_once("inc/header.php");
 <h3>
 	<font color=grey>Your Modules</font>
 </h3>
+<table>
+<td>
 <?php
     $sql = "SELECT module_name, module_hash, student_list_hash
             FROM $all_modules_table_name
@@ -15,5 +17,10 @@ include_once("inc/header.php");
     while($row = mysqli_fetch_array($result)) {
         echo '<a href=TA_student_session_view.php?module='. $row['module_hash'] .'&student_list='. $row['student_list_hash'] .'&module_name='. $row['module_name'] .'>'. $row['module_name'] .'</a><br>';
     }
+?>
+    <button>Edit module</button>
+</td>
+</table>
+<?php
 include("inc/footer.php");
 ?>
