@@ -23,6 +23,8 @@ if(isset($_GET['logout'])) {
 
 // UCL login - if there is a student_id, they are logged in, and we show the logged-in view
 if(isset($_SESSION['student_id'])) {
+    if (isset($_SESSION['state']))
+        unset($_SESSION['state']);
     if(isset($_SESSION['redirect'])) {
         $redirect = $_SESSION['redirect'];
         unset($_SESSION['redirect']);
@@ -39,6 +41,8 @@ if(isset($_SESSION['student_id'])) {
 
 // Standard login - if already logged in
 else if(isset($_SESSION['user_id'])) {
+    if (isset($_SESSION['state']))
+        unset($_SESSION['state']);
     if(isset($_SESSION['redirect'])) {
         $redirect = $_SESSION['redirect'];
         unset($_SESSION['redirect']);
@@ -211,7 +215,6 @@ else if(isset($_GET['code']) && !isset($_SESSION['student_id'])) {
                 $_SESSION['student_id'] = $student_id;
                 //echo "student_id set: " . $student_id;
             }
-            unset($_SESSION['state']);
             curl_close($ch);
             exit(header('Location: ' . $_SESSION['login_url']));
         }

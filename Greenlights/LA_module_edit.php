@@ -6,8 +6,6 @@ include_once("inc/lecturer_check.php");
 include_once("inc/db_connect.php");
 include("inc/header.php");
 
-
-// TODO: pass module name as get argument
 // Get hash - table name
 if (isset($_GET['module_name']) && isset($_GET['module']) && isset($_GET['student_list'])) {
     $module_name = $_GET['module_name'];
@@ -56,10 +54,30 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
             </tbody>
         </table>
     </div>
+    <div style="margin:50px 0px 0px 0px;">
+        <a class="btn btn-default read-more" style="background:#3399ff;color:white" href="./LA_modules_list.php">Save changes</a>
+    </div>
     <div>
         <h3>
 	       <font color=grey>Access edit</font>
         </h3>
+<?php
+// After user pressed 'add user' button
+$option = isset($_POST['addUser']) ? $_POST['addUser'] : false;
+   if ($option) {
+        list($add_new_user_id, $add_new_user_type) = explode("_", htmlentities($_POST['addUser'], ENT_QUOTES, "UTF-8"));
+        $sql = "INSERT INTO $all_modules_table_name (module_name, module_hash, access_user_id, access_user_type, student_list_hash) VALUES ('$module_name', '$module_hash', '$add_new_user_id', '$add_new_user_type', '$student_list_hash')";
+        if ($conn->query($sql) === TRUE) {
+            echo "";
+        } else {
+            die ("Error creating table: " . $conn->error);
+        }
+        
+   } else {
+     echo "";
+   }
+    
+?>
         
         <div style="width:50%">
             <table class="table" style="border:solid lightgrey 0.5px;">
@@ -73,17 +91,28 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
                 </thead>
                 <tbody>
 <?php
+// Get TAs and Lecturers that have access to this module
         $sql = "SELECT num, access_user_id, access_user_type
-        FROM $all_modules_table_name
-        WHERE module_hash='$module_hash'";
-        $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
-        while( $row = mysqli_fetch_assoc($resultset) ) {
-            print '<tr id="' . $row['num'] . '">';
-                //print '<td>' . $row['num'] . '</td>';
-                print '<td>Name Surname</td>';
-                print '<td>Email</td>';
-                print '<td>' . $row['access_user_type'] . '</td>';
-                print '<td>' . $row['access_user_id'] . '</td>';
+            FROM $all_modules_table_name
+            WHERE module_hash='$module_hash'";
+        $big_resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+        while($big_row = mysqli_fetch_assoc($big_resultset)) {
+            print '<tr id="' . $big_row['num'] . '">';
+                //print '<td>' . $big_row['num'] . '</td>';
+                // Get user name and email from credentials table
+                $user_id = $big_row['access_user_id'];
+                $sql = "SELECT firstname, lastname, email
+                    FROM $credentials_table_name
+                    WHERE user_id='$user_id'";
+                $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+                $row = mysqli_fetch_assoc($resultset);
+                $full_name = $row['firstname'] .' '. $row['lastname'];
+                $email = $row['email'];
+            
+                print '<td>'. $full_name .'</td>';
+                print '<td>'. $email .'</td>';
+                print '<td>' . $big_row['access_user_type'] . '</td>';
+                print '<td>' . $user_id . '</td>';
             print '</tr>';
         }
 ?>
@@ -91,22 +120,28 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
             </table>
         </div>
         <font color=grey>Add new:</font>
-        <select>  
-            <option value="Select">Select</option>  
-            <option value="Vineet">Vineet Saini, TA, 100000001</option>  
-            <option value="Sumit">Sumit Sharma, TA, 100000003</option>  
-            <option value="Dorilal">Dorilal Agarwal, TA, 100000002</option>  
-            <option value="Omveer">Omveer Singh, TA, 100000006</option>  
-            <option value="Rohtash">Rohtash Kumar, TA, 100000005</option>  
-            <option value="Maneesh">Maneesh Tewatia, Lecturer, 100000008</option>  
-            <option value="Priyanka">Priyanka Sachan, Lecturer, 100000004</option>  
-            <option value="Neha">Neha Saini</option>  
-        </select>   
+        <form method="post">
+            <select name="addUser"> 
+                <option value="0">Select</option>
+<?php
+// Check if users already have access, if not, diplay as option to add
+        $sql = "SELECT user_id, firstname, lastname, email, user_type
+            FROM $credentials_table_name
+            WHERE user_id NOT IN (
+                SELECT access_user_id
+                FROM $all_modules_table_name
+                WHERE module_hash='$module_hash'
+            )
+            AND (user_type='TA' OR user_type='Lecturer')";
+        $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+        while($row = mysqli_fetch_assoc($resultset)) {
+            print '<option value="'. $row[user_id] .'_'. $row[user_type]. '">'. $row[user_type] .', '. $row[firstname] .' '. $row[lastname] .', '. $row[email] .', '. $row[user_id] .'</option> '; 
+        }
+?>
+            </select>
+            <input type="submit" value="Add user"/>
+        </form>
 <!--        <button>Add</button>-->
-        
-        <div style="margin:50px 0px 0px 0px;">
-            <a class="btn btn-default read-more" style="background:#3399ff;color:white" href="./LA_modules_list.php">Save changes</a>
-        </div>
     </div>
     <script 
             type="text/javascript" 

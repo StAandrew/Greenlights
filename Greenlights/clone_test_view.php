@@ -12,13 +12,12 @@ include_once("connect.php");
         <table id="data_table" class="table table-striped">
             <thead>
                 <tr>
-                 <th>ID</th>
+                    <th>ID</th>
                     <th>Week</th>
                     <th>Teaching Event</th>
                     <th>Task</th>
                     <th>Group/Individual</th>
-                    <th>Estimated Time</th>
-                    
+                    <th>Estimated Time</th>    
                 </tr>
             </thead>
             <tbody>
