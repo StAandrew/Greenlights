@@ -25,6 +25,81 @@ if ($_POST['student_list_option'] != '0') {
     $student_list_hash = $_POST['student_list_option'];
 }
 // Populate student table with data from file
+<<<<<<< HEAD
+if(isset($_POST["submit"])) {
+    if (isset($_FILES["file"])) {
+        // Check for errors
+        if ($_FILES["file"]["error"] > 0) {
+            echo "There was an error uploading the file. Return Code: " . $_FILES["file"]["error"] . "<br />";
+            die();
+        }
+        // Check if file already uploaded
+        if (file_exists("upload/" . $_FILES["file"]["name"])) {
+            echo $_FILES["file"]["name"] . " already exists. ";
+            die();
+        }
+        
+        
+        
+        if($_FILES['file']['name']) {
+            $filename = explode(".", $_FILES['file']['name']);
+            if($filename[1] == 'csv') {
+                $temp = $_FILES["file"]["tmp_name"];
+                $file = new SplFileObject($temp);
+                $file->setFlags(SplFileObject::READ_CSV);
+                $csv = new LimitIterator($file, 1); // Skips first row
+                
+       
+       // Check if the number of columns are correct
+        $file=fopen($_FILES["file"]["tmp_name"], "r");
+        $columns=fgetcsv($file);
+        $num_columns=count($columns);
+        if ($num_columns != 6)
+            die ("Please check that your file only has 6 columns");
+        
+             
+      // Check if all the columns have the same length       
+      $lengthArray = array();
+      $row = 1;
+      if(($fp = fopen($_FILES["file"]["tmp_name"], "r")) !== FALSE) {
+        while (($data = fgetcsv($fp, 1000, ";")) !== FALSE) {
+            $lengthArray[] = count($data);
+            $row ++;
+            }
+            fclose($fp);
+        }
+            
+     $lengthArray = array_unique($lengthArray);
+     if (count($lengthArray) == 1) 
+        echo "Check done";
+     else
+        echo "please try again";
+                
+     //Check that the Student ID are of the correct length
+     $file=fopen($_FILES["file"]["tmp_name"], "r");
+    while (($line = fgetcsv($file)) !== FALSE) {
+        
+       $line=fgetcsv($file);
+       $id=$line[0];
+       $length=strlen($id);
+       if ($length > 9 && $lenth < 8 )
+           die ("Error in student ID. Please check your file");
+    }
+         
+                
+                
+                
+         //Insert Values      
+                foreach ($csv as $row) {
+                    $data = explode(";", $row[0]);
+                    
+                    $studentID = $data[0]; 
+                    $firstname = $data[1];
+                    $lastname = $data[2];
+                    $email = $data[3];
+                    $course_code = $data[4];
+                    $course_year = $data[5];
+=======
 else if (isset($_FILES["file"])) {
     // Check for errors
     if ($_FILES["file"]["error"] > 0) {
@@ -36,6 +111,7 @@ else if (isset($_FILES["file"])) {
         echo $_FILES["file"]["name"] . " already exists. ";
         die();
     }
+>>>>>>> 10f3d3f2b99536e40869473d8c258d917f43a929
 
     if($_FILES['file']['name']) {
         $filename = explode(".", $_FILES['file']['name']);
