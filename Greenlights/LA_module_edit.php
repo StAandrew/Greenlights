@@ -54,8 +54,12 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
             </tbody>
         </table>
     </div>
-    <div style="margin:50px 0px 0px 0px;">
-        <a class="btn btn-default read-more" style="background:#3399ff;color:white" href="./LA_modules_list.php">Save changes</a>
+    <div style="margin:10px 0px 0px 0px;">
+        <font color=grey>Please make sure to save changes before leaving the page:</font>
+        <form action="./LA_modules_list.php" method="post">
+            <input type="hidden" name="module_hash_to_save" value="<?php echo $module_hash; ?>"/>
+            <input type="submit" value="Save changes" class="btn btn-default read-more" style="background:#3399ff;color:white"/>
+        </form> 
     </div>
     <div>
         <h3>
@@ -149,9 +153,5 @@ $option = isset($_POST['addUser']) ? $_POST['addUser'] : false;
     </script>
 
 <?php
-
-// Add add TA function, save to $all_modules_table_name
-// when pressed save, fetch all tables from $all_students_table_name, and update all of them
-
 include("inc/footer.php");
 ?>
