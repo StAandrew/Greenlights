@@ -141,7 +141,7 @@ die();
     <hr>
     <div class="input-field">
         <table class="table table-bordered" id="table_field">
-            <input type='hidden' name='module_name' value='<?php echo $_POST['modulename'];?>' />
+            <input type='hidden' name='module_name' value='<?php echo $_POST['module_name'];?>' />
             <input type='hidden' name='student_list_hash' value='<?php echo $student_list_hash;?>' />
             <tr>
                 <th>Week number</th>

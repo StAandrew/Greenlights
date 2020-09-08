@@ -37,10 +37,8 @@ if ($conn->query($sql) === TRUE) {
 } else {
     throwErrorQuit("Error creating table: $conn->error", $module_table_hash);
 }
-
 // Save to main table (all modules table)
-$sql = "INSERT INTO $all_modules_table_name (module_name, module_hash, access_user_id, access_user_type, student_list_hash) 
-        VALUES ('$module_name', '$module_table_hash', '$user_id', 'Lecturer', '$student_list_hash')";     
+$sql = "INSERT INTO $all_modules_table_name (module_name, module_hash, access_user_id, access_user_type, student_list_hash) VALUES ('$module_name', '$module_table_hash', '$user_id', 'Lecturer', '$student_list_hash')";     
 if ($conn->query($sql) === TRUE) {
     echo "";
 } else {
@@ -237,8 +235,15 @@ if ($big_result->num_rows > 0) {
 } else {
     throwErrorQuit("Encountered error while creating per student tables", $module_table_hash);
 }
-echo "done";
-
+// TODO: CHANGE TO REDIRECT TO MODULE LIST
+echo "Success! Redirecting...";
+?>
+<form name='fr' action='LA_modules_list.php' method='POST'>
+</form>
+<script type='text/javascript'>
+    document.fr.submit();
+</script>
+<?php
 include("inc/footer.php");
 $conn->close();
 ?>
