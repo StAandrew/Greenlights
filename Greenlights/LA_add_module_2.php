@@ -23,6 +23,21 @@ $module_table_hash = hash('sha256', $to_hash);
 $module_table_hash = substr($module_table_hash, 1);
 $module_table_hash = "m" . $module_table_hash;
 
+// Create table
+$sql = "CREATE TABLE $module_table_hash (
+        num INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        week SMALLINT(2) UNSIGNED NOT NULL,
+        session VARCHAR(128) NOT NULL,
+        task VARCHAR(256) NOT NULL,
+        task_duration SMALLINT(4) NOT NULL,
+        task_type VARCHAR(1) DEFAULT 'I'
+)";
+if ($conn->query($sql) === TRUE) {
+    echo "";
+} else {
+    throwErrorQuit("Error creating table: $conn->error", $module_table_hash);
+}
+
 // Save to main table (all modules table)
 $sql = "INSERT INTO $all_modules_table_name (module_name, module_hash, access_user_id, access_user_type, student_list_hash) 
         VALUES ('$module_name', '$module_table_hash', '$user_id', 'Lecturer', '$student_list_hash')";     
@@ -32,73 +47,21 @@ if ($conn->query($sql) === TRUE) {
     throwErrorQuit("Error adding data to main table: $conn->error", $module_table_hash);
 }
 
-// Create table for a module
-if(isset($_POST['submit'])) {
-    $sql = "CREATE TABLE $module_table_hash (
-        num INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        week SMALLINT(2) UNSIGNED NOT NULL,
-        session VARCHAR(128) NOT NULL,
-        task VARCHAR(256) NOT NULL,
-        task_duration SMALLINT(4) NOT NULL,
-        task_type VARCHAR(1) DEFAULT 'I'
-    )";
-    if ($conn->query($sql) === TRUE) {
-        echo "";
-    } else {
-        throwErrorQuit("Error creating table: $conn->error", $module_table_hash);
-    }
-    
-    // Arrays of columns
-    $arr_week = $_POST['week'];
-    $arr_session = $_POST['session'];
-    $arr_task = $_POST['task'];
-    $arr_task_duration = $_POST['task_duration']; 
-    $arr_task_type = $_POST['task_type'];
-
-    $num = sizeof($arr_week); //to help iterate over rows
-    $success = false; //throws error if loop doesnt initialise
-    
-    // For each row
-    for($key = 0; $key < $num; $key++) {
-        $week = $arr_week[$key];
-        $session = $arr_session[$key];
-        $task = $arr_task[$key];
-        $task_duration = $arr_task_duration[$key];
-        $task_type = $arr_task_type[$key];
+// TASKS AREA
+// Clone from another table
+if (isset($_POST['module_hash'])) {
+    $module_hash_to_clone = $_POST['module_hash'];
+    $sql = "SELECT week, session, task, task_duration, task_type
+            FROM $module_hash_to_clone";
+    $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+    while($row = mysqli_fetch_array($resultset)) {
+        $week = $row['week'];
+        $session = $row['session'];
+        $task = $row['task'];
+        $task_duration = $row['task_duration'];
+        $task_type = $row['task_type'];
         
-        // task_type validation, default I
-        $task_type = strtolower($task_type);
-        if ($task_type == "group" || $task_type == "g" || $task_type == "goup" || $task_type == "grop" || $task_type == "grou")
-            $task_type = "G";
-        else
-            $task_type ="I";
-        
-        // duration validation, default 0
-        if (is_numeric($task_duration) && $task_duration > 0 && $task_duration == round($task_duration, 0)){
-            $task_duration = $task_duration;
-        } else {
-            $task_duration = round($task_duration, 0);
-            if(is_numeric($task_duration) && $task_duration > 0 && $task_duration == round($task_duration, 0)){
-                $task_duration = $task_duration;
-            } else {
-                $task_duration = 0;
-            }
-        }
-        
-        // week validation, default 0
-        if (is_numeric($week) && $week > 0 && $week == round($week, 0)){
-            $week = $week;
-        } else {
-            $week = round($week, 0);
-            if(is_numeric($week) && $week > 0 && $week == round($week, 0)){
-                $week = $week;
-            } else {
-                $week = 0;
-            }
-        }
-        
-        $sql = "INSERT INTO $module_table_hash (week, session, task, task_duration, task_type) 
-                VALUES ('$week', '$session', '$task', '$task_duration', '$task_type')";
+        $sql = "INSERT INTO $module_table_hash (week, session, task, task_duration, task_type) VALUES ('$week', '$session', '$task', '$task_duration', '$task_type')";
         if ($conn->query($sql) === TRUE) {
             $success = true;
         } else {
@@ -106,12 +69,81 @@ if(isset($_POST['submit'])) {
             $success = false;
             break;
         }
-     }
-     if (!$success) {
-            echo "<font color=Red><b><center><h5>Data could not be added. Please try again.</h5></center></b></font>";
-            throwErrorQuit("Encountered error while inserting data", $module_table_hash);
-     }
+    }
+    if (!$success) {
+        echo "<font color=Red><b><center><h5>Data could not be added. Please try again.</h5></center></b></font>";
+        throwErrorQuit("Encountered error while inserting data", $module_table_hash);
+    }
     $_POST = array();
+} else {
+// Insert from table 
+if(isset($_POST['submit'])) {
+        // Arrays of columns
+        $arr_week = $_POST['week'];
+        $arr_session = $_POST['session'];
+        $arr_task = $_POST['task'];
+        $arr_task_duration = $_POST['task_duration']; 
+        $arr_task_type = $_POST['task_type'];
+
+        $num = sizeof($arr_week); //to help iterate over rows
+        $success = false; //throws error if loop doesnt initialise
+
+        // For each row
+        for($key = 0; $key < $num; $key++) {
+            $week = $arr_week[$key];
+            $session = $arr_session[$key];
+            $task = $arr_task[$key];
+            $task_duration = $arr_task_duration[$key];
+            $task_type = $arr_task_type[$key];
+
+            // task_type validation, default I
+            $task_type = strtolower($task_type);
+            if ($task_type == "group" || $task_type == "g" || $task_type == "goup" || $task_type == "grop" || $task_type == "grou")
+                $task_type = "G";
+            else
+                $task_type ="I";
+
+            // duration validation, default 0
+            if (is_numeric($task_duration) && $task_duration > 0 && $task_duration == round($task_duration, 0)){
+                $task_duration = $task_duration;
+            } else {
+                $task_duration = round($task_duration, 0);
+                if(is_numeric($task_duration) && $task_duration > 0 && $task_duration == round($task_duration, 0)){
+                    $task_duration = $task_duration;
+                } else {
+                    $task_duration = 0;
+                }
+            }
+
+            // week validation, default 0
+            if (is_numeric($week) && $week > 0 && $week == round($week, 0)){
+                $week = $week;
+            } else {
+                $week = round($week, 0);
+                if(is_numeric($week) && $week > 0 && $week == round($week, 0)){
+                    $week = $week;
+                } else {
+                    $week = 0;
+                }
+            }
+
+            $sql = "INSERT INTO $module_table_hash (week, session, task, task_duration, task_type) VALUES ('$week', '$session', '$task', '$task_duration', '$task_type')";
+            if ($conn->query($sql) === TRUE) {
+                $success = true;
+            } else {
+                echo "Error adding data: " . $conn->error;
+                $success = false;
+                break;
+            }
+         }
+         if (!$success) {
+                echo "<font color=Red><b><center><h5>Data could not be added. Please try again.</h5></center></b></font>";
+                throwErrorQuit("Encountered error while inserting data", $module_table_hash);
+         }
+        $_POST = array();
+    } else {
+        throwErrorQuit("Error: submit not found", $module_table_hash);
+    }
 }
 
 // Function to throw error if there is a problem with a table

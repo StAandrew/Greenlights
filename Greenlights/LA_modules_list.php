@@ -53,21 +53,37 @@ if (isset($_POST['module_hash_to_save'])) {
         <font color=grey>Add new module</font>
     </h3>
         <p>Please enter your module name here:<br>
-            <input type=text placeholder="Enter Module Name" name=modulename size=50>
+            <input type=text placeholder="Enter Module Name" name=module_name size=50>
         </p>
         <p>Please upload the relevant class list:<br>
             <input type="file" name="file" id="file" accept=".csv">
         </p>
         <p>Or select from existing class lists (optional)
-            <select>  
-                <option value="Select">No</option>  
-                <option value="Vineet">ELEC0004</option>   
+            <select name="student_list_option"> 
+                <option value="0">No</option>
+<?php
+                $sql = "SELECT module_name, student_list_hash
+                        FROM $all_modules_table_name
+                        WHERE access_user_id=$user_id";  
+                $result = mysqli_query($conn, $sql);
+                while($row = mysqli_fetch_array($result)) {
+                    echo '<option value="'. $row['student_list_hash'] .'">'. $row['module_name'] .'</option>';
+                }
+?>
             </select> 
         </p>
         <p>Would you like to clone tasks from past modules? (optional)
-            <select>  
-                    <option value="Select">No</option>  
-                    <option value="Vineet">ELEC0004</option>   
+            <select name="module_option">
+                    <option value="0">No</option>  
+<?php
+                $sql = "SELECT module_name, module_hash
+                        FROM $all_modules_table_name
+                        WHERE access_user_id=$user_id";  
+                $result = mysqli_query($conn, $sql);
+                while($row = mysqli_fetch_array($result)) {
+                    echo '<option value="'. $row['module_hash'] .'">'. $row['module_name'] .'</option>';
+                }
+?> 
             </select>  
         <p>
     <input type=submit name=submit value="Import Class List and Add New Module">

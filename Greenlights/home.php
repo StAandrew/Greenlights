@@ -35,13 +35,5 @@ if(isset($_SESSION['user_type'])) {
 }
 include("inc/header.php");
 echo "Please log in";
-echo "[DEBUG] Output saved session variables<br/>";
-foreach ($_SESSION as $key=>$val)
-    echo $key." ".$val."<br/>";
-foreach ($_POST as $key=>$val)
-    echo $key." ".$val."<br/>";
-foreach ($_GET as $key=>$val)
-    echo $key." ".$val."<br/>";
-
 include("inc/footer.php");
 ?>
