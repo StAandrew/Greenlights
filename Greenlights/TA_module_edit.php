@@ -67,11 +67,6 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
             <input type='hidden' name='export_module_hash' value='<?php echo $module_hash;?>' />
             <input type="submit" name="export_module" value="Save module as .csv file"/>
         </form>
-        <form action="./export_xls.php" method="post">
-            <input type='hidden' name='export_module_name' value='<?php echo $module_name;?>' />
-            <input type='hidden' name='export_module_hash' value='<?php echo $module_hash;?>' />
-            <input type="submit" name="export_module" value="Save module as .xls file"/>
-        </form>
     </div>
     <script 
             type="text/javascript" 
