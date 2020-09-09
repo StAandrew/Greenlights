@@ -5,6 +5,7 @@ $output = '';
 if(isset($_POST['export_module_hash']) && isset($_POST['export_module_name'])) {
     $module_name = $_POST['export_module_name'];
     $module_hash = $_POST['export_module_hash'];
+    $date = date('Y-m-d');
     
     $query = "SELECT num, week, session, task, task_duration, task_type FROM $module_hash";
     $result = mysqli_query($conn, $query);
@@ -14,7 +15,7 @@ if(isset($_POST['export_module_hash']) && isset($_POST['export_module_name'])) {
         $output .= $row["week"].','.$row["session"].','.$row["task"].','.$row["task_duration"].','.$row["task_type"].PHP_EOL;
         }
         header('Content-Type: application/xls');
-        header('Content-Disposition: attachment; filename='. $module_name .'.csv');
+        header('Content-Disposition: attachment; filename='. $module_name .'_'. $date .'.csv');
         echo $output;
     }
 } else {
