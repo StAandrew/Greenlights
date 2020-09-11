@@ -158,8 +158,8 @@ die();
     
     // Insert one row
     $week = "0";
-    $session = " ";
-    $task = " ";
+    $session = "event";
+    $task = "task";
     $task_duration = "0";
     $task_type = "I";
         

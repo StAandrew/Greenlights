@@ -7,7 +7,7 @@ $(document).ready(function(){
         $tr.find("span.tabledit-identifier").text(nextID);  //set the row identifier
         $(table + ">tbody").append($tr);    //add the row to the table
         //$tr.find(".tabledit-edit-button").click();  //pretend to click the edit button
-        $tr.find("input:not([type=hidden]), select").val("");   //wipe out the inputs.
+        //$tr.find("input:not([type=hidden]), select").val("");   //wipe out the inputs.
         //$("#data_table").load( "LA_add_module_1.php #data_table );
     });
 	$('#data_table').Tabledit({
