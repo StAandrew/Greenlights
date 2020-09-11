@@ -104,7 +104,7 @@ function throwError ($message, $hash) {
     if ($hash == "") {
         echo 'Error: '. $message;
     } else {
-         include_once("db_connect.php");
+        include_once("inc/db_connect.php");
         echo 'Error: '. $message;
         $sql = "DROP TABLE IF EXISTS $hash";
         $conn->query($sql);
@@ -132,38 +132,93 @@ if ($_POST['module_option'] != '0') {
 die();
 // Allow user to insert options
 } else {
+	// Generate a hash of the table for the module
+	$to_hash = str_replace('.', '', str_replace(':', '', str_replace('-', '', str_replace(' ', '', date("Y-m-d H:i:s").microtime())))); 	//get accurate date
+	$to_hash .= "moduletable";
+	$to_hash .= preg_replace('/\s+/', '_', $module_name); //replace spaces by underscores
+	$to_hash .= $user_id; //add lecturer's id
+	$module_table_hash = hash('sha256', $to_hash);
+	$module_table_hash = substr($module_table_hash, 1);
+	$module_table_hash = "m" . $module_table_hash;
+
+	// Create table
+	$sql = "CREATE TABLE $module_table_hash (
+	        id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	        week SMALLINT(2) UNSIGNED NOT NULL,
+	        session VARCHAR(128) NOT NULL,
+	        task VARCHAR(256) NOT NULL,
+	        task_duration SMALLINT(4) NOT NULL,
+	        task_type VARCHAR(1) DEFAULT 'I'
+	)";
+	if ($conn->query($sql) === TRUE) {
+	    echo "";
+	} else {
+	    throwError("Error creating table: $conn->error", $module_table_hash);
+	}
+    
+    // Insert one row
+    $week = "0";
+    $session = " ";
+    $task = " ";
+    $task_duration = "0";
+    $task_type = "I";
+        
+    $sql = "INSERT INTO $module_table_hash (week, session, task, task_duration, task_type) VALUES ('$week', '$session', '$task', '$task_duration', '$task_type')";
+    if ($conn->query($sql) === TRUE) {
+        echo "";
+    } else {
+        throwError("Error creating table: $conn->error", $module_table_hash);
+    }
+	
 ?>
-<form class="insert_form" id="insert_form" method=post action="LA_add_module_2.php">
     <hr>
     <h1>
         <?php echo $module_name;?>
     </h1>
     <hr>
-    <div class="input-field">
-        <table class="table table-bordered" id="table_field">
-            <input type='hidden' name='module_name' value='<?php echo $_POST['module_name'];?>' />
-            <input type='hidden' name='student_list_hash' value='<?php echo $student_list_hash;?>' />
-            <tr>
-                <th>Week number</th>
-                <th>Teaching Event</th>
-                <th>Task</th>
-                <th>Estimated time for a task (minutes)</th>
-                <th>Group or Individual (G/I)</th>
-                <th>Add/Remove row</th>
-            </tr>
-            <tr>
-                <td><input class="form-control" type=text name=week[] required>  </td>     
-                <td><input class="form-control" type=text name=session[]  required> </td> 
-                <td><input class="form-control" type=text name=task[]  required length=50 > </td>
-                <td><input class="form-control" type=text name=task_duration[]  required>  </td> 
-                <td><input class="form-control" type=text name=task_type[]  required>  </td>  
-                <td><input class="btn btn-warning" type=button name=add id=add value=Add>  </td>
-            </tr>
+    <div id="js-helper"
+         data-module-id="<?php echo htmlspecialchars($module_table_hash); ?>">
+    </div>
+    <div id="table_view" class="input-field">
+        <table id="data_table" class="table table-striped">
+			<thead>
+            	<tr>
+					<th>Unique id</th>
+                	<th>Week number</th>
+                	<th>Teaching Event</th>
+                	<th>Task</th>
+                	<th>Estimated time for a task (minutes)</th>
+                	<th>Group or Individual (G/I)</th>
+                	<th>Add/Remove row</th>
+            	</tr>
+			</thead>
+			<tbody>
+<?php
+	$sql = "SELECT id, week, session, task, task_duration, task_type FROM $module_table_hash";
+    $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+    while( $row = mysqli_fetch_assoc($resultset) ) {
+        print '<tr id="' . $row['id'] . '">';
+            print '<td>' . $row['id'] . '</td>';
+            print '<td>' . $row['week'] . '</td>';
+            print '<td>' . $row['session'] . '</td>';
+            print '<td>' . $row['task'] . '</td>';
+            print '<td>' . $row['task_duration'] . '</td>';
+            print '<td>' . $row['task_type'] . '</td>';
+            print "<td><button id='add' for-table='#data_table'>Add Row</button></td>";
+        print '</tr>';
+    }
+?>
+			</tbody>
         </table>
+    </div> 
+<form class="insert_form" id="insert_form" method=post action="LA_add_module_2.php">
+    <input type='hidden' name='module_name' value='<?php echo $_POST['module_name'];?>' />
+    <input type='hidden' name='module_table_hash' value='<?php echo $module_table_hash?>' />
+    <input type='hidden' name='student_list_hash' value='<?php echo $student_list_hash;?>' />
         <center>
+            <input class="btn btn-success" type=submit name=cancel id="cancel" value=Cancel> 
             <input class="btn btn-success" type=submit name=submit id="submit" value=Submit> 
         </center>
-    </div> 
 </form>  
 <script 
     type="text/javascript" 

@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	$('#data_table').Tabledit({
-		deleteButton: false,
+		deleteButton: true,
 		editButton: false,   		
 		columns: {
 		  identifier: [0, 'id'],                    
@@ -10,7 +10,7 @@ $(document).ready(function(){
                      [4, 'task_duration'], 
                      [5, 'task_type']]
 		},
-		hideIdentifier: true,
+		hideIdentifier: false,
 		url: 'LA_modules_list_live_edit.php?module=' + $('#js-helper').data('module-id')		
 	});
 });

@@ -96,13 +96,13 @@ $option = isset($_POST['addUser']) ? $_POST['addUser'] : false;
                 <tbody>
 <?php
 // Get TAs and Lecturers that have access to this module
-        $sql = "SELECT num, access_user_id, access_user_type
+        $sql = "SELECT id, access_user_id, access_user_type
             FROM $all_modules_table_name
             WHERE module_hash='$module_hash'";
         $big_resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
         while($big_row = mysqli_fetch_assoc($big_resultset)) {
-            print '<tr id="' . $big_row['num'] . '">';
-                //print '<td>' . $big_row['num'] . '</td>';
+            print '<tr id="' . $big_row['id'] . '">';
+                //print '<td>' . $big_row['id'] . '</td>';
                 // Get user name and email from credentials table
                 $user_id = $big_row['access_user_id'];
                 $sql = "SELECT firstname, lastname, email
