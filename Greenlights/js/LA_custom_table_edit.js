@@ -8,7 +8,7 @@ $(document).ready(function(){
         $(table + ">tbody").append($tr);    //add the row to the table
         //$tr.find(".tabledit-edit-button").click();  //pretend to click the edit button
         //$tr.find("input:not([type=hidden]), select").val("");   //wipe out the inputs.
-        //$("#data_table").load( "LA_add_module_1.php #data_table );
+        //$("#data_table").load( "LA_add_module_1.php #data_table ); // this line does not work but we need simiilar functionality for proper row wipe out
     });
 	$('#data_table').Tabledit({
         rowIdentifier: 'id',
@@ -23,13 +23,13 @@ $(document).ready(function(){
                      [5, 'task_type']]
         },
         onDraw: function() {
-            console.log('onDraw()');
+            //console.log('onDraw()');
         },
         onSuccess: function(data, textStatus, jqXHR) {
-            console.log('onSuccess(data, textStatus, jqXHR)');
-            console.log(data);
-            console.log(textStatus);
-            console.log(jqXHR);
+            //console.log('onSuccess(data, textStatus, jqXHR)');
+            //console.log(data);
+            //console.log(textStatus);
+            //console.log(jqXHR);
             $('.tabledit-deleted-row').remove();
         },
         onFail: function(jqXHR, textStatus, errorThrown) {
@@ -39,12 +39,12 @@ $(document).ready(function(){
             console.log(errorThrown);
         },
         onAlways: function() {
-            console.log('onAlways()');
+            //console.log('onAlways()');
         },
         onAjax: function(action, serialize) {
-            console.log('onAjax(action, serialize)');
-            console.log(action);
-            console.log(serialize);
+            //console.log('onAjax(action, serialize)');
+            //console.log(action);
+            //console.log(serialize);
         },
 		hideIdentifier: false,
 		url: 'LA_add_module_live_edit.php?module=' + $('#js-helper').data('module-id')		

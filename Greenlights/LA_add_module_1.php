@@ -1,4 +1,9 @@
 <?php 
+// Here we allow user to create table for the module. 
+// We get student list either form file or clone from existing student lists.
+// If clone module is selected, we passon on module name and hash to the next page.
+// If clone module is not selected, we let user input values via Jquery Tabledit plugin.
+// Associated files: LA_custom_table_edit.js; LA_add_module_live_edit.php
 include_once("inc/enable_debug.php");
 
 include_once("inc/start_session.php");
@@ -6,44 +11,48 @@ include_once("inc/lecturer_check.php");
 include_once("inc/db_connect.php");
 include("inc/header.php");
 
-if(isset($_POST["submit"]) && isset($_POST['student_list_option']) && isset($_POST['module_option'])) {
+// If post arguments are not set, we do not proceed
+if(isset($_POST["submit"]) && isset($_POST['student_list_hash']) && isset($_POST['module_hash'])) {
     echo "";
 } else {
-    echo "Please return to previous page";
-    die();
+    die("Please return to the previous page or click 'Home'");
 }
 
-// Get module name
+// Get module name. We use another if, in order to give a more appropriate error to user
 if (isset($_POST['module_name'])) {
     $module_name = $_POST['module_name']; 
 } else
-    die("No module name");
+    die("No module name. Please try again. You can return by pressing 'Home'");
 
-// STUDENT LIST AREA
-// If student list clone option was selected
-if ($_POST['student_list_option'] != '0') {
-    $student_list_hash = $_POST['student_list_option'];
+// ---STUDENT LIST AREA---
+// If student list clone option was selected, we get studnet list hash from POST
+if ($_POST['student_list_hash'] != '0') {
+    $student_list_hash = $_POST['student_list_hash'];
 }
-// Populate student table with data from file
+
+// If not, populate student table with data from file
 else if (isset($_FILES["file"])) {
-    // Check for errors
+    // Check for errors. Most likely, user forgot to add a gile
     if ($_FILES["file"]["error"] > 0) {
-        echo "Please upload a file. <br/>Return Code: " . $_FILES["file"]["error"] . "<br/>";
-        die();
+        die("Please upload a file. <br/>Return Code: " . $_FILES["file"]["error"] . "<br/>");
     }
+    
     // Check if file already uploaded
     if (file_exists("upload/" . $_FILES["file"]["name"])) {
         echo $_FILES["file"]["name"] . " already exists. ";
         die();
     }
-
+    
+    // Check that file exists and was uploaded successfully
     if($_FILES['file']['name']) {
         $filename = explode(".", $_FILES['file']['name']);
+        
+        // Check that file name is CSV
         if($filename[1] == 'csv') {
             $temp = $_FILES["file"]["tmp_name"];
             $file = new SplFileObject($temp);
             $file->setFlags(SplFileObject::READ_CSV);
-            $csv = new LimitIterator($file, 1); // Skips first row
+            $csv = new LimitIterator($file, 1); // skips first row
             
             // Generate a hash of the table for the module
             $to_hash = str_replace('.', '', str_replace(':', '', str_replace('-', '', str_replace(' ', '', date("Y-m-d H:i:s").microtime())))); //get accurate date
@@ -51,7 +60,7 @@ else if (isset($_FILES["file"])) {
             $to_hash .= $user_id; //add lecturer's id
             $student_list_hash = hash('sha256', $to_hash);
             $student_list_hash = substr($student_list_hash, 1);
-            $student_list_hash = "l" . $student_list_hash;
+            $student_list_hash = "l" . $student_list_hash; // student list hashes start with 'l'
 
             // Create student table named by student hash
             $sql = "CREATE TABLE $student_list_hash (
@@ -71,7 +80,7 @@ else if (isset($_FILES["file"])) {
             
             // For each csv row
             foreach ($csv as $row) {
-                $data = explode(";", $row[0]);
+                $data = explode(";", $row[0]); // we use ';' for now
 
                 $studentID = $data[0]; 
                 $firstname = $data[1];
@@ -114,11 +123,61 @@ function throwError ($message, $hash) {
 }
 
 
-// TASKS AREA
+// ---TASKS AREA---
+// Generate a hash of the table for the module
+$to_hash = str_replace('.', '', str_replace(':', '', str_replace('-', '', str_replace(' ', '', date("Y-m-d H:i:s").microtime())))); 	//get accurate date
+$to_hash .= "moduletable";
+$to_hash .= preg_replace('/\s+/', '_', $module_name); //replace spaces by underscores
+$to_hash .= $user_id; //add lecturer's id
+$module_hash = hash('sha256', $to_hash);
+$module_hash = substr($module_hash, 1);
+$module_hash = "m" . $module_hash;
+
+// Create table
+$sql = "CREATE TABLE $module_hash (
+        id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        week SMALLINT(2) UNSIGNED NOT NULL,
+        session VARCHAR(128) NOT NULL,
+        task VARCHAR(256) NOT NULL,
+        task_duration SMALLINT(4) NOT NULL,
+        task_type VARCHAR(1) DEFAULT 'I'
+)";
+if ($conn->query($sql) === TRUE) {
+    echo "";
+} else {
+    throwError("Error creating table: $conn->error", $module_hash);
+}
+
 // Get options for cloning tasks
-if ($_POST['module_option'] != '0') {
-    $module_hash = $_POST['module_option'];
+if ($_POST['module_hash'] != '0') {
+    $module_hash_to_clone = $_POST['module_hash'];
     $_POST = array();
+    
+    $sql = "SELECT week, session, task, task_duration, task_type
+            FROM $module_hash_to_clone";
+    $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+    while($row = mysqli_fetch_array($resultset)) {
+        $week = $row['week'];
+        $session = $row['session'];
+        $task = $row['task'];
+        $task_duration = $row['task_duration'];
+        $task_type = $row['task_type'];
+        
+        $sql = "INSERT INTO $module_hash (week, session, task, task_duration, task_type) VALUES ('$week', '$session', '$task', '$task_duration', '$task_type')";
+        if ($conn->query($sql) === TRUE) {
+            $success = true;
+        } else {
+            echo "Error adding data: " . $conn->error;
+            $success = false;
+            break;
+        }
+    }
+    if (!$success) {
+        echo "<font color=Red><b><center><h5>Data could not be added. Please try again.</h5></center></b></font>";
+        throwError("Encountered error while inserting data (cloning from another module)", $module_hash);
+    }
+    
+    // Auto redirect to next page
 ?>
 <form name='fr' action='LA_add_module_2.php' method='POST'>
     <input type='hidden' name='module_name' value='<?php echo $module_name; ?>'/>
@@ -130,44 +189,21 @@ if ($_POST['module_option'] != '0') {
 </script>
 <?php
 die();
-// Allow user to insert options
-} else {
-	// Generate a hash of the table for the module
-	$to_hash = str_replace('.', '', str_replace(':', '', str_replace('-', '', str_replace(' ', '', date("Y-m-d H:i:s").microtime())))); 	//get accurate date
-	$to_hash .= "moduletable";
-	$to_hash .= preg_replace('/\s+/', '_', $module_name); //replace spaces by underscores
-	$to_hash .= $user_id; //add lecturer's id
-	$module_table_hash = hash('sha256', $to_hash);
-	$module_table_hash = substr($module_table_hash, 1);
-	$module_table_hash = "m" . $module_table_hash;
 
-	// Create table
-	$sql = "CREATE TABLE $module_table_hash (
-	        id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	        week SMALLINT(2) UNSIGNED NOT NULL,
-	        session VARCHAR(128) NOT NULL,
-	        task VARCHAR(256) NOT NULL,
-	        task_duration SMALLINT(4) NOT NULL,
-	        task_type VARCHAR(1) DEFAULT 'I'
-	)";
-	if ($conn->query($sql) === TRUE) {
-	    echo "";
-	} else {
-	    throwError("Error creating table: $conn->error", $module_table_hash);
-	}
-    
+// Else, allow user to insert options
+} else {
     // Insert one row
     $week = "0";
-    $session = "event";
-    $task = "task";
+    $session = "change this";
+    $task = "change this";
     $task_duration = "0";
     $task_type = "I";
         
-    $sql = "INSERT INTO $module_table_hash (week, session, task, task_duration, task_type) VALUES ('$week', '$session', '$task', '$task_duration', '$task_type')";
+    $sql = "INSERT INTO $module_hash (week, session, task, task_duration, task_type) VALUES ('$week', '$session', '$task', '$task_duration', '$task_type')";
     if ($conn->query($sql) === TRUE) {
         echo "";
     } else {
-        throwError("Error creating table: $conn->error", $module_table_hash);
+        throwError("Error creating table: $conn->error", $module_hash);
     }
 	
 ?>
@@ -177,7 +213,7 @@ die();
     </h1>
     <hr>
     <div id="js-helper"
-         data-module-id="<?php echo htmlspecialchars($module_table_hash); ?>">
+         data-module-id="<?php echo htmlspecialchars($module_hash); ?>">
     </div>
     <div id="table_view" class="input-field">
         <table id="data_table" class="table table-striped">
@@ -194,7 +230,7 @@ die();
 			</thead>
 			<tbody>
 <?php
-	$sql = "SELECT id, week, session, task, task_duration, task_type FROM $module_table_hash";
+	$sql = "SELECT id, week, session, task, task_duration, task_type FROM $module_hash";
     $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
     while( $row = mysqli_fetch_assoc($resultset) ) {
         print '<tr id="' . $row['id'] . '">';
@@ -213,7 +249,7 @@ die();
     </div> 
 <form class="insert_form" id="insert_form" method=post action="LA_add_module_2.php">
     <input type='hidden' name='module_name' value='<?php echo $_POST['module_name'];?>' />
-    <input type='hidden' name='module_table_hash' value='<?php echo $module_table_hash?>' />
+    <input type='hidden' name='module_hash' value='<?php echo $module_hash?>' />
     <input type='hidden' name='student_list_hash' value='<?php echo $student_list_hash;?>' />
         <center>
             <input class="btn btn-success" type=submit name=cancel id="cancel" value=Cancel> 

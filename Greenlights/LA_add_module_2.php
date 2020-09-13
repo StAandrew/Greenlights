@@ -1,4 +1,5 @@
 <?php
+// Here we insert module hash and student list hash into the main table as well as create per-student tables
 include_once("inc/enable_debug.php");
 
 include_once("inc/start_session.php");
@@ -7,51 +8,23 @@ include_once("inc/db_connect.php");
 include_once("inc/header.php");
 
 // Get module name and number of weeks and students table hash
-if (isset($_POST['module_name']) && isset($_POST['student_list_hash']) && isset($_POST['module_table_hash'])) {
+if (isset($_POST['module_name']) && isset($_POST['student_list_hash']) && isset($_POST['module_hash'])) {
     $module_name = $_POST['module_name'];
-    $module_table_hash = $_POST['module_table_hash'];
+    $module_hash = $_POST['module_hash'];
     $student_list_hash = $_POST['student_list_hash'];
 } else {
-    die ("POST error: module name not found");
+    die ("POST error: arguments not found");
 }
 
 // Save to main table (all modules table)
-$sql = "INSERT INTO $all_modules_table_name (module_name, module_hash, access_user_id, access_user_type, student_list_hash) VALUES ('$module_name', '$module_table_hash', '$user_id', 'Lecturer', '$student_list_hash')";     
+$sql = "INSERT INTO $all_modules_table_name (module_name, module_hash, access_user_id, access_user_type, student_list_hash) VALUES ('$module_name', '$module_hash', '$user_id', 'Lecturer', '$student_list_hash')";     
 if ($conn->query($sql) === TRUE) {
     echo "";
 } else {
-    throwErrorQuit("Error adding data to main table: $conn->error", $module_table_hash);
+    throwError("Error adding data to main table: $conn->error", $module_hash);
 }
 
 // TASKS AREA
-// Clone from another table
-if (isset($_POST['module_hash'])) {
-    $module_hash_to_clone = $_POST['module_hash'];
-    $sql = "SELECT week, session, task, task_duration, task_type
-            FROM $module_hash_to_clone";
-    $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
-    while($row = mysqli_fetch_array($resultset)) {
-        $week = $row['week'];
-        $session = $row['session'];
-        $task = $row['task'];
-        $task_duration = $row['task_duration'];
-        $task_type = $row['task_type'];
-        
-        $sql = "INSERT INTO $module_table_hash (week, session, task, task_duration, task_type) VALUES ('$week', '$session', '$task', '$task_duration', '$task_type')";
-        if ($conn->query($sql) === TRUE) {
-            $success = true;
-        } else {
-            echo "Error adding data: " . $conn->error;
-            $success = false;
-            break;
-        }
-    }
-    if (!$success) {
-        echo "<font color=Red><b><center><h5>Data could not be added. Please try again.</h5></center></b></font>";
-        throwErrorQuit("Encountered error while inserting data", $module_table_hash);
-    }
-    $_POST = array();
-} else {
 // Insert from table 
 //if(isset($_POST['submit'])) {
 //        // Arrays of columns
@@ -103,7 +76,7 @@ if (isset($_POST['module_hash'])) {
 //                }
 //            }
 //
-//            $sql = "INSERT INTO $module_table_hash (week, session, task, task_duration, task_type) VALUES ('$week', '$session', '$task', '$task_duration', '$task_type')";
+//            $sql = "INSERT INTO $module_hash (week, session, task, task_duration, task_type) VALUES ('$week', '$session', '$task', '$task_duration', '$task_type')";
 //            if ($conn->query($sql) === TRUE) {
 //                $success = true;
 //            } else {
@@ -114,33 +87,20 @@ if (isset($_POST['module_hash'])) {
 //         }
 //         if (!$success) {
 //                echo "<font color=Red><b><center><h5>Data could not be added. Please try again.</h5></center></b></font>";
-//                throwErrorQuit("Encountered error while inserting data", $module_table_hash);
+//                throwError("Encountered error while inserting data", $module_hash);
 //         }
 //        $_POST = array();
 //    } else {
-//        throwErrorQuit("Error: submit not found", $module_table_hash);
+//        throwError("Error: submit not found", $module_hash);
 //    }
-}
 
-// Function to throw error if there is a problem with a table
-function throwErrorQuit ($message, $hash) {
-    include("inc/db_connect.php");
-    echo "Error: $message";
-    $sql = "DELETE FROM $all_modules_table_name WHERE module_hash=$hash";
-    $conn->query($sql);
-    $sql = "DROP TABLE IF EXISTS $hash";
-    $conn->query($sql);
-    $_POST = array();
-    die();
-}
-
-// create per student tables
+// Create per student tables
 $sql = "SELECT student_id, firstname, lastname, email, course_code, year
         FROM $student_list_hash";
 $big_result = $conn->query($sql);
 if ($big_result->num_rows > 0) {
     while ($big_row = $big_result->fetch_assoc()) {
-        //each row
+        //For each row of student list table (for each student)
         $student_id = $big_row['student_id'];
         $firstname = $big_row['firstname'];
         $lastname = $big_row['lastname'];
@@ -148,7 +108,7 @@ if ($big_result->num_rows > 0) {
         $course_code = $big_row['course_code'];
         $year = $big_row['year'];
         
-        //generate hash
+        //Generate hash
         $to_hash = str_replace('.', '', str_replace(':', '', str_replace('-', '', str_replace(' ', '', date("Y-m-d H:i:s").microtime())))); //get accurate date
         $to_hash .= "studenttable";
         $to_hash .= $student_id . $firstname . $lastname;
@@ -156,7 +116,7 @@ if ($big_result->num_rows > 0) {
         $one_student_table_hash = substr($one_student_table_hash, 1);
         $one_student_table_hash = "s" . $one_student_table_hash;
         
-        //create table for student
+        //Create table for a student
         $sql = "CREATE TABLE $one_student_table_hash (
             id INT AUTO_INCREMENT PRIMARY KEY,
             week INT(2) UNSIGNED NOT NULL,
@@ -175,11 +135,11 @@ if ($big_result->num_rows > 0) {
         if ($conn->query($sql) === TRUE) {
             echo "";
         } else {
-            throwErrorQuit("Error while creating per student tables: $conn->error", $module_table_hash);
+            throwError("Error while creating per student tables: $conn->error", $module_hash);
         }
         
-        //add sessions to the table
-        $sql = "SELECT week, session, task, task_duration, task_type FROM $module_table_hash";
+        // Add sessions from module hash to the table
+        $sql = "SELECT week, session, task, task_duration, task_type FROM $module_hash";
         $result = $conn->query($sql);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
@@ -195,25 +155,24 @@ if ($big_result->num_rows > 0) {
                 if ($conn->query($sql) === TRUE) {
                     echo "";
                 } else {
-                    throwErrorQuit("Error while inserint into per student table: $conn->error", $module_table_hash);
+                    throwError("Error while inserint into per student table: $conn->error", $module_hash);
                 }
             }
-            //add to all_students table
+            // Add to all_students table
             $sql = "INSERT INTO $all_students_table_name (student_id, firstname, lastname, email, course_code, year, module_name, module_hash, student_table_hash) 
-                    VALUES ('$student_id', '$firstname', '$lastname', '$email', '$course_code', '$year', '$module_name', '$module_table_hash', '$one_student_table_hash')";
+                    VALUES ('$student_id', '$firstname', '$lastname', '$email', '$course_code', '$year', '$module_name', '$module_hash', '$one_student_table_hash')";
             if ($conn->query($sql) === TRUE) {
                 echo "";
             } else {
-                throwErrorQuit("Error while insering into all students table: $conn->error", $module_table_hash);
+                throwError("Error while insering into all students table: $conn->error", $module_hash);
             }            
         } else {
-            throwErrorQuit("Error while fetching sessions", $module_table_hash);
+            throwError("Error while fetching sessions", $module_hash);
         }
     }
 } else {
-    throwErrorQuit("Encountered error while creating per student tables", $module_table_hash);
+    throwError("Encountered error while creating per student tables", $module_hash);
 }
-// TODO: CHANGE TO REDIRECT TO MODULE LIST
 echo "Success! Redirecting...";
 ?>
 <form name='fr' action='LA_modules_list.php' method='POST'>
@@ -222,6 +181,19 @@ echo "Success! Redirecting...";
     document.fr.submit();
 </script>
 <?php
+
+// Function to throw error if there is a problem with a table
+function throwError ($message, $hash) {
+    include("inc/db_connect.php");
+    echo "Error: $message";
+    $sql = "DELETE FROM $all_modules_table_name WHERE module_hash=$hash";
+    $conn->query($sql);
+    $sql = "DROP TABLE IF EXISTS $hash";
+    $conn->query($sql);
+    $_POST = array();
+    die();
+}
+
 include("inc/footer.php");
 $conn->close();
 ?>

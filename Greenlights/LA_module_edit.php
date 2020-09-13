@@ -37,12 +37,12 @@ if (isset($_GET['module_name']) && isset($_GET['module']) && isset($_GET['studen
             </thead>
             <tbody>
 <?php
-$sql = "SELECT num, week, session, task, task_duration, task_type
+$sql = "SELECT id, week, session, task, task_duration, task_type
         FROM $module_hash";
 $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
 while( $row = mysqli_fetch_assoc($resultset) ) {
-        print '<tr id="' . $row['num'] . '">';
-            print '<td>' . $row['num'] . '</td>';
+        print '<tr id="' . $row['id'] . '">';
+            print '<td>' . $row['id'] . '</td>';
             print '<td>' . $row['week'] . '</td>';
             print '<td>' . $row['session'] . '</td>';
             print '<td>' . $row['task'] . '</td>';
@@ -96,12 +96,12 @@ $option = isset($_POST['addUser']) ? $_POST['addUser'] : false;
                 <tbody>
 <?php
 // Get TAs and Lecturers that have access to this module
-        $sql = "SELECT id, access_user_id, access_user_type
+        $sql = "SELECT num, access_user_id, access_user_type
             FROM $all_modules_table_name
             WHERE module_hash='$module_hash'";
         $big_resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
         while($big_row = mysqli_fetch_assoc($big_resultset)) {
-            print '<tr id="' . $big_row['id'] . '">';
+            print '<tr num="' . $big_row['num'] . '">';
                 //print '<td>' . $big_row['id'] . '</td>';
                 // Get user name and email from credentials table
                 $user_id = $big_row['access_user_id'];

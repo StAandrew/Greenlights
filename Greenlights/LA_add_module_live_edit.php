@@ -2,8 +2,6 @@
 include("inc/db_connect.php");
 $table = $_GET['module'];
 $input = filter_input_array(INPUT_POST);
-$sql_query = 'SELECT week FROM '. $table;
-    mysqli_query($conn, $sql_query) or die("database error:". mysqli_error($conn));
 if ($input['action'] == 'edit') {	
 	$update_field='';
 	if(isset($input['week'])) {

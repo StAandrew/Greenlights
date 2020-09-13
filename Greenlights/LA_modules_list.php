@@ -59,7 +59,7 @@ if (isset($_POST['module_hash_to_save'])) {
             <input type="file" name="file" id="file" accept=".csv">
         </p>
         <p>Or select from existing class lists (optional)
-            <select name="student_list_option"> 
+            <select name="student_list_hash"> 
                 <option value="0">No</option>
 <?php
                 $sql = "SELECT module_name, student_list_hash
@@ -73,7 +73,7 @@ if (isset($_POST['module_hash_to_save'])) {
             </select> 
         </p>
         <p>Would you like to clone tasks from past modules? (optional)
-            <select name="module_option">
+            <select name="module_hash">
                     <option value="0">No</option>  
 <?php
                 $sql = "SELECT module_name, module_hash
