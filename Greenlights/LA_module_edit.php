@@ -1,4 +1,6 @@
 <?php
+// Here we allow Lecturers to edit existing modules tables
+// To update per-student tables user needs to press 'save changes' button
 include_once("inc/enable_debug.php");
 
 include_once("inc/start_session.php");
@@ -6,7 +8,7 @@ include_once("inc/lecturer_check.php");
 include_once("inc/db_connect.php");
 include("inc/header.php");
 
-// Get hash - table name
+// Get information about module and a student list hash
 if (isset($_GET['module_name']) && isset($_GET['module']) && isset($_GET['student_list'])) {
     $module_name = $_GET['module_name'];
     $module_hash = $_GET['module'];
@@ -15,7 +17,10 @@ if (isset($_GET['module_name']) && isset($_GET['module']) && isset($_GET['studen
     echo "Error: get arguments was not found";
     die();
 }
+// TODO: Dsiplay list o fstudents at thebottom of a page
 
+// Editable table, files used: LA_module_edit_helper.js; LA_module_edit_helper.php
+// Helper for an editable table
 ?>     
     <div id="js-helper"
          data-module-id="<?php echo htmlspecialchars($module_hash); ?>">
@@ -23,31 +28,35 @@ if (isset($_GET['module_name']) && isset($_GET['module']) && isset($_GET['studen
     <h3>
         <font color=grey><?php echo $module_name; ?></font>
     </h3>
-    <div id="table_view">	
+    <div id="table_view" class="input-field">	
         <table id="data_table" class="table table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Week</th>
-                    <th>Teaching event</th>
-                    <th>Task</th>
-                    <th>Task duration (minutes)</th>
-                    <th>Task type</th>
+                    <th>Unique id</th>
+                	<th>Week number</th>
+                	<th>Teaching Event</th>
+                	<th>Task</th>
+                	<th>Estimated time for a task (minutes)</th>
+                	<th>Group or Individual (G/I)</th>
+                	<th>Add/Remove row</th>
                 </tr>
             </thead>
             <tbody>
 <?php
-$sql = "SELECT id, week, session, task, task_duration, task_type
-        FROM $module_hash";
+$sql = "SELECT id, week, session, task, task_duration, task_type FROM $module_hash";
 $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
 while( $row = mysqli_fetch_assoc($resultset) ) {
-        print '<tr id="' . $row['id'] . '">';
+        print '<tr>';
             print '<td>' . $row['id'] . '</td>';
             print '<td>' . $row['week'] . '</td>';
             print '<td>' . $row['session'] . '</td>';
             print '<td>' . $row['task'] . '</td>';
             print '<td>' . $row['task_duration'] . '</td>';
-            print '<td>' . $row['task_type'] . '</td>'; 
+            print '<td>' . $row['task_type'] . '</td>';
+            if ($row['id'] == '1')
+                print "<td><button id='add' for-table='#data_table'>Add Row</button></td>";
+            else
+                print "<td></td>";
         print '</tr>';
 }
 ?>
@@ -96,29 +105,29 @@ $option = isset($_POST['addUser']) ? $_POST['addUser'] : false;
                 <tbody>
 <?php
 // Get TAs and Lecturers that have access to this module
-        $sql = "SELECT num, access_user_id, access_user_type
-            FROM $all_modules_table_name
-            WHERE module_hash='$module_hash'";
-        $big_resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
-        while($big_row = mysqli_fetch_assoc($big_resultset)) {
-            print '<tr num="' . $big_row['num'] . '">';
-                //print '<td>' . $big_row['id'] . '</td>';
-                // Get user name and email from credentials table
-                $user_id = $big_row['access_user_id'];
-                $sql = "SELECT firstname, lastname, email
-                    FROM $credentials_table_name
-                    WHERE user_id='$user_id'";
-                $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
-                $row = mysqli_fetch_assoc($resultset);
-                $full_name = $row['firstname'] .' '. $row['lastname'];
-                $email = $row['email'];
-            
-                print '<td>'. $full_name .'</td>';
-                print '<td>'. $email .'</td>';
-                print '<td>' . $big_row['access_user_type'] . '</td>';
-                print '<td>' . $user_id . '</td>';
-            print '</tr>';
-        }
+$sql = "SELECT num, access_user_id, access_user_type
+    FROM $all_modules_table_name
+    WHERE module_hash='$module_hash'";
+$big_resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+while($big_row = mysqli_fetch_assoc($big_resultset)) {
+    print '<tr num="' . $big_row['num'] . '">';
+        //print '<td>' . $big_row['id'] . '</td>';
+        // Get user name and email from credentials table
+        $user_id = $big_row['access_user_id'];
+        $sql = "SELECT firstname, lastname, email
+            FROM $credentials_table_name
+            WHERE user_id='$user_id'";
+        $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+        $row = mysqli_fetch_assoc($resultset);
+        $full_name = $row['firstname'] .' '. $row['lastname'];
+        $email = $row['email'];
+
+        print '<td>'. $full_name .'</td>';
+        print '<td>'. $email .'</td>';
+        print '<td>' . $big_row['access_user_type'] . '</td>';
+        print '<td>' . $user_id . '</td>';
+    print '</tr>';
+}
 ?>
                 </tbody>
             </table>
@@ -129,18 +138,18 @@ $option = isset($_POST['addUser']) ? $_POST['addUser'] : false;
                 <option value="0">Select</option>
 <?php
 // Check if users already have access, if not, diplay as option to add
-        $sql = "SELECT user_id, firstname, lastname, email, user_type
-            FROM $credentials_table_name
-            WHERE user_id NOT IN (
-                SELECT access_user_id
-                FROM $all_modules_table_name
-                WHERE module_hash='$module_hash'
-            )
-            AND (user_type='TA' OR user_type='Lecturer')";
-        $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
-        while($row = mysqli_fetch_assoc($resultset)) {
-            print '<option value="'. $row[user_id] .'_'. $row[user_type]. '">'. $row[user_type] .', '. $row[firstname] .' '. $row[lastname] .', '. $row[email] .', '. $row[user_id] .'</option> '; 
-        }
+$sql = "SELECT user_id, firstname, lastname, email, user_type
+    FROM $credentials_table_name
+    WHERE user_id NOT IN (
+        SELECT access_user_id
+        FROM $all_modules_table_name
+        WHERE module_hash='$module_hash'
+    )
+    AND (user_type='TA' OR user_type='Lecturer')";
+$resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+while($row = mysqli_fetch_assoc($resultset)) {
+    print '<option value="'. $row['user_id'] .'_'. $row['user_type']. '">'. $row['user_type'] .', '. $row['firstname'] .' '. $row['lastname'] .', '. $row['email'] .', '. $row['user_id'] .'</option> '; 
+}
 ?>
             </select>
             <input type="submit" value="Add user"/>
@@ -156,9 +165,8 @@ $option = isset($_POST['addUser']) ? $_POST['addUser'] : false;
     </div>
     <script 
             type="text/javascript" 
-            src="js/LA_module_edit_table_edit.js">
+            src="js/LA_module_edit_helper.js">
     </script>
-
 <?php
 include("inc/footer.php");
 ?>

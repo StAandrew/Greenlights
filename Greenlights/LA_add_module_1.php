@@ -233,7 +233,7 @@ die();
 	$sql = "SELECT id, week, session, task, task_duration, task_type FROM $module_hash";
     $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
     while( $row = mysqli_fetch_assoc($resultset) ) {
-        print '<tr id="' . $row['id'] . '">';
+        print '<tr>';
             print '<td>' . $row['id'] . '</td>';
             print '<td>' . $row['week'] . '</td>';
             print '<td>' . $row['session'] . '</td>';
@@ -258,7 +258,7 @@ die();
 </form>  
 <script 
     type="text/javascript" 
-    src="js/LA_custom_table_edit.js">
+    src="js/LA_add_module_helper.js">
 </script>
 <?php
 }

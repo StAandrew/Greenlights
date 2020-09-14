@@ -27,27 +27,29 @@ if (isset($_GET['module_name']) && isset($_GET['module']) && isset($_GET['studen
         <table id="data_table" class="table table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Week</th>
-                    <th>Teaching event</th>
-                    <th>Task</th>
-                    <th>Task duration (minutes)</th>
-                    <th>Task type</th>
+                    <th>Unique id</th>
+                	<th>Week number</th>
+                	<th>Teaching Event</th>
+                	<th>Task</th>
+                	<th>Estimated time for a task (minutes)</th>
+                	<th>Group or Individual (G/I)</th>
+                	<th>Add/Remove row</th>
                 </tr>
             </thead>
             <tbody>
 <?php
-$sql = "SELECT num, week, session, task, task_duration, task_type
+$sql = "SELECT id, week, session, task, task_duration, task_type
         FROM $module_hash";
 $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
 while( $row = mysqli_fetch_assoc($resultset) ) {
-        print '<tr id="' . $row['num'] . '">';
-            print '<td>' . $row['num'] . '</td>';
+        print '<tr>';
+            print '<td>' . $row['id'] . '</td>';
             print '<td>' . $row['week'] . '</td>';
             print '<td>' . $row['session'] . '</td>';
             print '<td>' . $row['task'] . '</td>';
             print '<td>' . $row['task_duration'] . '</td>';
             print '<td>' . $row['task_type'] . '</td>'; 
+            print "<td><button id='add' for-table='#data_table'>Add Row</button></td>";
         print '</tr>';
 }
 ?>
@@ -70,7 +72,8 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
     </div>
     <script 
             type="text/javascript" 
-            src="js/LA_module_edit_table_edit.js">
+            src="js/LA_module_edit_helper.js">
+//        TODO: CHANGE THIS
     </script>
 
 <?php

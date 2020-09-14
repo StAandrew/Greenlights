@@ -13,6 +13,6 @@ $(document).ready(function(){
                      [12, 'meeting_duration']]
 		},
 		hideIdentifier: false,
-		url: 'TA_PS_live_edit.php?table=' + $('#js-helper').data('table-id')		
+		url: 'TA_PS_helper.php?table=' + $('#js-helper').data('table-id')		
 	});
 });

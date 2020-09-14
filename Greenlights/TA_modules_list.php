@@ -14,18 +14,18 @@ if (isset($_POST['module_hash_to_save'])) {
     // for each student table
     while($big_row = mysqli_fetch_array($big_resultset)) {
         $student_table_hash = $big_row['student_table_hash'];
-        $sql = "SELECT num, week, session, task, task_duration, task_type FROM $module_hash_to_save";
+        $sql = "SELECT id, week, session, task, task_duration, task_type FROM $module_hash_to_save";
         $small_resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
         // for each row in module table
         while($small_row = mysqli_fetch_array($small_resultset)) {
-            $num = $small_row['num'];
+            $id = $small_row['id'];
             $week = $small_row['week'];
             $session = $small_row['session'];
             $task = $small_row['task'];
             $task_duration = $small_row['task_duration'];
             $task_type = $small_row['task_type'];
             // update table for each student
-            $sql = "UPDATE $student_table_hash SET id='$num', week='$week', session='$session', task='$task', task_duration='$task_duration', task_type='$task_type' WHERE id='$num'";
+            $sql = "UPDATE $student_table_hash SET id='$id', week='$week', session='$session', task='$task', task_duration='$task_duration', task_type='$task_type' WHERE id='$id'";
             if ($conn->query($sql) === TRUE) {
                 echo "";
             } else {

@@ -102,7 +102,7 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
         </div> 
         <script 
                 type="text/javascript" 
-                src="js/TA_PS_custom_table_edit.js">
+                src="js/TA_PS_helper.js">
         </script>
 <?php
 include('inc/footer.php');

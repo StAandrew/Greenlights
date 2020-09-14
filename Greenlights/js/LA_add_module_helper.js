@@ -47,6 +47,6 @@ $(document).ready(function(){
             //console.log(serialize);
         },
 		hideIdentifier: false,
-		url: 'LA_add_module_live_edit.php?module=' + $('#js-helper').data('module-id')		
+		url: 'LA_add_module_helper.php?module=' + $('#js-helper').data('module-id')		
 	});
 });
