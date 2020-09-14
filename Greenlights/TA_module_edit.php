@@ -72,7 +72,7 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
     </div>
     <script 
             type="text/javascript" 
-            src="js/LA_module_edit_helper.js">
+            src="js/module_edit_helper.js">
 //        TODO: CHANGE THIS
     </script>
 

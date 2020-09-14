@@ -53,10 +53,10 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
             print '<td>' . $row['task'] . '</td>';
             print '<td>' . $row['task_duration'] . '</td>';
             print '<td>' . $row['task_type'] . '</td>';
-            if ($row['id'] == '1')
+//            if ($row['id'] == '1')
                 print "<td><button id='add' for-table='#data_table'>Add Row</button></td>";
-            else
-                print "<td></td>";
+//            else
+//                print "<td></td>";
         print '</tr>';
 }
 ?>
@@ -165,7 +165,7 @@ while($row = mysqli_fetch_assoc($resultset)) {
     </div>
     <script 
             type="text/javascript" 
-            src="js/LA_module_edit_helper.js">
+            src="js/module_edit_helper.js">
     </script>
 <?php
 include("inc/footer.php");

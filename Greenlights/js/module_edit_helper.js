@@ -8,8 +8,14 @@ $(document).ready(function(){
         $tr.find("span.tabledit-identifier").text(nextID);  //set the row identifier
         $(table + ">tbody").append($tr);    //add the row to the table
         //$tr.find(".tabledit-edit-button").click();  //pretend to click the edit button
-        //$tr.find("input:not([type=hidden]), select").val("");   //wipe out the inputs.
-        //$("#data_table").load( "LA_add_module_1.php #data_table ); // this line does not work but we need simiilar functionality for proper row wipe out
+        //$td.find("input:not([type=hidden]), select").val("");   //wipe out the inputs.
+        
+        $td.find("input:not([type=hidden]), select");
+        tds = tableRows[i].getElementsByTagName('td');
+        for( j = 0, jlen = tds.length; j < jlen; j++) {
+            r.push(tds[j]);
+        }
+        table.DataTable().ajax.reload();
     });
 	$('#data_table').Tabledit({
         rowIdentifier: 'id',
@@ -48,6 +54,6 @@ $(document).ready(function(){
             //console.log(serialize);
         },
 		hideIdentifier: false,
-		url: 'LA_module_edit_helper.php?module=' + $('#js-helper').data('module-id')	
+		url: 'module_edit_helper.php?module=' + $('#js-helper').data('module-id')	
 	});
 });
