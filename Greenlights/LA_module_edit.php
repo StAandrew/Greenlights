@@ -17,7 +17,7 @@ if (isset($_GET['module_name']) && isset($_GET['module']) && isset($_GET['studen
     echo "Error: get arguments was not found";
     die();
 }
-// TODO: Dsiplay list o fstudents at thebottom of a page
+// TODO: Display list of students at thebottom of a page
 
 // Editable table, files used: LA_module_edit_helper.js; LA_module_edit_helper.php
 // Helper for an editable table

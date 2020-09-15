@@ -17,13 +17,17 @@ if ($input['action'] == 'edit') {
 	} 
 	if($update_field && $input['id']) {
 		$sql = 'UPDATE '. $table .' SET '. $update_field .' WHERE id=' . $input['id'];
-        //$sql = 'INSERT INTO ' . $table . ' (id, week, session, task, task_duration, task_type) VALUES ("'. $input['id'] .'", "0", "event", "task", "0", "I") ON DUPLICATE KEY UPDATE '. $update_field;
 		mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
 	}
 }
 else if ($input['action'] == 'delete') {
-    $sql = 'DELETE FROM ' . $table . ' WHERE id=' . $input['id'];
-    mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+    // Safeguard to prevent deletion of last row
+    $sql = 'SELECT id FROM ' . $table . ' ORDER BY id DESC LIMIT 0, 2';
+    $result = $conn->query($sql);
+    if ($result->num_rows > 1) {
+        $sql = 'DELETE FROM ' . $table . ' WHERE id=' . $input['id'];
+        mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+    }
 }
 else if ($input['action'] == 'add') {
     $sql = 'SELECT id, week, session, task, task_duration, task_type FROM ' . $table . ' ORDER BY id DESC LIMIT 0, 1';

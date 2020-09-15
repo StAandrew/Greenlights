@@ -11,14 +11,7 @@ $(document).ready(function(){
         //$tr.find(".tabledit-edit-button").click();  //pretend to click the edit button
         //$td.find("input:not([type=hidden]), select").val("");   //wipe out the inputs.
         
-//        tds = tableRows[i].getElementsByTagName('td');
-//        for( j = 0, jlen = tds.length; j < jlen; j++) {
-//            r.push(tds[j]);
-//        }
-//        table.DataTable().ajax.reload();
-//        location.reload();
-        
-        //$("#table_view").load(location.href + " #table_view");
+        //$("#table_view").load(location.href + " #table_view"); //reload div
         $.ajax({
             url: 'module_edit_helper.php?module=' + $('#js-helper').data('module-id'),
             method:'POST',
@@ -27,7 +20,6 @@ $(document).ready(function(){
             },
            success: function(data){
                //alert(data);
-               //$("#table_view").load(location.href + " #table_view");
            }
         });
         
@@ -51,15 +43,6 @@ $(document).ready(function(){
         },
         onAlways: function() {
             console.log('onAlways()');
-            var totalRowCount = $("#data_table tr").length;
-            if(totalRowCount > 2) {
-                allowDelete = true;
-            } else {
-                allowDelete = false;
-                $("#table_view").load(location.href + " #table_view");
-            }
-            console.log(allowDelete ? 'true' : 'false');
-            //$("#table_view").load(location.href + " #table_view");
         },
         onAjax: function(action, serialize) {
             console.log('onAjax(action, serialize)');
@@ -67,7 +50,7 @@ $(document).ready(function(){
             console.log(serialize);
         },
         rowIdentifier: 'id',
-		deleteButton: allowDelete,
+		deleteButton: true,
 		editButton: false,
 		columns: {
             identifier: [0, 'id'],                    
