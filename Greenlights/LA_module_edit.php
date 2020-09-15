@@ -38,7 +38,6 @@ if (isset($_GET['module_name']) && isset($_GET['module']) && isset($_GET['studen
                 	<th>Task</th>
                 	<th>Estimated time for a task (minutes)</th>
                 	<th>Group or Individual (G/I)</th>
-                	<th>Add/Remove row</th>
                 </tr>
             </thead>
             <tbody>
@@ -53,15 +52,12 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
             print '<td>' . $row['task'] . '</td>';
             print '<td>' . $row['task_duration'] . '</td>';
             print '<td>' . $row['task_type'] . '</td>';
-//            if ($row['id'] == '1')
-                print "<td><button id='add' for-table='#data_table'>Add Row</button></td>";
-//            else
-//                print "<td></td>";
         print '</tr>';
 }
 ?>
             </tbody>
         </table>
+        <button id='add' for-table='#data_table'>Add Row</button>
     </div>
     <div style="margin:10px 0px 0px 0px;">
         <font color=grey>Please make sure to save changes before leaving the page:</font>
