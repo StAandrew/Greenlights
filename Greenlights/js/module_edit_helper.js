@@ -8,10 +8,11 @@ $(document).ready(function(){
         $tr.find("input.tabledit-identifier").val(nextID);  //set the row identifier
         $tr.find("span.tabledit-identifier").text(nextID);  //set the row identifier
         $(table + ">tbody").append($tr);    //add the row to the table
+        
         //$tr.find(".tabledit-edit-button").click();  //pretend to click the edit button
         //$td.find("input:not([type=hidden]), select").val("");   //wipe out the inputs.
-        
         //$("#table_view").load(location.href + " #table_view"); //reload div
+        
         $.ajax({
             url: 'module_edit_helper.php?module=' + $('#js-helper').data('module-id'),
             method:'POST',
@@ -25,32 +26,9 @@ $(document).ready(function(){
         
     });
 	$('#data_table').Tabledit({
-        onDraw: function() {
-            console.log('onDraw()');
-        },
-        onSuccess: function(data, textStatus, jqXHR) {
-            //console.log('onSuccess(data, textStatus, jqXHR)');
-            //console.log(data);
-            //console.log(textStatus);
-            //console.log(jqXHR);
-            $('.tabledit-deleted-row').remove();
-        },
-        onFail: function(jqXHR, textStatus, errorThrown) {
-            console.log('onFail(jqXHR, textStatus, errorThrown)');
-            console.log(jqXHR);
-            console.log(textStatus);
-            console.log(errorThrown);
-        },
-        onAlways: function() {
-            console.log('onAlways()');
-        },
-        onAjax: function(action, serialize) {
-            console.log('onAjax(action, serialize)');
-            console.log(action);
-            console.log(serialize);
-        },
-        rowIdentifier: 'id',
-		deleteButton: true,
+		url: 'module_edit_helper.php?module=' + $('#js-helper').data('module-id'),
+        hideIdentifier: true,
+        deleteButton: true,
 		editButton: false,
 		columns: {
             identifier: [0, 'id'],                    
@@ -60,7 +38,29 @@ $(document).ready(function(){
                      [4, 'task_duration'], 
                      [5, 'task_type']]
 		},
-		hideIdentifier: false,
-		url: 'module_edit_helper.php?module=' + $('#js-helper').data('module-id')	
+        onDraw: function() {
+            //console.log('onDraw()');
+        },
+        onSuccess: function(data, textStatus, jqXHR) {
+            //console.log('onSuccess(data, textStatus, jqXHR)');
+            //console.log(data);
+            //console.log(textStatus);
+            //console.log(jqXHR);
+            $('.tabledit-deleted-row').remove();
+        },
+        onFail: function(jqXHR, textStatus, errorThrown) {
+            //console.log('onFail(jqXHR, textStatus, errorThrown)');
+            //console.log(jqXHR);
+            //console.log(textStatus);
+            //console.log(errorThrown);
+        },
+        onAlways: function() {
+            console.log('onAlways()');
+        },
+        onAjax: function(action, serialize) {
+            //console.log('onAjax(action, serialize)');
+            //console.log(action);
+            //console.log(serialize);
+        }
 	});
 });
