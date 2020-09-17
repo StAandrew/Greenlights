@@ -45,7 +45,7 @@ if (isset($_POST['module_hash_to_save'])) {
             WHERE access_user_id=$user_id";  
     $result = mysqli_query($conn, $sql);
     while($row = mysqli_fetch_array($result)) {
-        echo '<a href=LA_module_edit.php?module='. $row['module_hash'] .'&student_list='. $row['student_list_hash'] . '&module_name='. $row['module_name'] .'>'. $row['module_name'] .'</a><br>';
+        echo '<a href=module_edit.php?module='. $row['module_hash'] .'&student_list='. $row['student_list_hash'] . '&module_name='. $row['module_name'] .'>'. $row['module_name'] .'</a><br>';
     }
 ?>
 <form name=course_entry method=post action="LA_add_module_1.php" enctype="multipart/form-data">

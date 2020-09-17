@@ -258,7 +258,7 @@ die();
 </form>  
 <script 
     type="text/javascript" 
-    src="js/LA_add_module_helper.js">
+    src="js/module_edit_helper.js">
 </script>
 <?php
 }

@@ -1,7 +1,6 @@
 $(document).ready(function(){
     var allowDelete;
     $("#add").click(function(e){
-        console.log('click');
         var table = $(this).attr('for-table');  //get the target table selector
         var $tr = $(table + ">tbody>tr:last-child").clone(true, true);  //clone the last row
         var nextID = parseInt($tr.find("input.tabledit-identifier").val()) + 1; //get the ID and add one.

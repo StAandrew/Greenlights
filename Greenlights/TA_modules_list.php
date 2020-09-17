@@ -53,7 +53,7 @@ if (isset($_POST['module_hash_to_save'])) {
         </span>
         <span style="display:table-cell; float:left; margin-left:10px; vertical-align:middle; line-height: 30px;">
 <?php
-        echo '<a href=TA_module_edit.php?module='. $row['module_hash'] .'&student_list='. $row['student_list_hash'] . '&module_name='. $row['module_name'] .'>Edit module</a><br>';
+        echo '<a href=module_edit.php?module='. $row['module_hash'] .'&student_list='. $row['student_list_hash'] . '&module_name='. $row['module_name'] .'>Edit module</a><br>';
 ?>
         </span>
     </div>

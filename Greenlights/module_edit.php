@@ -4,7 +4,7 @@
 include_once("inc/enable_debug.php");
 
 include_once("inc/start_session.php");
-include_once("inc/lecturer_check.php");
+include_once("inc/ta_check.php");
 include_once("inc/db_connect.php");
 include("inc/header.php");
 
@@ -17,6 +17,12 @@ if (isset($_GET['module_name']) && isset($_GET['module']) && isset($_GET['studen
     echo "Error: get arguments was not found";
     die();
 }
+
+$callBackURL = "./home.php";
+if ($_SESSION['user_type'] == 'Lecturer')
+	$callBackURL = "./LA_modules_list.php";
+else if ($_SESSION['user_type'] == 'TA')
+	$callBackURL = "./LA_modules_list.php";
 // TODO: Display list of students at thebottom of a page
 
 // Editable table, files used: LA_module_edit_helper.js; LA_module_edit_helper.php
@@ -61,11 +67,15 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
     </div>
     <div style="margin:10px 0px 0px 0px;">
         <font color=grey>Please make sure to save changes before leaving the page:</font>
-        <form action="./LA_modules_list.php" method="post">
+        <form action="<?php echo $callBackURL; ?>" method="post">
             <input type="hidden" name="module_hash_to_save" value="<?php echo $module_hash; ?>"/>
             <input type="submit" value="Save changes" class="btn btn-default read-more" style="background:#3399ff;color:white"/>
         </form> 
     </div>
+<?php
+// Only allow Lecturers to change access
+	if ($_SESSION['user_type'] == 'Lecturer') {
+?>
     <div>
         <h3>
 	       <font color=grey>Access edit</font>
@@ -152,6 +162,9 @@ while($row = mysqli_fetch_assoc($resultset)) {
         </form>
 <!--        <button>Add</button>-->
     </div>
+<?php
+}
+?>
     <div style="margin:50px 0px 0px 0px;">
         <form action="./export_csv.php" method="post">
             <input type='hidden' name='export_module_name' value='<?php echo $module_name;?>' />
