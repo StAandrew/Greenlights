@@ -1,6 +1,8 @@
 <?php
 include_once("inc/start_session.php");
 if(isset($_SESSION['user_id'])) {
+
+// This may be used to debug if there is an issue with session:
 //    echo "[DEBUG] Output saved session variables<br/>";
 //    foreach ($_SESSION as $key=>$val)
 //        echo $key." ".$val."<br/>";
@@ -14,9 +16,9 @@ if(isset($_SESSION['user_id'])) {
 //    foreach ($_GLOBAL as $key=>$val)
 //        echo $key." ".$val."<br/>";
 }
-$lecturer_home = "LA_modules_list.php";
-$ta_home = "TA_modules_list.php";
-$student_home = "student_modules_list.php";
+$lecturer_home = "module_list.php";
+$ta_home = "module_list.php";
+$student_home = "student_module_list.php";
 
 if(isset($_SESSION['user_type'])) {
     if ($_SESSION['user_type'] == "Student") {
@@ -27,6 +29,7 @@ if(isset($_SESSION['user_type'])) {
         exit(header('Location: ' . $lecturer_home));
     } else if ($_SESSION['user_type'] == "admin") {
         echo "logged in as admin";
+        // TODO: add admin view -> button to view as student and as lecturer or ta
     }
 } else {
     // Redirect to login

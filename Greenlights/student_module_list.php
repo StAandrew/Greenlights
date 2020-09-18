@@ -17,7 +17,6 @@ if(isset($_SESSION['student_id']) || isset($_SESSION['user_id'])) {
         die();
     }
 } else {
-    echo "two";
     header('Location: login.php');
     die();
 }

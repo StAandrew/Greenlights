@@ -1,9 +1,10 @@
 <?php
 include_once("inc/start_session.php");
-include_once("inc/lecturer_check.php");
+include_once("inc/ta_check.php");
 include_once("inc/db_connect.php");
 include("inc/header.php");
 
+// Option when user came back from module edit
 if (isset($_POST['module_hash_to_save'])) {
     $module_hash_to_save = $_POST['module_hash_to_save'];
     $_POST = array();
@@ -35,6 +36,8 @@ if (isset($_POST['module_hash_to_save'])) {
     }
 }
 
+// ----- YOUR MODULES AREA -----
+$no_modules_message = "No modules added yet";
 ?>
 <h3>
 	<font color=grey>Your Modules</font>
@@ -43,12 +46,38 @@ if (isset($_POST['module_hash_to_save'])) {
     $sql = "SELECT module_name, module_hash, student_list_hash
             FROM $all_modules_table_name
             WHERE access_user_id=$user_id";  
-    $result = mysqli_query($conn, $sql);
-    while($row = mysqli_fetch_array($result)) {
-        echo '<a href=module_edit.php?module='. $row['module_hash'] .'&student_list='. $row['student_list_hash'] . '&module_name='. $row['module_name'] .'>'. $row['module_name'] .'</a><br>';
-    }
+    if ($result = $conn->query($sql)) {
+        if($result->num_rows > 0) {
+            while($row = mysqli_fetch_array($result)) {
 ?>
-<form name=course_entry method=post action="LA_add_module_1.php" enctype="multipart/form-data">
+    <div style="display:inline;  text-align:center; vertical-align:middle;">
+        <span style="display:table-cell; float:left; margin-left:10px; vertical-align:middle; line-height: 30px;">
+<?php
+echo '<h4><a href=module_overview.php?module='. $row['module_hash'] .'&student_list='. $row['student_list_hash'] .'&module_name='. $row['module_name'] .'>'. $row['module_name'] .'</a></h4>';
+?>
+        </span>
+        <span style="display:table-cell; float:left; margin-left:10px; vertical-align:middle; line-height: 30px;">
+<?php
+echo '<a href=module_edit.php?module='. $row['module_hash'] .'&student_list='. $row['student_list_hash'] . '&module_name='. $row['module_name'] .'>Edit module</a><br>';
+?>
+        </span>
+    </div>
+    <br/>
+    <br/>
+<?php
+            }
+        } else {
+            print $no_modules_message;
+        }
+    } else {
+        print $no_modules_message;
+    }
+
+// ----- ADD MODULE AREA -----
+// Only allow lecturers to add new modules
+if ($_SESSION['user_type'] == 'Lecturer') {
+?>
+<form name=course_entry method=post action="add_module_1.php" enctype="multipart/form-data">
     <h3>
         <font color=grey>Add new module</font>
     </h3>
@@ -90,5 +119,6 @@ if (isset($_POST['module_hash_to_save'])) {
 </form>
 
 <?php
+}
 include("inc/footer.php");
 ?>

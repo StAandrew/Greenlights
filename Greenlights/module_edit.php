@@ -18,11 +18,7 @@ if (isset($_GET['module_name']) && isset($_GET['module']) && isset($_GET['studen
     die();
 }
 
-$callBackURL = "./home.php";
-if ($_SESSION['user_type'] == 'Lecturer')
-	$callBackURL = "./LA_modules_list.php";
-else if ($_SESSION['user_type'] == 'TA')
-	$callBackURL = "./LA_modules_list.php";
+$callBackURL = "./module_list.php";
 // TODO: Display list of students at thebottom of a page
 
 // Editable table, files used: LA_module_edit_helper.js; LA_module_edit_helper.php

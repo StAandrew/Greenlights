@@ -4,8 +4,8 @@ include_once("inc/ta_check.php");
 include_once("inc/db_connect.php");
 include_once("inc/header.php");
 
-$per_student_view = "TA_PS_view.php";
-$per_session_view = "TA_session_view.php";
+$per_student_view = "per_student_view.php";
+$per_session_view = "per_session_view.php";
 
 // Check get arguments
 if (isset($_GET['module']) && isset($_GET['student_list']) && isset($_GET['module_name'])) {

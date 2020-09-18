@@ -225,7 +225,6 @@ die();
                 	<th>Task</th>
                 	<th>Estimated time for a task (minutes)</th>
                 	<th>Group or Individual (G/I)</th>
-                	<th>Add/Remove row</th>
             	</tr>
 			</thead>
 			<tbody>
@@ -240,14 +239,14 @@ die();
             print '<td>' . $row['task'] . '</td>';
             print '<td>' . $row['task_duration'] . '</td>';
             print '<td>' . $row['task_type'] . '</td>';
-            print "<td><button id='add' for-table='#data_table'>Add Row</button></td>";
         print '</tr>';
     }
 ?>
 			</tbody>
         </table>
+        <button id='add' for-table='#data_table'>Add Row</button>
     </div> 
-<form class="insert_form" id="insert_form" method=post action="LA_add_module_2.php">
+<form class="insert_form" id="insert_form" method=post action="add_module_2.php">
     <input type='hidden' name='module_name' value='<?php echo $_POST['module_name'];?>' />
     <input type='hidden' name='module_hash' value='<?php echo $module_hash?>' />
     <input type='hidden' name='student_list_hash' value='<?php echo $student_list_hash;?>' />

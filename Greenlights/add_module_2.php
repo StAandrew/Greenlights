@@ -175,7 +175,7 @@ if ($big_result->num_rows > 0) {
 }
 echo "Success! Redirecting...";
 ?>
-<form name='fr' action='LA_modules_list.php' method='POST'>
+<form name='fr' action='module_list.php' method='POST'>
 </form>
 <script type='text/javascript'>
     document.fr.submit();

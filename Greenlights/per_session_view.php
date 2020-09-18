@@ -21,7 +21,7 @@ if (isset($_GET['session']) && isset($_GET['module_name']) && isset($_GET['modul
     <body>
         <?php 
             echo "Module: " . $module_name . "<br/>";
-            echo "Session: " . $session . "<br/>";
+            echo "Teaching event: " . $session . "<br/>";
         ?>
 <?php
     
