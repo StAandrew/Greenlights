@@ -155,7 +155,8 @@ if(isset($_POST['old_pass'])) {
 <div id="page-container">
 <header class="header">
     <div>
-        <img style="max-width:100%;" alt="UCL logo" id="logo" src="img/ucl-banner-land-stone-rgb.png">
+        <img style="width:100%; border-width:0;" alt="UCL logo" id="logo" src="img/ucl-banner-land-black-outline-rgb.png">
+<!--        <hr style="margin:0; height:5px;border-width:0;color:#252624;background-color:#252624">-->
     </div>
     <div role="navigation" class="navbar navbar-default navbar-static-top">
           <div class="container">
@@ -195,38 +196,38 @@ if(isset($_POST['old_pass'])) {
           </div>
     </div>
 </header>
-    <div id="content">
-    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">&times;</span>
-                        <span class="sr-only">Close</span>
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">Change password</h4>
-                </div>
-                <!-- Modal Body -->
-                <div class="modal-body">
-                    <form method="post">
-                        <label>Enter Current Password</label>
-                            <input type="password" name="old_pass" class="form-control" />  
-                        <br/>
-                        <label>Enter New Password</label>
-                        <li>Must be a minimum of 8 characters<br/></li>
-                        <li>Must contain at least 1 number<br/></li>
-                        <li>Must contain at least one uppercase character<br/></li>
-                        <li>Must contain at least one lowercase character<br/></li>
-                        <br/>
-                            <input type="password" name="new_pass" class="form-control" />  
-                        <br/>  
-                        <label>Confirm New Password</label>
-                            <input type="password" name="confirm_pass" class="form-control" />  
-                        <br/> 
-                        <input type="submit" name="change_password" value="Change password" class="btn btn-info" />  
-                    </form>
-                </div>
+<div id="content">
+<div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Change password</h4>
+            </div>
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <form method="post">
+                    <label>Enter Current Password</label>
+                        <input type="password" name="old_pass" class="form-control" />  
+                    <br/>
+                    <label>Enter New Password</label>
+                    <li>Must be a minimum of 8 characters<br/></li>
+                    <li>Must contain at least 1 number<br/></li>
+                    <li>Must contain at least one uppercase character<br/></li>
+                    <li>Must contain at least one lowercase character<br/></li>
+                    <br/>
+                        <input type="password" name="new_pass" class="form-control" />  
+                    <br/>  
+                    <label>Confirm New Password</label>
+                        <input type="password" name="confirm_pass" class="form-control" />  
+                    <br/> 
+                    <input type="submit" name="change_password" value="Change password" class="btn btn-info" />  
+                </form>
             </div>
         </div>
     </div>
+</div>
