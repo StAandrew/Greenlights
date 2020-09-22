@@ -284,7 +284,7 @@ th, td {
 }
 </style>
 </head>
-<p class="welcome-login-text"><h1>Welcome to the Greenlights - The UCL Feedback System </h1></p>
+<p class="welcome-login-text"><h1>Welcome to Greenlights - The UCL Feedback System </h1></p>
     <hr><p> <br>
         <span>
           <table cellspacing="10" border="3" rules=none>
