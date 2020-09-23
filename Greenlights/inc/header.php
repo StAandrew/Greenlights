@@ -154,8 +154,22 @@ if(isset($_POST['old_pass'])) {
 <body>
 <div id="page-container">
 <header class="header">
+    <div id="HEADER_1">
+        <div id="DIV_2">
+            <div id="DIV_3">
+                <div id="DIV_4">
+                    <p id="P_5">
+                        Portico<br id="BR_6" />
+                    </p> <a href="https://www.ucl.ac.uk/" id="A_7"><span id="SPAN_8">Home</span></a><img style="width:100%; border-width:0;" alt="UCL logo" id="logo" src="img/UCL-black.png">
+                </div>
+            </div>
+            <!-- end .photograph -->
+
+        </div>
+        <!-- end .wrapper -->
+    </div>
     <div>
-        <img style="width:100%; border-width:0;" alt="UCL logo" id="logo" src="img/ucl-banner-land-black-outline-rgb.png">
+        <img style="width:100%; border-width:0;" alt="UCL logo" id="logo" src="img/UCL-black.png">
 <!--        <hr style="margin:0; height:5px;border-width:0;color:#252624;background-color:#252624">-->
     </div>
     <div role="navigation" class="navbar navbar-default navbar-static-top">

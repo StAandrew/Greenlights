@@ -3,7 +3,7 @@
 // We get student list either form file or clone from existing student lists.
 // If clone module is selected, we passon on module name and hash to the next page.
 // If clone module is not selected, we let user input values via Jquery Tabledit plugin.
-// Associated files: LA_custom_table_edit.js; LA_add_module_live_edit.php
+// Associated files: 
 include_once("inc/enable_debug.php");
 
 include_once("inc/start_session.php");
@@ -179,7 +179,7 @@ if ($_POST['module_hash'] != '0') {
     
     // Auto redirect to next page
 ?>
-<form name='fr' action='LA_add_module_2.php' method='POST'>
+<form name='fr' action='add_module_2.php' method='POST'>
     <input type='hidden' name='module_name' value='<?php echo $module_name; ?>'/>
     <input type='hidden' name='student_list_hash' value='<?php echo $student_list_hash; ?>'/>
     <input type='hidden' name='module_hash' value='<?php echo $module_hash; ?>'/>
@@ -194,8 +194,8 @@ die();
 } else {
     // Insert one row
     $week = "0";
-    $session = "change this";
-    $task = "change this";
+    $session = "Sample event";
+    $task = "Sample task";
     $task_duration = "0";
     $task_type = "I";
         

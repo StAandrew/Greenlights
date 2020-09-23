@@ -54,7 +54,7 @@ $(document).ready(function(){
             //console.log(errorThrown);
         },
         onAlways: function() {
-            console.log('onAlways()');
+            //console.log('onAlways()');
         },
         onAjax: function(action, serialize) {
             //console.log('onAjax(action, serialize)');

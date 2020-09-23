@@ -42,6 +42,7 @@ $no_modules_message = "No modules added yet";
 <h3>
 	<font color=grey>Your Modules</font>
 </h3>
+<table id="your-modules-table">
 <?php
     $sql = "SELECT module_name, module_hash, student_list_hash
             FROM $all_modules_table_name
@@ -50,20 +51,18 @@ $no_modules_message = "No modules added yet";
         if($result->num_rows > 0) {
             while($row = mysqli_fetch_array($result)) {
 ?>
-    <div style="display:inline;  text-align:center; vertical-align:middle;">
-        <span style="display:table-cell; float:left; margin-left:10px; vertical-align:middle; line-height: 30px;">
+    <tr class="your-modules-row">
+        <td class="your-modules-td">
 <?php
 echo '<h4><a href=module_overview.php?module='. $row['module_hash'] .'&student_list='. $row['student_list_hash'] .'&module_name='. $row['module_name'] .'>'. $row['module_name'] .'</a></h4>';
 ?>
-        </span>
-        <span style="display:table-cell; float:left; margin-left:10px; vertical-align:middle; line-height: 30px;">
+        </td>
+        <td class="your-modules-span">
 <?php
 echo '<a href=module_edit.php?module='. $row['module_hash'] .'&student_list='. $row['student_list_hash'] . '&module_name='. $row['module_name'] .'>Edit module</a><br>';
 ?>
-        </span>
-    </div>
-    <br/>
-    <br/>
+        </td>
+    </tr>
 <?php
             }
         } else {
@@ -72,7 +71,9 @@ echo '<a href=module_edit.php?module='. $row['module_hash'] .'&student_list='. $
     } else {
         print $no_modules_message;
     }
-
+?>
+</table>
+<?php
 // ----- ADD MODULE AREA -----
 // Only allow lecturers to add new modules
 if ($_SESSION['user_type'] == 'Lecturer') {
@@ -101,6 +102,7 @@ if ($_SESSION['user_type'] == 'Lecturer') {
 ?>
             </select> 
         </p>
+    
         <p>Would you like to clone tasks from past modules? (optional)
             <select name="module_hash">
                     <option value="0">No</option>  
