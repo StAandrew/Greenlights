@@ -17,7 +17,7 @@ if (isset($_GET['module']) && isset($_GET['student_list']) && isset($_GET['modul
     die();
 }
 ?>
-<h4 style="margin-top:20px; color:gray">Module: <?php echo $module_name; ?></h4>
+<h4 style="margin-top:10px; color:dimgray; font-size:x-large">Module: <?php echo $module_name; ?></h4>
     <div style="margin-top: 10px">
         <table id="joint-table" width="100%" style="position:relative; top:0;">
             <tr>
@@ -88,7 +88,7 @@ if ($big_result->num_rows > 0) {
                     <td style="position:absolute; width:50%; top:0">
                         <table id="right-table" class="table table-striped" style="border-right:solid lightgrey 0.5px; border-bottom:solid lightgrey 0.5px;">
                             <tr>
-                                <th>Session</th>
+                                <th>Teaching event</th>
                             </tr>
 <?php
 // Module table

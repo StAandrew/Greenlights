@@ -91,11 +91,11 @@ if ($_SESSION['user_type'] == 'Lecturer') {
         <h4 class="section-title">
             <font>Task list</font>
         </h4>
-        <div class="section-contents">Option 1: Input tasks by hand (default, no action needed)</div>
+        <div class="section-contents">Option 1: input tasks by hand (default, no action needed)</div>
         <div class="section-contents">Option 2: upload via CSV file
-            <input style="margin-left:10px" type="file" name="file" id="file" accept=".csv">
+            <input style="margin-left:10px" type="file" name="task_file" id="task_file" accept=".csv">
         </div>
-        <div class="section-contents">Option 3: Clone tasks from past modules
+        <div class="section-contents">Option 3: clone tasks from another module
             <select style="margin-left:10px" name="module_hash">
                     <option value="0">No</option>  
 <?php
@@ -134,5 +134,5 @@ if ($_SESSION['user_type'] == 'Lecturer') {
 
 <?php
 }
-include("inc/footer.php");
+include("footer_test.php");
 ?>
