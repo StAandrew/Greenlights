@@ -39,8 +39,8 @@ if (isset($_POST['module_hash_to_save'])) {
 // ----- YOUR MODULES AREA -----
 $no_modules_message = "No modules added yet";
 ?>
-<h3>
-	<font color=grey>Your Modules</font>
+<h3 class="large-section-title">
+        <font>Your modules</font>
 </h3>
 <table id="your-modules-table">
 <?php
@@ -79,32 +79,24 @@ echo '<a href=module_edit.php?module='. $row['module_hash'] .'&student_list='. $
 if ($_SESSION['user_type'] == 'Lecturer') {
 ?>
 <form name=course_entry method=post action="add_module_1.php" enctype="multipart/form-data">
-    <h3>
-        <font color=grey>Add new module</font>
+    <h3 class="large-section-title">
+        <font>Add new module</font>
     </h3>
-        <p>Please enter your module name here:<br>
+        <h4 class="section-title">
+            <font>Module name</font>
+        </h4>
+        <p>
             <input type=text placeholder="Enter Module Name" name=module_name size=50>
         </p>
-        <p>Please upload the relevant class list:<br>
-            <input type="file" name="file" id="file" accept=".csv">
-        </p>
-        <p>Or select from existing class lists (optional)
-            <select name="student_list_hash"> 
-                <option value="0">No</option>
-<?php
-                $sql = "SELECT module_name, student_list_hash
-                        FROM $all_modules_table_name
-                        WHERE access_user_id=$user_id";  
-                $result = mysqli_query($conn, $sql);
-                while($row = mysqli_fetch_array($result)) {
-                    echo '<option value="'. $row['student_list_hash'] .'">'. $row['module_name'] .'</option>';
-                }
-?>
-            </select> 
-        </p>
-    
-        <p>Would you like to clone tasks from past modules? (optional)
-            <select name="module_hash">
+        <h4 class="section-title">
+            <font>Task list</font>
+        </h4>
+        <div class="section-contents">Option 1: Input tasks by hand (default, no action needed)</div>
+        <div class="section-contents">Option 2: upload via CSV file
+            <input style="margin-left:10px" type="file" name="file" id="file" accept=".csv">
+        </div>
+        <div class="section-contents">Option 3: Clone tasks from past modules
+            <select style="margin-left:10px" name="module_hash">
                     <option value="0">No</option>  
 <?php
                 $sql = "SELECT module_name, module_hash
@@ -116,8 +108,28 @@ if ($_SESSION['user_type'] == 'Lecturer') {
                 }
 ?> 
             </select>  
-        <p>
-    <input type=submit name=submit value="Import Class List and Add New Module">
+        </div>
+        <h4 class="section-title">
+            <font>Class list</font>
+        </h4>
+        <div class="section-contents">Option 1: upload via CSV file
+            <input style="margin-left:10px" type="file" name="file" id="file" accept=".csv">
+        </div>
+        <div class="section-contents">Option 2: select from existing class lists
+            <select style="margin-left:10px" name="student_list_hash"> 
+                <option value="0">No</option>
+<?php
+                $sql = "SELECT module_name, student_list_hash
+                        FROM $all_modules_table_name
+                        WHERE access_user_id=$user_id";  
+                $result = mysqli_query($conn, $sql);
+                while($row = mysqli_fetch_array($result)) {
+                    echo '<option value="'. $row['student_list_hash'] .'">'. $row['module_name'] .'</option>';
+                }
+?>
+            </select> 
+        </div>
+    <input style="size:large" type=submit name=submit value="Add New Module">
 </form>
 
 <?php

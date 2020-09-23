@@ -198,7 +198,7 @@ die();
     $task = "Sample task";
     $task_duration = "0";
     $task_type = "I";
-        
+    
     $sql = "INSERT INTO $module_hash (week, session, task, task_duration, task_type) VALUES ('$week', '$session', '$task', '$task_duration', '$task_type')";
     if ($conn->query($sql) === TRUE) {
         echo "";
@@ -229,6 +229,7 @@ die();
 			</thead>
 			<tbody>
 <?php
+    // Table for adding tasks
 	$sql = "SELECT id, week, session, task, task_duration, task_type FROM $module_hash";
     $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
     while( $row = mysqli_fetch_assoc($resultset) ) {

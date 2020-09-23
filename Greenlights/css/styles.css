@@ -93,3 +93,21 @@ footer {
     padding-right: 10px;
     text-align: left;
 }
+.large-section-title {
+    color: #404040;
+}
+.section-title {
+    font-size: large;
+    margin-bottom: 5px;
+    color: #606060;
+}
+.section-contents {
+    font-size: medium;
+    color: #696969;
+    display:flex; 
+    flex-direction: row; 
+    justify-content: left; 
+    align-items: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}

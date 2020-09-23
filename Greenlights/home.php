@@ -1,7 +1,5 @@
 <?php
 include_once("inc/start_session.php");
-if(isset($_SESSION['user_id'])) {
-
 // This may be used to debug if there is an issue with session:
 //    echo "[DEBUG] Output saved session variables<br/>";
 //    foreach ($_SESSION as $key=>$val)
@@ -15,7 +13,6 @@ if(isset($_SESSION['user_id'])) {
 //    echo "[DEBUG] Output global variables<br/>";
 //    foreach ($_GLOBAL as $key=>$val)
 //        echo $key." ".$val."<br/>";
-}
 $lecturer_home = "module_list.php";
 $ta_home = "module_list.php";
 $student_home = "student_module_list.php";
