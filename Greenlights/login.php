@@ -279,10 +279,10 @@ else if(!isset($_SESSION['student_id']) && !isset($_SESSION['user_id'])) {
             <p>
                 <br>
                 <span>
-                    <table cellspacing="10" border="3" rules=none class="login-table">
+                    <table cellspacing="10" border="1" rules=none class="login-table">
                         <tr bgcolor=silver>
                             <td>
-                                <b>System Log-in</b>
+                                <b>Portal Log-in</b>
                             </td>  
                         </tr>
                         <tr>
@@ -290,35 +290,38 @@ else if(!isset($_SESSION['student_id']) && !isset($_SESSION['user_id'])) {
                                 <b>Greenlights is supported from Monday to Friday between 10am and 4pm, UK time.</b>
                             </td>
                         </tr>
+                        <form method="post">
+                        <input type='hidden' name='state' value='<?php echo $_SESSION['state'];?>' />
                         <tr>
                             <td>
-                                <b>Username:</b> 
-                                <br>
-                                <input type=text name=username size=100 required>
+                                <label>Enter Email</label>
+                                <input type="email" name="email" class="form-control" size=100 required />  
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <b>Password:</b>
-                                <br>
-                                <input type=text name=password size=100 required>
+                                <label>Enter Password</label>
+                         <input type="password" name="password" class="form-control" size=100 required /> 
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <a href=" <?php echo $authorise_url;?>">
-                                    <center>
-                                        <button class="login-via-ucl" style="vertical-align:middle" href="<?php echo $authorise_url;?>" align=center>
-                                        <span>Login via UCL (recommended)</span>
-                                        </button>
-                                    </center>
-                                    <hr>
-                                </a>
+                                <center>
+                                    <input type="submit" name="login" value="Login" class="login-other" />  
+                                </center>
+                                <hr>
                              </td>           
                         </tr>
+                        </form>
                         <tr>
                             <td>
-                                <b>Difficulty logging in? Expand the relevant section below for help</b> 
+                                <center>
+                                     <span>
+                                        <a href="<?php echo $authorise_url;?>">
+                                            <button class="login-via-ucl" style="vertical-align:middle" href="<?php echo $authorise_url;?>"><span>Login via UCL (students only)</span></button>
+                                        </a>
+                                    </span>
+                                </center>
                             </td>
                         </tr>
                     </table>           
