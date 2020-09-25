@@ -33,10 +33,14 @@ if(isset($_SESSION['student_id'])) {
     
     // Display welcome message - logged in via UCL
     include("inc/header.php");
-    echo '<div class="welcome-login-text"><p>Welcome, ' . $_SESSION['given_name'] . '</p>';
-    echo '<p>Logged in as ' . $_SESSION['full_name'] . ', '. $_SESSION['student_id']. '</p>';
-    echo '<p><a href="./login.php?logout">Log Out</a></p>';
-    echo '<p><a href="./home.php">Home</a></p></div>';
+?>
+    <div class="welcome-login-text"><p>Welcome, <?php echo $_SESSION['given_name']; ?></p>
+    <p><a href="./home.php">Home</a></p>
+    <p>Student id: <?php echo $_SESSION['student_id'];?></p>
+    <p>Logged in as <?php echo $_SESSION['full_name']?></p>
+    <p><a href="./login.php?logout">Log Out</a></p>
+    </div>
+<?php
 }
 
 // Standard login - if already logged in
@@ -51,10 +55,50 @@ else if(isset($_SESSION['user_id'])) {
     
     // Display welcome message - logged in via form
     include("inc/header.php");
-    echo '<div class="welcome-login-text"><p>Welcome, ' . $_SESSION['full_name'] . '</p>';
-    echo '<p>Logged in as ' . $_SESSION['full_name'] . ', ' . $_SESSION['user_id'] . '</p>'; 
-    echo '<p><a href="' . $_SESSION['login_url'] . '?logout">Log Out</a></p>';
-    echo '<p><a href="./home.php">Home</a></p></div>';
+?>
+    <div class="welcome-login-text"><p>Welcome, <?php echo $_SESSION['full_name']; ?></p>
+    <p><a href="./home.php">Home</a></p>
+    <p>User id: <?php echo $_SESSION['user_id'];?></p>
+    <p>Logged in as <?php echo $_SESSION['full_name']?></p>
+    <p><a data-toggle="modal" data-target="#changePasswordModal" style="cursor: pointer">Change password</a></p>
+    <p><a href="./login.php?logout">Log Out</a></p>
+    </div>
+
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Change password</h4>
+                </div>
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <form method="post">
+                        <label>Enter Current Password</label>
+                            <input type="password" name="old_pass" class="form-control" />  
+                        <br/>
+                        <label>Enter New Password</label>
+                        <li>Must be a minimum of 8 characters<br/></li>
+                        <li>Must contain at least 1 number<br/></li>
+                        <li>Must contain at least one uppercase character<br/></li>
+                        <li>Must contain at least one lowercase character<br/></li>
+                        <br/>
+                            <input type="password" name="new_pass" class="form-control" />  
+                        <br/>  
+                        <label>Confirm New Password</label>
+                            <input type="password" name="confirm_pass" class="form-control" />  
+                        <br/> 
+                        <input type="submit" name="change_password" value="Change password" class="btn btn-info" />  
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php
 }
 
 // Standard login - if initialised login
@@ -273,7 +317,7 @@ else if(!isset($_SESSION['student_id']) && !isset($_SESSION['user_id'])) {
 ?>
     <center>
     <p class="welcome-login-text">
-        <h1>Welcome to Greenlights system</h1>
+        <h1>Welcome to Greenlights feedback system</h1>
     <p>
         <hr>
             <p>
@@ -294,13 +338,13 @@ else if(!isset($_SESSION['student_id']) && !isset($_SESSION['user_id'])) {
                         <input type='hidden' name='state' value='<?php echo $_SESSION['state'];?>' />
                         <tr>
                             <td>
-                                <label>Enter Email</label>
+                                <label>Email:</label>
                                 <input type="email" name="email" class="form-control" size=100 required />  
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Enter Password</label>
+                                <label>Password:</label>
                          <input type="password" name="password" class="form-control" size=100 required /> 
                             </td>
                         </tr>
@@ -328,35 +372,6 @@ else if(!isset($_SESSION['student_id']) && !isset($_SESSION['user_id'])) {
                 </span>
             </p>  
     </center>
-    <div class="modal fade" id="myModalHorizontal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <button type="button" class="close" 
-                        data-dismiss="modal">
-                       <span aria-hidden="true">&times;</span>
-                       <span class="sr-only">Close</span>
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">Login</h4>
-                </div>
-                <!-- Modal Body -->
-                <div class="modal-body">
-                    <form method="post">
-                         <input type='hidden' name='state' value='<?php echo $_SESSION['state'];?>' />
-                         <label>Enter Email</label>
-                         <input type="email" name="email" class="form-control" />  
-                         <br />  
-                         <label>Enter Password</label>
-                         <input type="password" name="password" class="form-control" />  
-                         <br />  
-                         <input type="submit" name="login" value="Login" class="btn btn-info" />  
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-        
 <?php
 }
 

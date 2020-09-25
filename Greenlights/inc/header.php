@@ -186,7 +186,6 @@ if(isset($_POST['old_pass'])) {
                             echo '<li class="inactive"><a href="home.php">Home</a></li>';
                             echo '<li class="inactive"><a href="./login.php">Welcome, '. $_SESSION['full_name'] .'</a></li>';
                             echo '<li class="inactive"><a>'. $_SESSION['user_id'] .'</li>';
-                            echo '<li class="inactive" style="cursor: pointer"><a data-toggle="modal" data-target="#changePasswordModal" >Change password</li>';
                             echo '<li class="inactive"><a href="./login.php?logout">Log Out</a></li>';
                         } else {
                             echo '<li class="inactive"><a href="./login.php">Login</a></li>';
@@ -198,37 +197,3 @@ if(isset($_POST['old_pass'])) {
     </div>
 </header>
 <div id="content">
-<div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                    <span aria-hidden="true">&times;</span>
-                    <span class="sr-only">Close</span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel">Change password</h4>
-            </div>
-            <!-- Modal Body -->
-            <div class="modal-body">
-                <form method="post">
-                    <label>Enter Current Password</label>
-                        <input type="password" name="old_pass" class="form-control" />  
-                    <br/>
-                    <label>Enter New Password</label>
-                    <li>Must be a minimum of 8 characters<br/></li>
-                    <li>Must contain at least 1 number<br/></li>
-                    <li>Must contain at least one uppercase character<br/></li>
-                    <li>Must contain at least one lowercase character<br/></li>
-                    <br/>
-                        <input type="password" name="new_pass" class="form-control" />  
-                    <br/>  
-                    <label>Confirm New Password</label>
-                        <input type="password" name="confirm_pass" class="form-control" />  
-                    <br/> 
-                    <input type="submit" name="change_password" value="Change password" class="btn btn-info" />  
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
