@@ -25,6 +25,13 @@ footer {
     right: 0;
     width: 100%;
 }
+.login-table {
+    border-collapse: collapse;
+}
+.login-table th,
+.login-table td {
+  padding: 10px;
+}
 .comment-edit {
     min-width: 10px;
     max-width: 150px; 

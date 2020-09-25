@@ -271,20 +271,60 @@ else if(!isset($_SESSION['student_id']) && !isset($_SESSION['user_id'])) {
     ]);
     include("inc/header.php");
 ?>
-    <p class="welcome-login-text">Welcome to Greenlights system<br/>Please log in:</p>
+    <center>
+    <p class="welcome-login-text">
+        <h1>Welcome to Greenlights system</h1>
     <p>
-        <span>
-            <a href="<?php echo $authorise_url;?>">
-                <button class="login-via-ucl" style="vertical-align:middle" href="<?php echo $authorise_url;?>"><span>Login via UCL</span></button>
-            </a>
-        </span>
-        <span class="login-via-ucl-text">(recommended)</span>
-    </p>
-    <p>
-        <button class="login-other" style="vertical-align:middle" data-toggle="modal" data-target="#myModalHorizontal">
-                    <span>Other login</span>
-        </button>
-    </p>
+        <hr>
+            <p>
+                <br>
+                <span>
+                    <table cellspacing="10" border="3" rules=none class="login-table">
+                        <tr bgcolor=silver>
+                            <td>
+                                <b>System Log-in</b>
+                            </td>  
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Greenlights is supported from Monday to Friday between 10am and 4pm, UK time.</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Username:</b> 
+                                <br>
+                                <input type=text name=username size=100 required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Password:</b>
+                                <br>
+                                <input type=text name=password size=100 required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href=" <?php echo $authorise_url;?>">
+                                    <center>
+                                        <button class="login-via-ucl" style="vertical-align:middle" href="<?php echo $authorise_url;?>" align=center>
+                                        <span>Login via UCL (recommended)</span>
+                                        </button>
+                                    </center>
+                                    <hr>
+                                </a>
+                             </td>           
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Difficulty logging in? Expand the relevant section below for help</b> 
+                            </td>
+                        </tr>
+                    </table>           
+                </span>
+            </p>  
+    </center>
     <div class="modal fade" id="myModalHorizontal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
