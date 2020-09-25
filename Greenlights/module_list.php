@@ -89,15 +89,21 @@ if ($_SESSION['user_type'] == 'Lecturer') {
             <input type=text placeholder="Enter Module Name" name=module_name size=50>
         </p>
         <h4 class="section-title">
-            <font>Task list</font>
+            <font>Choose task list option:</font>
         </h4>
-        <div class="section-contents">Option 1: input tasks by hand (default, no action needed)</div>
-        <div class="section-contents">Option 2: upload via CSV file
-            <input style="margin-left:10px" type="file" name="task_file" id="task_file" accept=".csv">
-        </div>
-        <div class="section-contents">Option 3: clone tasks from another module
-            <select style="margin-left:10px" name="module_hash">
-                    <option value="0">No</option>  
+        <ul>
+            <li>
+                <div class="section-contents">Input tasks by hand (default, no action needed)</div>
+            </li>
+            <li>
+                <div class="section-contents">Upload via CSV file
+                    <input style="margin-left:10px" type="file" name="task_file" id="task_file" accept=".csv">
+                </div>
+            </li>
+            <li>
+                <div class="section-contents">Clone tasks from another module
+                    <select style="margin-left:10px" name="module_hash">
+                        <option value="0">No</option>  
 <?php
                 $sql = "SELECT module_name, module_hash
                         FROM $all_modules_table_name
@@ -107,15 +113,21 @@ if ($_SESSION['user_type'] == 'Lecturer') {
                     echo '<option value="'. $row['module_hash'] .'">'. $row['module_name'] .'</option>';
                 }
 ?> 
-            </select>  
-        </div>
+                    </select>  
+                </div>
+            </li>
+        </ul>
         <h4 class="section-title">
-            <font>Class list</font>
+            <font>Choose class list option:</font>
         </h4>
-        <div class="section-contents">Option 1: upload via CSV file
-            <input style="margin-left:10px" type="file" name="file" id="file" accept=".csv">
-        </div>
-        <div class="section-contents">Option 2: select from existing class lists
+        <ul>
+            <li>
+                <div class="section-contents">Upload via CSV file
+                    <input style="margin-left:10px" type="file" name="file" id="file" accept=".csv">
+                </div>
+            </li>
+            <li>
+            <div class="section-contents">Select from existing class lists
             <select style="margin-left:10px" name="student_list_hash"> 
                 <option value="0">No</option>
 <?php
@@ -128,11 +140,13 @@ if ($_SESSION['user_type'] == 'Lecturer') {
                 }
 ?>
             </select> 
-        </div>
-    <input style="size:large" type=submit name=submit value="Add New Module">
+            </div>
+            </li>
+        </ul>
+    <input style="size:large" type=submit name=submit value="Add New Module" >
 </form>
 
 <?php
 }
-include("footer_test.php");
+include("inc/footer.php");
 ?>

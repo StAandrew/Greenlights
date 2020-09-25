@@ -153,6 +153,7 @@ if(isset($_POST['old_pass'])) {
 </head>
 <body>
 <div id="page-container">
+<div id="page-container-no-footer">
 <header class="header">
     <div>
         <img style="width:100%; border-width:0;" alt="UCL logo" id="logo" src="img/UCL-black.png">
