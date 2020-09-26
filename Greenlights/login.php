@@ -353,11 +353,9 @@ else if(!isset($_SESSION['student_id']) && !isset($_SESSION['user_id'])) {
                                 <center>
                                     <input type="submit" name="login" value="Login" class="login-other" />  
                                 </center>
-                                <hr>
                              </td>           
                         </tr>
                         </form>
-                        <tr>
                             <td>
                                 <center>
                                      <span>
