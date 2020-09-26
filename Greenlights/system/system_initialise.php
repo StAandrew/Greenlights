@@ -78,5 +78,6 @@ registerUser("admin@ucl", "ucladmin", "admin", "Mr", "Admin", "");
 registerUser("lecturer@ucl", "ucladmin", "Lecturer", "Stanley", "Brown", "");
 registerUser("ta@ucl", "ucladmin", "TA", "Dan", "Matthews", "");
 registerUser("student@ucl", "ucladmin", "Student", "Leo", "Walker", "18293867");
+registerUser("aishwarya.shaji.19@ucl.ac.uk", "ucladmin", "Student", "Aishwarya", "Shaji", "19017016");
 $conn->close();
 ?>

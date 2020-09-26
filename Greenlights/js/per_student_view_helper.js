@@ -1,5 +1,7 @@
 $(document).ready(function(){
 	$('#data_table').Tabledit({
+        url: 'per_student_view_helper.php?table=' + $('#js-helper').data('table-id'),
+        hideIdentifier: true,
 		deleteButton: false,
 		editButton: false,   		
 		columns: {
@@ -12,7 +14,11 @@ $(document).ready(function(){
                      [11, 'meeting_date'],
                      [12, 'meeting_duration']]
 		},
-		hideIdentifier: false,
-		url: 'TA_PS_helper.php?table=' + $('#js-helper').data('table-id')		
+        onFail: function(jqXHR, textStatus, errorThrown) {
+//            console.log('onFail(jqXHR, textStatus, errorThrown)');
+//            console.log(jqXHR);
+//            console.log(textStatus);
+//            console.log(errorThrown);
+        },
 	});
 });

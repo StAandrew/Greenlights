@@ -42,3 +42,5 @@ if ($input['action'] == 'edit') {
 		mysqli_query($conn, $sql_query) or die("database error:". mysqli_error($conn));
 	}
 }
+mysqli_close($conn);
+echo json_encode($input);

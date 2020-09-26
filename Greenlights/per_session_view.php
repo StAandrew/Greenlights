@@ -132,20 +132,20 @@ if ($stud_result->num_rows > 0) {
                     $red_num = $red_num / $rating_num;
                     $green_num = $green_num / $rating_num;
                 }
-//                if ($overall_rating == -1 || $rating_num == 0)
-//                    $overall_rating = "Unknown";
-//                // Check for red and amber thresholds
-//                else if ($red_num >= $red_threshold)
-//                    $overall_rating = "Red";
-//                else if ($amber_num + $red_num >= $amber_threshold)
-//                    $overall_rating = "Amber";
-//                // If thresholds are fine, calculate based on average
-//                else if ($overall_rating <= 0.3)
-//                    $overall_rating = "Red";
-//                else if ($overall_rating <= 0.7)
-//                    $overall_rating = "Amber";
-//                else 
-//                    $overall_rating = "Green";
+                if ($overall_rating == -1 || $rating_num == 0)
+                    $overall_rating = "Unknown";
+                // Check for red and amber thresholds
+                else if ($red_num >= $red_threshold)
+                    $overall_rating = "Red";
+                else if ($amber_num + $red_num >= $amber_threshold)
+                    $overall_rating = "Amber";
+                // If thresholds are fine, calculate based on average
+                else if ($overall_rating <= 0.3)
+                    $overall_rating = "Red";
+                else if ($overall_rating <= 0.7)
+                    $overall_rating = "Amber";
+                else 
+                    $overall_rating = "Green";
             } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
             }

@@ -26,7 +26,7 @@ if (isset($_POST['module_hash_to_save'])) {
             $task_duration = $small_row['task_duration'];
             $task_type = $small_row['task_type'];
             // update table for each student
-            $sql = "UPDATE $student_table_hash SET id='$id', week='$week', session='$session', task='$task', task_duration='$task_duration', task_type='$task_type' WHERE id='$id'";
+            $sql = "INSERT INTO $student_table_hash (id, week, session, task, task_duration, task_type) VALUES ('$id', '$week', '$session', '$task', '$task_duration', '$task_type') ON DUPLICATE KEY UPDATE id='$id', week='$week', session='$session', task='$task', task_duration='$task_duration', task_type='$task_type'";
             if ($conn->query($sql) === TRUE) {
                 echo "";
             } else {
