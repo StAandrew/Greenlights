@@ -48,18 +48,18 @@ echo "Year of studies: " . $year ."<br/>";
             <thead>
                 <tr>
                     <th>Unique id</th>
-                    <th>Week</th>
+                    <th class="table-week">Week</th>
                     <th>Session</th>
                     <th>Task</th>
-                    <th>Group number</th>
-                    <th>Rating</th>
+                    <th class="table-group-number">Group number</th>
+                    <th class="table-rating">Rating (Green, Amber, Red)</th>
                     <th>Task duration (minutes)</th>
                     <th>Task type(G/I)</th>
-                    <th>Task took (minutes)</th>
-                    <th>Comment</th>
-                    <th>Actions</th>
-                    <th>Meeting date</th>
-                    <th>Meeting duration</th>
+                    <th class="table-task-actual">Task took (minutes)</th>
+                    <th class="table-comment">Comment</th>
+                    <th class="table-actions">Future actions</th>
+                    <th class="table-meeting-date">Meeting date (yyyy-mm-dd hh:mm)</th>
+                    <th class="table-meeting-duration">Meeting duration (minutes)</th>
                 </tr>
             </thead>
             <tbody>
@@ -79,21 +79,21 @@ $resultset = mysqli_query($conn, $sql_query) or die("database error:". mysqli_er
 while( $row = mysqli_fetch_assoc($resultset) ) {
         print '<tr id="' . $row['id'] . '">';
             print '<td>' . $row['id'] . '</td>';
-            print '<td>' . $row['week'] . '</td>';
+            print '<td  class="table-week">' . $row['week'] . '</td>';
             print '<td>' . $row['session'] . '</td>';
             print '<td>' . $row['task'] . '</td>';
             if ($row['group_number'] == 0)
-                print '<td> </td>';
+                print '<td class="table-group-number"> </td>';
             else
-                print '<td>' . $row['group_number'] . '</td>';
-            print '<td>' . $row['rating'] . '</td>'; 
+                print '<td  class="table-group-number">' . $row['group_number'] . '</td>';
+            print '<td class="table-rating">' . $row['rating'] . '</td>'; 
             print '<td>' . $row['task_duration'] . '</td>';
             print '<td>' . $row['task_type'] . '</td>';
-            print '<td>' . $row['task_actual'] . '</td>';
-            print '<td style="word-wrap: break-word; min-width: 160px; max-width: 160px";>' . $row['comment'] . '</td>'; 
-            print '<td>' . $row['actions'] . '</td>'; 
-            print '<td>' . $row['meeting_date'] . '</td>'; 
-            print '<td>' . $row['meeting_duration'] . '</td>'; 
+            print '<td class="table-task-actual">' . $row['task_actual'] . '</td>';
+            print '<td class="table-comment">' . $row['comment'] . '</td>'; 
+            print '<td class="table-actions">' . $row['actions'] . '</td>'; 
+            print '<td class="table-meeting-date">' . $row['meeting_date'] . '</td>'; 
+            print '<td class="table-meeting-duration">' . $row['meeting_duration'] . '</td>'; 
         print '</tr>';
 }
 ?>

@@ -120,6 +120,49 @@ footer {
     margin-top: 5px;
     margin-bottom: 5px;
 }
+ 
+.table-week {
+    min-width: 50px;
+    max-width: 50px;
+}
+.table-group-number {
+    min-width: 60px;
+    max-width: 60px;
+}
+.table-rating {
+    min-width: 80px;
+    max-width: 80px;
+}
+.table-task-actual {
+    min-width: 65px;
+    max-width: 65px;
+}
+.table-comment {
+    word-wrap: break-word;
+    min-width: 20vw;
+    max-width: 20vw;
+}
+.table-actions {
+    word-wrap: break-word;
+    min-width: 20vw;
+    max-width: 20vw;
+}
+.table-meeting-date {
+    word-wrap: break-word;
+    min-width: 135px;
+    max-width: 135px;
+}
+.meeting-date {
+    word-wrap: break-word;
+    min-width: 135px;
+    max-width: 135px;
+}
+.meeting-duration {
+    word-wrap: break-word;
+    min-width: 70px;
+    max-width: 70px;
+}
+
 
 /*************** UCL SPECIFIC CLASSES ************************/
 /*************** UCL SPECIFIC CLASSES ************************/

@@ -162,7 +162,7 @@ while($row = mysqli_fetch_assoc($resultset)) {
 }
 ?>
     <div style="margin:50px 0px 0px 0px;">
-        <form action="./export_csv.php" method="post">
+        <form action="inc/export_csv.php" method="post">
             <input type='hidden' name='export_module_name' value='<?php echo $module_name;?>' />
             <input type='hidden' name='export_module_hash' value='<?php echo $module_hash;?>' />
             <input type="submit" name="export_module" value="Save module as .csv file"/>
