@@ -245,17 +245,50 @@ die();
 ?>
 			</tbody>
         </table>
-        <button id='add' for-table='#data_table'>Add Row</button>
+        <button id='add' for-table='#data_table'>Add Row (clones last row)</button>
     </div> 
-<form class="insert_form" id="insert_form" method=post action="add_module_2.php">
-    <input type='hidden' name='module_name' value='<?php echo $_POST['module_name'];?>' />
-    <input type='hidden' name='module_hash' value='<?php echo $module_hash?>' />
-    <input type='hidden' name='student_list_hash' value='<?php echo $student_list_hash;?>' />
+    <form class="insert_form" id="insert_form" method=post action="add_module_2.php">
+        <input type='hidden' name='module_name' value='<?php echo $_POST['module_name'];?>' />
+        <input type='hidden' name='module_hash' value='<?php echo $module_hash?>' />
+        <input type='hidden' name='student_list_hash' value='<?php echo $student_list_hash;?>' />
         <center>
-            <input class="btn btn-success" type=submit name=cancel id="cancel" value=Cancel> 
+            <input class="btn btn-success" formaction="module_list.php?cancel" type=submit name=cancel id="cancel" value=Cancel>
             <input class="btn btn-success" type=submit name=submit id="submit" value=Submit> 
         </center>
-</form>  
+    </form>
+<hr/>
+<h3>
+    <font color=grey>List of students:</font>
+</h3>
+<table class="table table-stiped">
+    <thead>
+        <tr>
+            <th>Student id</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Email</th>
+            <th>Course code</th>
+            <th>Year</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php
+        $sql = "SELECT student_id, firstname, lastname, email, course_code, year FROM $student_list_hash";
+        $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+        while($row = mysqli_fetch_assoc($resultset)) {
+            print '<tr>';
+                print '<td>'. $row['student_id'] .'</td>';
+                print '<td>'. $row['firstname'] .'</td>';
+                print '<td>' . $row['lastname'] . '</td>';
+                print '<td>' . $row['email'] . '</td>';
+                print '<td>' . $row['course_code'] . '</td>';
+                print '<td>' . $row['year'] . '</td>';
+            print '</tr>';
+        }
+
+    ?>
+   </tbody>
+</table>
 <script 
     type="text/javascript" 
     src="js/module_edit_helper.js">

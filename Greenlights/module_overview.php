@@ -41,15 +41,8 @@ $big_result = $conn->query($sql);
 if ($big_result->num_rows > 0) {
     // for each student
     while ($big_row = $big_result->fetch_assoc()) {
-        $display_name = $big_row['firstname'][0] . ". " . $big_row['lastname'] . " #" . $big_row['student_id']; //name to display
+        $display_name = $big_row['firstname'] . " " . $big_row['lastname'] . " #" . $big_row['student_id'];
         $student_id = $big_row['student_id'];
-        // inside per student table
-//        $student_id = $row['student_id'];
-//        $firstname = $row['firstname'];
-//        $lastname = $row['lastname'];
-//        $email = $row['email'];
-//        $course_code = $row['course_code'];
-//        $year = $row['year'];
         $sql = "SELECT student_table_hash
         FROM $all_students_table_name
         WHERE module_hash=\"$module_hash\"
@@ -101,8 +94,8 @@ if ($result->num_rows > 0) {
         print '<tr>';
             print '<td><a href=\''. $per_session_view . 
                 '?session=' . str_replace(' ', '_', $session_name) . 
-                '&module_name=' . $module_name . 
                 '&module_hash=' . $module_hash . 
+                '&module_name=' . $module_name . 
                 '&student_list_hash=' . $student_list_hash . '\' >' . $session_name . '</a></td>';
         print '</tr>';
     }

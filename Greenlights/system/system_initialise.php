@@ -74,10 +74,21 @@ if ($conn->query($sql) === TRUE) {
 
 // Add default users
 include("register-user.php");
-registerUser("admin@ucl", "ucladmin", "admin", "Mr", "Admin", "");
-registerUser("lecturer@ucl", "ucladmin", "Lecturer", "Stanley", "Brown", "");
-registerUser("ta@ucl", "ucladmin", "TA", "Dan", "Matthews", "");
-registerUser("student@ucl", "ucladmin", "Student", "Leo", "Walker", "18293867");
+registerUser("admin@uclgreenlighs", "ucladmin", "admin", "Mr", "Admin", "");
+
+registerUser("lecturer.demo@ucl.ac.uk", "ucladmin", "Lecturer", "Stanley", "Brown", "");
+registerUser("zdadaur@ucl.ac.uk", "ucladmin", "Lecturer", "David", "Urwin", "");
+registerUser("zdajawa@ucl.ac.uk", "ucladmin", "Lecturer", "Jack", "Walsh", "");
+
+registerUser("ta.demo@ucl.ac.uk", "ucladmin", "TA", "Dan", "Matthews", "");
+registerUser("zceanco@ucl.ac.uk", "ucladmin", "TA", "Andrew", "Cooper", "");
+registerUser("zcedaja@ucl.ac.uk", "ucladmin", "TA", "David", "Jackson", "");
+registerUser("zcephsc@ucl.ac.uk", "ucladmin", "TA", "Phillip", "Scott", "");
+registerUser("zceshst@ucl.ac.uk", "ucladmin", "TA", "Sharone", "Stone", "");
+registerUser("zcemase@ucl.ac.uk", "ucladmin", "TA", "Mark", "Seal", "");
+
+registerUser("student@ucl.ac.uk", "ucladmin", "Student", "Leo", "Walker", "18293867");
 registerUser("aishwarya.shaji.19@ucl.ac.uk", "ucladmin", "Student", "Aishwarya", "Shaji", "19017016");
+registerUser("zceeast@ucl.ac.uk", "ucladmin", "Student", "Andrey", "Staniukynas", "18030116");
 $conn->close();
 ?>

@@ -105,8 +105,11 @@ if ($stud_result->num_rows > 0) {
                 FROM $table
                 WHERE task = '$item'";
             $result = $conn->query($sql);
+            $overall_rating = 0;
             if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
+                while ($row = $result->fetch_assoc()) {
+                    if($row['rating'] == null)
+                        break;
                     if($row['rating'] == 'Green') {
                         $overall_rating += 3;
                         $green_num += 1;
@@ -126,7 +129,7 @@ if ($stud_result->num_rows > 0) {
                     }
                 }
                 if ($rating_num != 0) {
-                    $overall_rating = $overall_rating/3*$rating_num;
+                    $overall_rating = $overall_rating/ (3*$rating_num);
                     
                     $amber_num = $amber_num / $rating_num;
                     $red_num = $red_num / $rating_num;
@@ -136,12 +139,12 @@ if ($stud_result->num_rows > 0) {
                     $overall_rating = "Unknown";
                 // Check for red and amber thresholds
                 else if ($red_num >= $red_threshold)
-                    $overall_rating = "Red";
+                    $overall_rating = "Green";
                 else if ($amber_num + $red_num >= $amber_threshold)
                     $overall_rating = "Amber";
                 // If thresholds are fine, calculate based on average
                 else if ($overall_rating <= 0.3)
-                    $overall_rating = "Red";
+                    $overall_rating = "Green";
                 else if ($overall_rating <= 0.7)
                     $overall_rating = "Amber";
                 else 
@@ -159,7 +162,10 @@ if ($stud_result->num_rows > 0) {
             if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                     if (!$date) {
-                        print '<td>' . $row['meeting_date'] . '</td>';
+                        if ($row['meeting_date'] != null)
+                            print '<td>' . date_format(date_create($row['meeting_date']), 'Y-m-d H:i') . '</td>';
+                        else
+                            print '<td></td>';
                         print '<td>' . $overall_rating . '</td>';
                         $date = 1;
                     }

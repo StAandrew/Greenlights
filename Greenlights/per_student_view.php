@@ -92,14 +92,25 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
             print '<td class="table-task-actual">' . $row['task_actual'] . '</td>';
             print '<td class="table-comment">' . $row['comment'] . '</td>'; 
             print '<td class="table-actions">' . $row['actions'] . '</td>'; 
-            print '<td class="table-meeting-date">' . $row['meeting_date'] . '</td>'; 
+            if ($row['meeting_date'] != null)
+                print '<td class="table-meeting-date">' . date_format(date_create($row['meeting_date']), 'Y-m-d H:i') . '</td>';
+            else
+                print '<td class="table-meeting-date"></td>';
             print '<td class="table-meeting-duration">' . $row['meeting_duration'] . '</td>'; 
         print '</tr>';
 }
 ?>
             </tbody>
             </table>
-        </div> 
+        </div>
+        <div style="margin:50px 0px 0px 0px;">
+            <form action="inc/export_student_csv.php" method="post">
+                <input type='hidden' name='export_student_id' value='<?php echo $student_id;?>' />
+                <input type='hidden' name='export_table_hash' value='<?php echo $module_hash;?>' />
+                <input type='hidden' name='export_student_list_hash' value='<?php echo $student_list_hash;?>' />
+                <input type="submit" name="export_module" value="Save as .csv file"/>
+            </form>
+        </div>
         <script 
                 type="text/javascript" 
                 src="js/per_student_view_helper.js">

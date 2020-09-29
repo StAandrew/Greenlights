@@ -23,8 +23,8 @@ if(isset($_GET['logout'])) {
 
 // UCL login - if there is a student_id, they are logged in, and we show the logged-in view
 if(isset($_SESSION['student_id'])) {
-    if (isset($_SESSION['state']))
-        unset($_SESSION['state']);
+    if (isset($_SESSION['login_state']))
+        unset($_SESSION['login_state']);
     if(isset($_SESSION['redirect'])) {
         $redirect = $_SESSION['redirect'];
         unset($_SESSION['redirect']);
@@ -45,8 +45,8 @@ if(isset($_SESSION['student_id'])) {
 
 // Standard login - if already logged in
 else if(isset($_SESSION['user_id'])) {
-    if (isset($_SESSION['state']))
-        unset($_SESSION['state']);
+    if (isset($_SESSION['login_state']))
+        unset($_SESSION['login_state']);
     if(isset($_SESSION['redirect'])) {
         $redirect = $_SESSION['redirect'];
         unset($_SESSION['redirect']);
@@ -104,12 +104,12 @@ else if(isset($_SESSION['user_id'])) {
 // Standard login - if initialised login
 else if(isset($_POST["email"]) && isset($_POST["password"])){
     
-    // Raise error if states mismatch - security issue
-    if($_SESSION['state'] != $_POST['state']) {
-        echo "[DEBUG] Session state: " . $_SESSION['state'] . "<br/>";
-        echo "[DEBUG] Get state: " . $_GET['state'] . "<br/>";
-        echo "[DEBUG] Post state: " . $_POST['state'] . "<br/>";
-        die('Authorization server returned an invalid state parameter');
+    // Raise error if login_states mismatch - security issue
+    if($_SESSION['login_state'] != $_POST['login_state']) {
+        echo "[DEBUG] Session login_state: " . $_SESSION['login_state'] . "<br/>";
+        echo "[DEBUG] Get login_state: " . $_GET['login_state'] . "<br/>";
+        echo "[DEBUG] Post login_state: " . $_POST['login_state'] . "<br/>";
+        die('Authorization server returned an invalid login_state parameter');
     }
     
     $email = "";
@@ -169,7 +169,7 @@ else if(isset($_POST["email"]) && isset($_POST["password"])){
             $_SESSION['user_type'] = $user_type; //types: TA Lecturer admin Student
             $_SESSION['user_id'] = $user_id; //100000001
             $_SESSION['full_name'] = $name . " " . $surname;
-            unset($_SESSION['state']);
+            unset($_SESSION['login_state']);
             $stmt->free_result();
             $stmt->close();
             $mysqli->close();
@@ -190,18 +190,18 @@ else if(isset($_GET['code']) && !isset($_SESSION['student_id'])) {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
     // Check for errors
-    if($_SESSION['state'] != $_GET['state']) {
-        echo "[DEBUG] Session state: " . $_SESSION['state'] . "<br/>";
-        echo "[DEBUG] Get state: " . $_GET['state'] . "<br/>";
-        echo "[DEBUG] Post state: " . $_POST['state'] . "<br/>";
-        die('Authorization server returned an invalid state parameter');
+    if($_SESSION['login_state'] != $_GET['state']) {
+        echo "[DEBUG line 194] Session login_state: " . $_SESSION['login_state'] . "<br/>";
+        echo "[DEBUG] Get login_state: " . $_GET['state'] . "<br/>";
+        echo "[DEBUG] Post login_state: " . $_POST['state'] . "<br/>";
+        die('Authorization server returned an invalid login_state parameter');
     }
     if(isset($_GET['error'])) {
       die('Authorization server returned an error: ' . htmlspecialchars($_GET['error']));
     }
 //    echo "Result: " . $_GET['result'] . "<br/>";
 //    echo "Client_id: " . $_GET['client_id'] . "<br/>";
-//    echo "State: " . $_GET['state'] . "<br/>";
+//    echo "login_state: " . $_GET['login_state'] . "<br/>";
 //    echo "Code: " . $_GET['code']. "<br/>";
     
     $token_url = $token_endpoint.'?'.http_build_query([
@@ -305,13 +305,13 @@ else if(!isset($_SESSION['student_id']) && !isset($_SESSION['user_id'])) {
     $schema .= "://";
     $_SESSION['login_url'] = $schema . $_SERVER['SERVER_NAME'] . $port . $_SERVER['REQUEST_URI'];
     
-    // Generate a random state for security
-    $_SESSION['state'] = bin2hex(random_bytes(5));
+    // Generate a random login_state for security
+    $_SESSION['login_state'] = bin2hex(random_bytes(5));
 
     // UCL SSO Authorise endpoint
     $authorise_url = $authorise_endpoint.'?'.http_build_query([
         'client_id' => $client_id,
-        'state' => $_SESSION['state'],
+        'state' => $_SESSION['login_state'],
     ]);
     include("inc/header.php");
 ?>
@@ -335,7 +335,7 @@ else if(!isset($_SESSION['student_id']) && !isset($_SESSION['user_id'])) {
                             </td>
                         </tr>
                         <form method="post">
-                        <input type='hidden' name='state' value='<?php echo $_SESSION['state'];?>' />
+                        <input type='hidden' name='login_state' value='<?php echo $_SESSION['login_state'];?>' />
                         <tr>
                             <td>
                                 <label>Email:</label>
@@ -365,7 +365,6 @@ else if(!isset($_SESSION['student_id']) && !isset($_SESSION['user_id'])) {
                                     </span>
                                 </center>
                             </td>
-                        </tr>
                     </table>           
                 </span>
             </p>  

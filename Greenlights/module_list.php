@@ -4,6 +4,53 @@ include_once("inc/ta_check.php");
 include_once("inc/db_connect.php");
 include("inc/header.php");
 
+// Option when user canceled adding a module
+if(isset($_GET['cancel'])) {
+    $delete_table_hash = $_POST['module_hash'];
+    $delete_student_list = $_POST['student_list_hash'];
+    $_POST = array();
+    
+    $sql = "DROP TABLE IF EXISTS $delete_table_hash";
+    if ($conn->query($sql) === TRUE) {
+        echo "";
+    } else {
+        echo "Failed to delete table $delete_table_hash";
+    }
+    
+    $sql = "DROP TABLE IF EXISTS $delete_student_list";
+    if ($conn->query($sql) === TRUE) {
+        echo "";
+    } else {
+        echo "Failed to delete table $delete_student_list";
+    }
+    
+    $sql = "DELETE FROM $all_modules_table_name WHERE module_hash='$delete_table_hash'";
+    if ($conn->query($sql) === TRUE) {
+        echo "";
+    } else {
+        echo "Failed to delete from all modules table";
+    }
+    
+    $sql = "SELECT student_table_hash, module_hash FROM $all_students_table_name WHERE module_hash='$delete_table_hash'";
+    $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+    while($row = mysqli_fetch_array($resultset)) {
+        $delete_student_table = $row['student_table_hash'];
+        $sql = "DROP TABLE IF EXISTS $delete_student_table";
+        if ($conn->query($sql) === TRUE) {
+            echo "";
+        } else {
+            echo "Failed to delete students table $delete_student_table";
+        }
+    }
+    
+    $sql = "DELETE FROM $all_students_table_name WHERE module_hash='$delete_table_hash'";
+    if ($conn->query($sql) === TRUE) {
+        echo "";
+    } else {
+        echo "Failed to delete from all modules table";
+    }
+}
+
 // Option when user came back from module edit
 if (isset($_POST['module_hash_to_save'])) {
     $module_hash_to_save = $_POST['module_hash_to_save'];
@@ -93,7 +140,7 @@ if ($_SESSION['user_type'] == 'Lecturer') {
         </h4>
         <ul>
             <li>
-                <div class="section-contents">Input tasks by hand (default, no action needed)</div>
+                <div class="section-contents">Input tasks by hand <b>(default, no action needed)</b></div>
             </li>
             <li>
                 <div class="section-contents">Upload via CSV file

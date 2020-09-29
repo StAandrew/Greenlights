@@ -1,6 +1,7 @@
 <?php
 // Here we allow Lecturers to edit existing modules tables
 // To update per-student tables user needs to press 'save changes' button
+// Editable table, files used: module_edit_helper.js; module_edit_helper.php
 include_once("inc/enable_debug.php");
 
 include_once("inc/start_session.php");
@@ -9,8 +10,7 @@ include_once("inc/db_connect.php");
 include("inc/header.php");
 
 // Get information about module and a student list hash
-if (isset($_GET['module_name']) && isset($_GET['module']) && isset($_GET['student_list'])) {
-    $module_name = $_GET['module_name'];
+if (isset($_GET['module']) && isset($_GET['student_list'])) {
     $module_hash = $_GET['module'];
     $student_list_hash = $_GET['student_list'];
 } else {
@@ -18,10 +18,13 @@ if (isset($_GET['module_name']) && isset($_GET['module']) && isset($_GET['studen
     die();
 }
 
-$callBackURL = "./module_list.php";
-// TODO: Display list of students at thebottom of a page
+// Get module name from $all_modules table
+$sql = "SELECT module_name, module_hash FROM $all_modules_table_name WHERE module_hash='$module_hash' LIMIT 0,1";
+$resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+$row = mysqli_fetch_assoc($resultset);
+$module_name = $row['module_name'];
 
-// Editable table, files used: LA_module_edit_helper.js; LA_module_edit_helper.php
+$callBackURL = "./module_list.php";
 // Helper for an editable table
 ?>     
     <div id="js-helper"
@@ -59,7 +62,7 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
 ?>
             </tbody>
         </table>
-        <button id='add' for-table='#data_table'>Add Row</button>
+        <button id='add' for-table='#data_table'>Add Row (clones last row)</button>
     </div>
     <div style="margin:10px 0px 0px 0px;">
         <font color=grey>Please make sure to save changes before leaving the page:</font>
@@ -161,13 +164,46 @@ while($row = mysqli_fetch_assoc($resultset)) {
 <?php
 }
 ?>
-    <div style="margin:50px 0px 0px 0px;">
+    <div style="margin:30px 30px 0px 0px;">
         <form action="inc/export_csv.php" method="post">
             <input type='hidden' name='export_module_name' value='<?php echo $module_name;?>' />
             <input type='hidden' name='export_module_hash' value='<?php echo $module_hash;?>' />
             <input type="submit" name="export_module" value="Save module as .csv file"/>
         </form>
     </div>
+    <hr/>
+     <h3>
+        <font color=grey>List of students:</font>
+    </h3>
+    <table class="table table-stiped">
+        <thead>
+            <tr>
+                <th>Student id</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Email</th>
+                <th>Course code</th>
+                <th>Year</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php
+            $sql = "SELECT student_id, firstname, lastname, email, course_code, year FROM $student_list_hash";
+            $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+            while($row = mysqli_fetch_assoc($resultset)) {
+                print '<tr>';
+                    print '<td>'. $row['student_id'] .'</td>';
+                    print '<td>'. $row['firstname'] .'</td>';
+                    print '<td>' . $row['lastname'] . '</td>';
+                    print '<td>' . $row['email'] . '</td>';
+                    print '<td>' . $row['course_code'] . '</td>';
+                    print '<td>' . $row['year'] . '</td>';
+                print '</tr>';
+            }
+
+        ?>
+       </tbody>
+    </table>
     <script 
             type="text/javascript" 
             src="js/module_edit_helper.js">
