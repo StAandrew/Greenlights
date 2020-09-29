@@ -1,5 +1,4 @@
 $(document).ready(function(){
-    var allowDelete;
     $("#add").click(function(e){
         var table = $(this).attr('for-table');  //get the target table selector
         var $tr = $(table + ">tbody>tr:last-child").clone(true, true);  //clone the last row

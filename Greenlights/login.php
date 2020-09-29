@@ -121,11 +121,7 @@ else if(isset($_POST["email"]) && isset($_POST["password"])){
     $password = hash('sha256', $salt.$password);
     
     // Cheking if user exists in a database
-    $mysqli = new mysqli("localhost", "root", "root", "TA_development");
-    if ($mysqli->connect_errno) {
-        showAlert("Database error: Failed to connect");
-    }
-    $stmt = $mysqli->prepare('SELECT user_type, user_id FROM '. $credentials_table .' WHERE email = ?');
+    $stmt = $conn->prepare('SELECT user_type, user_id FROM '. $credentials_table .' WHERE email = ?');
     if (!$stmt) {
         showAlert("Stmt email prepare failed");
     }
@@ -146,7 +142,7 @@ else if(isset($_POST["email"]) && isset($_POST["password"])){
         $user_id = "";
         
         // Cheking if passwords match
-        $stmt = $mysqli->prepare('SELECT firstname, lastname, user_type, user_id FROM '. $credentials_table .' WHERE email = ? AND pass = ?');
+        $stmt = $conn->prepare('SELECT firstname, lastname, user_type, user_id FROM '. $credentials_table .' WHERE email = ? AND pass = ?');
         if (!$stmt) {
             showAlert("Stmt email password prepare failed");
         }
@@ -172,7 +168,7 @@ else if(isset($_POST["email"]) && isset($_POST["password"])){
             unset($_SESSION['login_state']);
             $stmt->free_result();
             $stmt->close();
-            $mysqli->close();
+            $conn->close();
             exit(header('Location: ' . $_SESSION['login_url']));
         } else {
             showAlert("Wrong password");
@@ -181,7 +177,7 @@ else if(isset($_POST["email"]) && isset($_POST["password"])){
         showAlert("User was not found");
     }
     $stmt->close();
-    $mysqli->close();
+    $conn->close();
 }
 
 // UCL login - after we got the code from UCL API

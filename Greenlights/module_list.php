@@ -10,6 +10,7 @@ if(isset($_GET['cancel'])) {
     $delete_student_list = $_POST['student_list_hash'];
     $_POST = array();
     
+    // Drop table of a module
     $sql = "DROP TABLE IF EXISTS $delete_table_hash";
     if ($conn->query($sql) === TRUE) {
         echo "";
@@ -17,6 +18,7 @@ if(isset($_GET['cancel'])) {
         echo "Failed to delete table $delete_table_hash";
     }
     
+    // TODO
     $sql = "DROP TABLE IF EXISTS $delete_student_list";
     if ($conn->query($sql) === TRUE) {
         echo "";
@@ -24,6 +26,7 @@ if(isset($_GET['cancel'])) {
         echo "Failed to delete table $delete_student_list";
     }
     
+    // Delete records from all modules table
     $sql = "DELETE FROM $all_modules_table_name WHERE module_hash='$delete_table_hash'";
     if ($conn->query($sql) === TRUE) {
         echo "";
@@ -31,6 +34,7 @@ if(isset($_GET['cancel'])) {
         echo "Failed to delete from all modules table";
     }
     
+    // Drop per-student tables
     $sql = "SELECT student_table_hash, module_hash FROM $all_students_table_name WHERE module_hash='$delete_table_hash'";
     $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
     while($row = mysqli_fetch_array($resultset)) {
@@ -43,6 +47,7 @@ if(isset($_GET['cancel'])) {
         }
     }
     
+    // Delete records from all student table
     $sql = "DELETE FROM $all_students_table_name WHERE module_hash='$delete_table_hash'";
     if ($conn->query($sql) === TRUE) {
         echo "";
@@ -89,7 +94,15 @@ $no_modules_message = "No modules added yet";
 <h3 class="large-section-title">
         <font>Your modules</font>
 </h3>
-<table id="your-modules-table">
+<table id="your-modules-table" class="grid" style="width: 650px;">
+    <thead>
+        <tr>
+            <th>id</th>
+            <th><font color=dimgray>Module overview</font></th>
+            <th><font color=dimgray>Module edit</font></th>
+        </tr>
+    </thead>
+    <tbody>
 <?php
     $sql = "SELECT module_name, module_hash, student_list_hash
             FROM $all_modules_table_name
@@ -99,12 +112,13 @@ $no_modules_message = "No modules added yet";
             while($row = mysqli_fetch_array($result)) {
 ?>
     <tr class="your-modules-row">
+        <td class="your-modules-td"><?php echo $row['module_hash']; ?></td>
         <td class="your-modules-td">
 <?php
 echo '<h4><a href=module_overview.php?module='. $row['module_hash'] .'&student_list='. $row['student_list_hash'] .'&module_name='. $row['module_name'] .'>'. $row['module_name'] .'</a></h4>';
 ?>
         </td>
-        <td class="your-modules-span">
+        <td class="your-modules-td">
 <?php
 echo '<a href=module_edit.php?module='. $row['module_hash'] .'&student_list='. $row['student_list_hash'] . '&module_name='. $row['module_name'] .'>Edit module</a><br>';
 ?>
@@ -119,6 +133,7 @@ echo '<a href=module_edit.php?module='. $row['module_hash'] .'&student_list='. $
         print $no_modules_message;
     }
 ?>
+    </tbody>
 </table>
 <?php
 // ----- ADD MODULE AREA -----
@@ -192,7 +207,10 @@ if ($_SESSION['user_type'] == 'Lecturer') {
         </ul>
     <input style="size:large" type=submit name=submit value="Add New Module" >
 </form>
-
+<script 
+    type="text/javascript" 
+    src="js/module_list_helper.js">
+</script>
 <?php
 }
 include("inc/footer.php");
