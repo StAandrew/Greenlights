@@ -6,13 +6,6 @@ $input = filter_input_array(INPUT_POST);
 if ($input['action'] == 'delete') {
     $delete_module_hash = $input['id'];
     
-    $sql = 'SELECT id FROM ' . $table . ' ORDER BY id DESC LIMIT 0, 2';
-    $result = $conn->query($sql);
-    if ($result->num_rows > 1) {
-        $sql = 'DELETE FROM ' . $table . ' WHERE id=' . $input['id'];
-        mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
-    }
-    
     // Drop table of a module
     $sql = "DROP TABLE IF EXISTS $delete_module_hash";
     if ($conn->query($sql) === TRUE) {

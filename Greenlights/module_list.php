@@ -6,28 +6,20 @@ include("inc/header.php");
 
 // Option when user canceled adding a module
 if(isset($_GET['cancel'])) {
-    $delete_table_hash = $_POST['module_hash'];
+    $delete_module_hash = $_POST['module_hash'];
     $delete_student_list = $_POST['student_list_hash'];
     $_POST = array();
-    
+        
     // Drop table of a module
-    $sql = "DROP TABLE IF EXISTS $delete_table_hash";
+    $sql = "DROP TABLE IF EXISTS $delete_module_hash";
     if ($conn->query($sql) === TRUE) {
         echo "";
     } else {
-        echo "Failed to delete table $delete_table_hash";
-    }
-    
-    // TODO
-    $sql = "DROP TABLE IF EXISTS $delete_student_list";
-    if ($conn->query($sql) === TRUE) {
-        echo "";
-    } else {
-        echo "Failed to delete table $delete_student_list";
+        echo "Failed to delete table $delete_module_hash";
     }
     
     // Delete records from all modules table
-    $sql = "DELETE FROM $all_modules_table_name WHERE module_hash='$delete_table_hash'";
+    $sql = "DELETE FROM $all_modules_table_name WHERE module_hash='$delete_module_hash'";
     if ($conn->query($sql) === TRUE) {
         echo "";
     } else {
@@ -35,7 +27,7 @@ if(isset($_GET['cancel'])) {
     }
     
     // Drop per-student tables
-    $sql = "SELECT student_table_hash, module_hash FROM $all_students_table_name WHERE module_hash='$delete_table_hash'";
+    $sql = "SELECT student_table_hash, module_hash FROM $all_students_table_name WHERE module_hash='$delete_module_hash'";
     $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
     while($row = mysqli_fetch_array($resultset)) {
         $delete_student_table = $row['student_table_hash'];
@@ -48,12 +40,28 @@ if(isset($_GET['cancel'])) {
     }
     
     // Delete records from all student table
-    $sql = "DELETE FROM $all_students_table_name WHERE module_hash='$delete_table_hash'";
+    $sql = "DELETE FROM $all_students_table_name WHERE module_hash='$delete_module_hash'";
     if ($conn->query($sql) === TRUE) {
         echo "";
     } else {
         echo "Failed to delete from all modules table";
     }
+    
+    // Check if student list is still being used by other modules
+    $student_list_used = false;
+    $sql = "SELECT student_list_hash, module_hash FROM $all_modules_table_name WHERE module_hash='$delete_module_hash'";
+    $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+    while($row = mysqli_fetch_array($resultset)) {
+        $student_list_used = true;
+    }
+    if (!$student_list_used) {
+        $sql = "DROP TABLE IF EXISTS $delete_student_list";
+        if ($conn->query($sql) === TRUE) {
+            echo "";
+        } else {
+            echo "Failed to delete table $delete_student_list";
+        }
+    }    
 }
 
 // Option when user came back from module edit
