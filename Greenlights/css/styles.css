@@ -91,11 +91,25 @@ footer {
     border-radius: 5px;
     width: 100%;
 }
-
 .login-other:hover {
   background-color: #249CC2; 
   color: white; 
   border-color: #249CC2;
+}
+
+.login-home-button {
+    font-size:larger;
+    font-weight: 600;
+    border-radius: 5px;
+    padding:10px;
+    margin-left:0;
+} 
+.login-change-password-button {
+    font-size:medium; 
+    border-radius: 5px; 
+    padding:4px; 
+    margin-left:0;
+    margin-bottom:10px;
 }
 
 .additional-information {

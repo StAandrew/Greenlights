@@ -35,7 +35,7 @@ if(isset($_SESSION['student_id'])) {
     include("inc/header.php");
 ?>
     <div class="welcome-login-text"><p>Welcome, <?php echo $_SESSION['given_name']; ?></p>
-    <p><a href="./home.php">Home</a></p>
+    <p><a style="font-size:large; border:2px solid; border-radius: 5px; padding:10px; margin-left:0;"  href="./home.php">Home</a></p>
     <p>Student id: <?php echo $_SESSION['student_id'];?></p>
     <p>Logged in as <?php echo $_SESSION['full_name']?></p>
     <p><a href="./login.php?logout">Log Out</a></p>
@@ -56,13 +56,15 @@ else if(isset($_SESSION['user_id'])) {
     // Display welcome message - logged in via form
     include("inc/header.php");
 ?>
-    <div class="welcome-login-text"><p>Welcome, <?php echo $_SESSION['full_name']; ?></p>
-    <p><a href="./home.php">Home</a></p>
-    <p>User id: <?php echo $_SESSION['user_id'];?></p>
-    <p>Logged in as <?php echo $_SESSION['full_name']?></p>
-    <p><a data-toggle="modal" data-target="#changePasswordModal" style="cursor: pointer">Change password</a></p>
-    <p><a href="./login.php?logout">Log Out</a></p>
-    </div>
+    <div class="welcome-login-text"><center><p> Welcome, <?php echo $_SESSION['full_name']; ?></p>
+    <p> User id: <?php echo $_SESSION['user_id'];?></p>
+    <p> Logged in as <?php if($_SESSION['user_type'] == "Lecturer") echo "Lecturer"; else if($_SESSION['user_type'] == "TA") echo "Teaching Assistant"; else if($_SESSION['user_type'] == "Student") echo "Student"; else if($_SESSION['user_type'] == "admin") echo "admin";?>, <?php echo $_SESSION['full_name']?></p>
+    <p><a class="login-home-button" href="./home.php">Home</a></p>
+    <center>
+        <span><a class="login-change-password-button" style="cursor:pointer;" data-toggle="modal" data-target="#changePasswordModal" style="cursor: pointer">Change password</a></span>
+        <span><a class="login-change-password-button" href="./login.php?logout">Log Out</a></span>
+    </center>
+    </center></div>
 
     <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -78,7 +80,7 @@ else if(isset($_SESSION['user_id'])) {
                 <!-- Modal Body -->
                 <div class="modal-body">
                     <form method="post">
-                        <input type="hidden" name="my_email" class="form-control" autocomplete="email"/> 
+                        <input type="text" name="my_email" class="form-control" autocomplete="email username" style="display:none;"/> 
                         <label>Enter Current Password</label>
                         
                             <input type="password" name="old_pass" class="form-control" autocomplete="current-password"/>  
@@ -337,7 +339,7 @@ else if(!isset($_SESSION['student_id']) && !isset($_SESSION['user_id'])) {
                         <tr>
                             <td>
                                 <label>Email:</label>
-                                <input type="email" name="email" class="form-control" size=100 required autocomplete="email"/>  
+                                <input type="email" name="email" class="form-control" size=100 required autocomplete="email username"/>  
                             </td>
                         </tr>
                         <tr>
@@ -377,7 +379,10 @@ include("inc/footer.php");
 
 // Helping functions
 function showAlert($message) {
-    echo "<script type='text/javascript'>alert('$message');</script>";
-    exit(header('Location: ' . $_SESSION['login_url']));
+?>
+<script type="text/javascript">alert('<?php echo $message;?>'); window.location = "<?php echo $_SESSION['login_url'];?>"</script>
+<?php
+    session_destroy();
+    die();
 }
 ?>

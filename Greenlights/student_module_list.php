@@ -23,7 +23,7 @@ if(isset($_SESSION['student_id']) || isset($_SESSION['user_id'])) {
 include("inc/header.php");
 ?>
 <h3>
-	<font color=grey>Your Modules</font>
+	<font style="font-size:x-large; color:grey;">Your Modules</font>
 </h3>
 <?php
 // Get all modules of this student
@@ -35,7 +35,7 @@ if ($result = $conn->query($sql)) {
         while ($row = $result->fetch_assoc()) {
             $hash = $row['student_table_hash'];
             $module_name = $row['module_name'];
-            echo '<a href=student_view.php?id='. $hash .'>'. $module_name .'</a><br>';
+            echo '<a style="font-size:large;" href=student_view.php?id='. $hash .'>'. $module_name .'</a><br>';
         }
     } else {
         print "No information available yet";
