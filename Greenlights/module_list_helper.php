@@ -44,9 +44,12 @@ if ($input['action'] == 'delete') {
     }
     
     // Check if student list is still being used by other modules
-    $sql = "SELECT student_list_hash, module_hash FROM $all_modules_table_name WHERE module_hash='$delete_module_hash' LIMIT 0,1";
+    $sql = "SELECT student_list_hash, module_hash FROM $all_modules_table_name LIMIT 0,1";
     $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
     while($row = mysqli_fetch_array($resultset)) {
+        if ($row['module_hash'] != $delete_module_hash) // There is at least one module that uses this student list
+            break;
+        
         $delete_student_list = $row['student_list_hash'];
         $sql = "DROP TABLE IF EXISTS $delete_student_list";
         if ($conn->query($sql) === TRUE) {

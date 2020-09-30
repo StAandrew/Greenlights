@@ -263,10 +263,9 @@ else {
 	
 ?>
     <hr>
-    <h1>
-        <?php echo $module_name;?>
-    </h1>
+    <h1>Module: <?php echo $module_name;?></h1>
     <hr>
+    <font style="color:dimgray"><i>Please enter only numbers into columns 'Week' and 'Estimated time for a task(minutes)'<br/>Please do not leave the page. To cancel, press 'Cancel'</i></font>
     <div id="js-helper"
          data-module-id="<?php echo htmlspecialchars($module_hash); ?>">
     </div>
@@ -300,14 +299,14 @@ else {
 ?>
 			</tbody>
         </table>
-        <button id='add' for-table='#data_table'>Add Row (clones last row)</button>
+        <button class="btn add-row-button" id='add' for-table='#data_table'>Add Row (clones last row)</button>
     </div> 
     <form class="insert_form" id="insert_form" method=post action="add_module_2.php">
         <input type='hidden' name='module_name' value='<?php echo $_POST['module_name'];?>' />
         <input type='hidden' name='module_hash' value='<?php echo $module_hash?>' />
         <input type='hidden' name='student_list_hash' value='<?php echo $student_list_hash;?>' />
         <center>
-            <input class="btn btn-success" formaction="module_list.php?cancel" type=submit name=cancel id="cancel" value=Cancel>
+            <input class="btn btn-danger" formaction="module_list.php?cancel" type=submit name=cancel id="cancel" value=Cancel>
             <input class="btn btn-success" type=submit name=submit id="submit" value=Submit> 
         </center>
     </form>

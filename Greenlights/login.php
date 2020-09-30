@@ -78,8 +78,10 @@ else if(isset($_SESSION['user_id'])) {
                 <!-- Modal Body -->
                 <div class="modal-body">
                     <form method="post">
+                        <input type="hidden" name="my_email" class="form-control" autocomplete="email"/> 
                         <label>Enter Current Password</label>
-                            <input type="password" name="old_pass" class="form-control" />  
+                        
+                            <input type="password" name="old_pass" class="form-control" autocomplete="current-password"/>  
                         <br/>
                         <label>Enter New Password</label>
                         <li>Must be a minimum of 8 characters<br/></li>
@@ -87,10 +89,10 @@ else if(isset($_SESSION['user_id'])) {
                         <li>Must contain at least one uppercase character<br/></li>
                         <li>Must contain at least one lowercase character<br/></li>
                         <br/>
-                            <input type="password" name="new_pass" class="form-control" />  
+                            <input type="password" name="new_pass" class="form-control" autocomplete="new-password"/>  
                         <br/>  
                         <label>Confirm New Password</label>
-                            <input type="password" name="confirm_pass" class="form-control" />  
+                            <input type="password" name="confirm_pass" class="form-control" autocomplete="new-password"/>  
                         <br/> 
                         <input type="submit" name="change_password" value="Change password" class="btn btn-info" />  
                     </form>
@@ -335,13 +337,13 @@ else if(!isset($_SESSION['student_id']) && !isset($_SESSION['user_id'])) {
                         <tr>
                             <td>
                                 <label>Email:</label>
-                                <input type="email" name="email" class="form-control" size=100 required />  
+                                <input type="email" name="email" class="form-control" size=100 required autocomplete="email"/>  
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <label>Password:</label>
-                         <input type="password" name="password" class="form-control" size=100 required /> 
+                         <input type="password" name="password" class="form-control" size=100 required autocomplete="current-password"/> 
                             </td>
                         </tr>
                         <tr>

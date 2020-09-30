@@ -3,6 +3,7 @@ $(document).ready(function(){
 		url: 'module_list_helper.php',
         hideIdentifier: true,
         deleteButton: true,
+        restoreButton: false,
 		editButton: false,
 		columns: {
             identifier: [0, 'id'],                    

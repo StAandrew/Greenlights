@@ -48,20 +48,17 @@ if(isset($_GET['cancel'])) {
     }
     
     // Check if student list is still being used by other modules
-    $student_list_used = false;
-    $sql = "SELECT student_list_hash, module_hash FROM $all_modules_table_name WHERE module_hash='$delete_module_hash'";
+    $sql = "SELECT student_list_hash, module_hash FROM $all_modules_table_name WHERE module_hash='$delete_module_hash' LIMIT 0,1";
     $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
     while($row = mysqli_fetch_array($resultset)) {
-        $student_list_used = true;
-    }
-    if (!$student_list_used) {
+        $delete_student_list = $row['student_list_hash'];
         $sql = "DROP TABLE IF EXISTS $delete_student_list";
         if ($conn->query($sql) === TRUE) {
             echo "";
         } else {
             echo "Failed to delete table $delete_student_list";
         }
-    }
+    }    
     exit(header('Location: module_list.php'));
 }
 
@@ -172,6 +169,32 @@ if ($_SESSION['user_type'] == 'Lecturer') {
             <input type=text placeholder="Enter Module Name" name=module_name size=50>
         </p>
         <h4 class="section-title">
+            <font>Choose class list option:</font>
+        </h4>
+        <ul>
+            <li>
+                <div class="section-contents">Upload via CSV file
+                    <input style="margin-left:10px" type="file" name="student_list_file" id="student_list_file" accept=".csv">
+                </div>
+            </li>
+            <li>
+            <div class="section-contents">Select from existing class lists
+            <select style="margin-left:10px" name="student_list_hash"> 
+                <option value="0">No</option>
+<?php
+                $sql = "SELECT module_name, student_list_hash
+                        FROM $all_modules_table_name
+                        WHERE access_user_id=$user_id";  
+                $result = mysqli_query($conn, $sql);
+                while($row = mysqli_fetch_array($result)) {
+                    echo '<option value="'. $row['student_list_hash'] .'">'. $row['module_name'] .'</option>';
+                }
+?>
+            </select> 
+            </div>
+            </li>
+        </ul>
+        <h4 class="section-title">
             <font>Choose task list option:</font>
         </h4>
         <ul>
@@ -200,34 +223,92 @@ if ($_SESSION['user_type'] == 'Lecturer') {
                 </div>
             </li>
         </ul>
-        <h4 class="section-title">
-            <font>Choose class list option:</font>
-        </h4>
-        <ul>
-            <li>
-                <div class="section-contents">Upload via CSV file
-                    <input style="margin-left:10px" type="file" name="student_list_file" id="student_list_file" accept=".csv">
-                </div>
-            </li>
-            <li>
-            <div class="section-contents">Select from existing class lists
-            <select style="margin-left:10px" name="student_list_hash"> 
-                <option value="0">No</option>
-<?php
-                $sql = "SELECT module_name, student_list_hash
-                        FROM $all_modules_table_name
-                        WHERE access_user_id=$user_id";  
-                $result = mysqli_query($conn, $sql);
-                while($row = mysqli_fetch_array($result)) {
-                    echo '<option value="'. $row['student_list_hash'] .'">'. $row['module_name'] .'</option>';
-                }
-?>
-            </select> 
-            </div>
-            </li>
-        </ul>
     <input style="size:large" type=submit name=submit value="Add New Module" >
 </form>
+<br/>
+<h4 style="margin-bottom:5px;"><font style="color:dimgray;">Additional information and examples:</font></h4>
+<font class="additional-information"><font style="font-size:large;">Student list CSV file structure:</font><br/>delimiter: any<br/><i>note: first row will be skipped</i></font>
+<table class="table additional-information-table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+            <th>E</th>
+            <th>F</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>1</b></td>
+            <td>id</td>
+            <td>name</td>
+            <td>surname</td>
+            <td>email</td>
+            <td>course</td>
+            <td>year</td>
+        </tr>
+        <tr>
+            <td><b>2</b></td>
+            <td>18123456</td>
+            <td>John</td>
+            <td>Smith</td>
+            <td>zceejsm@ucl.ac.uk</td>
+            <td>H400</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td><b>3</b></td>
+            <td>...</td>
+            <td>...</td>
+            <td>...</td>
+            <td>...</td>
+            <td>...</td>
+            <td>...</td>
+        </tr>
+    </tbody>
+</table>
+<font class="additional-information"><font style="font-size:large;">Module list CSV file structure:</font><br/>delimiter: ; (semicolon only)<br/><i>note: first row will be skipped</i></font>
+<table class="table additional-information-table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+            <th>E</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>1</b></td>
+            <td>Week</td>
+            <td>Teaching Event</td>
+            <td>Task</td>
+            <td>Estinamted time for a task (minutes, digits only)</td>
+            <td>Group or Individual (G/I)</td>
+        </tr>
+        <tr>
+            <td><b>2</b></td>
+            <td>1</td>
+            <td>Lab equipment and breadboard</td>
+            <td>Learn how to use lab equipment and prepare for a quiz</td>
+            <td>35</td>
+            <td>I</td>
+        </tr>
+        <tr>
+            <td><b>3</b></td>
+            <td>...</td>
+            <td>...</td>
+            <td>...</td>
+            <td>...</td>
+            <td>...</td>
+        </tr>
+    </tbody>
+</table>
 <?php
 }
 include("inc/footer.php");
