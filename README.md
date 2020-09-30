@@ -41,7 +41,7 @@ Tables have this structure:
 |AUTO_INCREMENT|
   
 **Per-module tables:**  
-|  num   |    week   |  session   |    task    |task_duration| task_type |
+|   id   |    week   |  session   |    task    |task_duration| task_type |
 |:------:|:---------:|:----------:|:----------:|:-----------:|:---------:|
 |  INT   |SMALLINT(2)|VARCHAR(128)|VARCHAR(256)| SMALLINT(4) |VARCHAR(1) |
 |NOT NULL|  NOT NULL |  NOT NULL  |  NOT NULL  |  NOT NULL   |DEFAULT 'I'|
