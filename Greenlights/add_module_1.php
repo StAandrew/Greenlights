@@ -31,25 +31,25 @@ if ($_POST['student_list_hash'] != '0') {
 }
 
 // If not, populate student table with data from file
-else if (isset($_FILES["file"])) {
+else if (isset($_FILES["student_list_file"])) {
     // Check for errors. Most likely, user forgot to add a gile
-    if ($_FILES["file"]["error"] > 0) {
-        die("Please upload a file. <br/>Return Code: " . $_FILES["file"]["error"] . "<br/>");
+    if ($_FILES["student_list_file"]["error"] > 0) {
+        die("Please upload a file. <br/>Return Code: " . $_FILES["student_list_file"]["error"] . "<br/>");
     }
     
     // Check if file already uploaded
-    if (file_exists("upload/" . $_FILES["file"]["name"])) {
-        echo $_FILES["file"]["name"] . " already exists. ";
+    if (file_exists("upload/" . $_FILES["student_list_file"]["name"])) {
+        echo $_FILES["student_list_file"]["name"] . " already exists. ";
         die();
     }
     
     // Check that file exists and was uploaded successfully
-    if($_FILES['file']['name']) {
-        $filename = explode(".", $_FILES['file']['name']);
+    if($_FILES['student_list_file']['name']) {
+        $filename = explode(".", $_FILES['student_list_file']['name']);
         
         // Check that file name is CSV
         if($filename[1] == 'csv') {
-            $temp = $_FILES["file"]["tmp_name"];
+            $temp = $_FILES["student_list_file"]["tmp_name"];
             $file = new SplFileObject($temp);
             $file->setFlags(SplFileObject::READ_CSV);
             $csv = new LimitIterator($file, 1); // skips first row

@@ -320,7 +320,7 @@ else if(!isset($_SESSION['student_id']) && !isset($_SESSION['user_id'])) {
                 <br>
                 <span>
                     <table cellspacing="10" border="1" rules=none class="login-table">
-                        <tr bgcolor=silver>
+                        <tr class="portal-log-in-bg">
                             <td>
                                 <b>Portal Log-in</b>
                             </td>  

@@ -1,16 +1,14 @@
 <?php  
-include_once("inc/db_connect.php");
+require __DIR__ . '/db_connect.php';
 
 $output = '';
 if(isset($_POST['export_module_hash']) && isset($_POST['export_module_name'])) {
     $module_name = $_POST['export_module_name'];
     $module_hash = $_POST['export_module_hash'];
-    echo $module_hash . "<br/>";
-    echo $module_name;
     $date = date('Y-m-d');
     
-    $query = "SELECT num, week, session, task, task_duration, task_type FROM $module_hash";
-    $result = mysqli_query($conn, $query);
+    $sql = "SELECT * FROM $module_hash";
+    $result = mysqli_query($conn, $sql);
     if(mysqli_num_rows($result) > 0) {
         $output .= 'Week,Teaching Event,Task,Estimated Time,Group or Individual(G/I)'. PHP_EOL;
         while($row = mysqli_fetch_array($result)) {
@@ -19,6 +17,8 @@ if(isset($_POST['export_module_hash']) && isset($_POST['export_module_name'])) {
         header('Content-Type: application/xls');
         header('Content-Disposition: attachment; filename='. $module_name .'_'. $date .'.csv');
         echo $output;
+    } else {
+        echo "Error: cannot connect to a database";
     }
 } else {
     echo "Error: module name and hash not set";

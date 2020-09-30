@@ -39,6 +39,10 @@ footer {
     word-wrap: break-word;
 }
 
+.portal-log-in-bg {
+    background-color: #6AD099;
+}
+
 .welcome-login-text {
     padding-top: 5px;
     margin: 5px;
@@ -48,23 +52,23 @@ footer {
 }
 .login-via-ucl {
     display: inline-block;
-    background-color: #52347B;
+    background-color: #6AD099;
     color: #FFFFFF;
     text-align: center;
     font-size: medium;
-    padding: 12px;
+    padding: 9px;
     transition: all 0.3s;
     cursor: pointer;
     margin: 0px;
     font-weight: 600;
-    border: 2px solid #52347B;
+    border: 2px solid #6AD099;
     border-radius: 5px;
     width: 100%;
-    
 }
 .login-via-ucl:hover {
     color: #FFFFFF;
-    background-color: #F06747;
+    background-color: #FF4F55;
+    border-color: #FF4F55;
 }
 .login-via-ucl-text {
     margin-left: 1px;
@@ -75,7 +79,7 @@ footer {
 .login-other {
     display: inline-block;
     background-color: white;
-    color: #52347B;
+    color: #249CC2;
     text-align: center;
     font-size: medium;
     padding: 7px;
@@ -83,15 +87,15 @@ footer {
     cursor: pointer;
     margin: 1px;
     font-weight: 600;
-    border: 2px solid #52347B;
+    border: 2px solid #249CC2;
     border-radius: 5px;
     width: 100%;
 }
 
 .login-other:hover {
-  background-color: #52347B; 
+  background-color: #249CC2; 
   color: white; 
-  border: 0px solid #52347B;
+  border-color: #249CC2;
 }
 .your-modules-table {
     border:none;

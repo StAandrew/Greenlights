@@ -61,7 +61,8 @@ if(isset($_GET['cancel'])) {
         } else {
             echo "Failed to delete table $delete_student_list";
         }
-    }    
+    }
+    exit(header('Location: module_list.php'));
 }
 
 // Option when user came back from module edit
@@ -98,6 +99,13 @@ if (isset($_POST['module_hash_to_save'])) {
 
 // ----- YOUR MODULES AREA -----
 $no_modules_message = "No modules added yet";
+
+// Check if at least one module was added
+$sql = "SELECT module_name, module_hash, student_list_hash
+            FROM $all_modules_table_name
+            WHERE access_user_id=$user_id LIMIT 0,1";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
 ?>
 <h3 class="large-section-title">
         <font>Your modules</font>
@@ -144,6 +152,7 @@ echo '<a href=module_edit.php?module='. $row['module_hash'] .'&student_list='. $
     </tbody>
 </table>
 <?php
+}
 // ----- ADD MODULE AREA -----
 // Only allow lecturers to add new modules
 if ($_SESSION['user_type'] == 'Lecturer') {
@@ -163,7 +172,7 @@ if ($_SESSION['user_type'] == 'Lecturer') {
         </h4>
         <ul>
             <li>
-                <div class="section-contents">Input tasks by hand <b>(default, no action needed)</b></div>
+                <div class="section-contents">Input tasks by hand<b>(default, no action needed)</b></div>
             </li>
             <li>
                 <div class="section-contents">Upload via CSV file
@@ -193,7 +202,7 @@ if ($_SESSION['user_type'] == 'Lecturer') {
         <ul>
             <li>
                 <div class="section-contents">Upload via CSV file
-                    <input style="margin-left:10px" type="file" name="file" id="file" accept=".csv">
+                    <input style="margin-left:10px" type="file" name="student_list_file" id="student_list_file" accept=".csv">
                 </div>
             </li>
             <li>

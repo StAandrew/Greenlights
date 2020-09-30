@@ -1,12 +1,12 @@
 <?php  
-include_once("inc/db_connect.php");
+require __DIR__ . '/db_connect.php';
 
 $output = '';
 if(isset($_POST['export_module_hash']) && isset($_POST['export_module_name'])) {
     $module_name = $_POST['export_module_name'];
     $module_hash = $_POST['export_module_hash'];
     
-    $query = "SELECT num, week, session, task, task_duration, task_type FROM $module_hash";
+    $query = "SELECT * FROM $module_hash";
     $result = mysqli_query($conn, $query);
     if(mysqli_num_rows($result) > 0) {
         $output .= '
