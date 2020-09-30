@@ -1,0 +1,19 @@
+Week;Teaching Event;Task;Estimated Time;Group or Individual(G/I)
+1;MyDAQ and Multisim;Prepare for the workshop;10;I
+2;Lab equipment and breadboard;Know how to use lab equipment;15;I
+3;Voltage Divider and RC filter;Learn formulas and main facts;30;I
+3;Resonant Circuits;Calculate values of components;10;I
+3;Resonant Circuits;Build a circuit;20;I
+3;Resonant Circuits;Measure voltage on a diode and make a plot;25;I
+3;Resonant Circuits;Measure Vout and make a plot of Vout vs Vin;30;I
+4;Diodes;Build a circuit;20;I
+4;Diodes;Measure Vour and make a plot of Vout vs Vin;50;G
+4;Diodes;Make conclusions;10;I
+5;DC Op-Amps;Make calculations and build a circuit;30;I
+5;DC Op-Amps;Create multiple plots as stated in lab description ;110;G
+6;AC Op-Amps;Make conclusions and finish the online quiz;30;I
+7;Three-Phase Systems;Prepare for a quiz;70;I
+8;BJT AC Characteristics ;Make calculations and build a circuit;40;G
+9;BJT AC Characteristics ;Make a plot of base current vs collector current;90;I
+10;BJT DC Characteristics ;Make calculations and build a circuit;40;G
+10;BJT DC Characteristics ;Make a plot of base current vs collector current;90;I

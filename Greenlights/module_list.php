@@ -151,6 +151,10 @@ echo '<a href=module_edit.php?module='. $row['module_hash'] .'&student_list='. $
 ?>
     </tbody>
 </table>
+<script 
+    type="text/javascript" 
+    src="js/module_list_helper.js">
+</script>
 <?php
 }
 // ----- ADD MODULE AREA -----
@@ -224,10 +228,6 @@ if ($_SESSION['user_type'] == 'Lecturer') {
         </ul>
     <input style="size:large" type=submit name=submit value="Add New Module" >
 </form>
-<script 
-    type="text/javascript" 
-    src="js/module_list_helper.js">
-</script>
 <?php
 }
 include("inc/footer.php");

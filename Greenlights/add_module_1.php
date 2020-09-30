@@ -20,9 +20,13 @@ if(isset($_POST["submit"]) && isset($_POST['student_list_hash']) && isset($_POST
 
 // Get module name. We use another if, in order to give a more appropriate error to user
 if (isset($_POST['module_name'])) {
-    $module_name = $_POST['module_name']; 
-} else
+    $module_name = $_POST['module_name'];
+    if ($module_name == "") {
+         die("No module name. Please try again. You can return by pressing 'Home'");
+    }
+} else {
     die("No module name. Please try again. You can return by pressing 'Home'");
+}
 
 // ---STUDENT LIST AREA---
 // If student list clone option was selected, we get studnet list hash from POST
@@ -34,7 +38,7 @@ if ($_POST['student_list_hash'] != '0') {
 else if (isset($_FILES["student_list_file"])) {
     // Check for errors. Most likely, user forgot to add a gile
     if ($_FILES["student_list_file"]["error"] > 0) {
-        die("Please upload a file. <br/>Return Code: " . $_FILES["student_list_file"]["error"] . "<br/>");
+        die("Please upload student list. <br/>Return Code: " . $_FILES["student_list_file"]["error"] . "<br/>");
     }
     
     // Check if file already uploaded
@@ -80,7 +84,7 @@ else if (isset($_FILES["student_list_file"])) {
             
             // For each csv row
             foreach ($csv as $row) {
-                $data = explode(";", $row[0]); // we use ';' for now
+                $data = explode(getCsvDelimiter($temp, 3), $row[0]); // datect delimiter automatically
 
                 $studentID = $data[0]; 
                 $firstname = $data[1];
@@ -93,7 +97,7 @@ else if (isset($_FILES["student_list_file"])) {
                 if ($conn->query($sql) === TRUE) {
                     $success = true;
                 } else {
-                    die ("Error creating table: " . $conn->error);
+                    die ("Error adding to table: " . $conn->error);
                     $success = false;
                 }
             }
@@ -108,20 +112,6 @@ else if (isset($_FILES["student_list_file"])) {
 } else {
     throwError("FILES is not set", "");
 }
-// Function to throw error if there is a problem with students table
-function throwError ($message, $hash) {
-    if ($hash == "") {
-        echo 'Error: '. $message;
-    } else {
-        include_once("inc/db_connect.php");
-        echo 'Error: '. $message;
-        $sql = "DROP TABLE IF EXISTS $hash";
-        $conn->query($sql);
-    }
-    $_POST = array();
-    die();
-}
-
 
 // ---TASKS AREA---
 // Generate a hash of the table for the module
@@ -148,8 +138,72 @@ if ($conn->query($sql) === TRUE) {
     throwError("Error creating table: $conn->error", $module_hash);
 }
 
-// Get options for cloning tasks
-if ($_POST['module_hash'] != '0') {
+// If a file was uploaded, populate tasks with data from file
+if(file_exists($_FILES['task_file']['tmp_name']) && is_uploaded_file($_FILES['task_file']['tmp_name'])) {
+    // Check for errors. Most likely, user forgot to add a file
+    if ($_FILES["task_file"]["error"] > 0) {
+        die("Please upload a file. <br/>Return Code: " . $_FILES["task_file"]["error"] . "<br/>");
+    }
+    
+    // Check if file already uploaded
+    if (file_exists("upload/" . $_FILES["task_file"]["name"])) {
+        echo $_FILES["task_file"]["name"] . " already exists. ";
+        die();
+    }
+    
+    // Check that file exists and was uploaded successfully
+    if($_FILES['task_file']['name']) {
+        $filename = explode(".", $_FILES['task_file']['name']);
+        
+        // Check that file name is CSV
+        if($filename[1] == 'csv') {
+            $temp = $_FILES["task_file"]["tmp_name"];
+            $task_file = new SplFileObject($temp);
+            $task_file->setFlags(SplFileObject::READ_CSV);
+            $csv = new LimitIterator($task_file, 1);
+                
+            foreach ($csv as $row) {
+                $data = explode(";", $row[0]); // we use ';' as a delimiter for task list
+                
+                $week = $data[0]; 
+                $session = $data[1];
+                $task = $data[2];
+                $task_duration = $data[3];
+                $task_type = $data[4];
+
+                $sql = "INSERT INTO $module_hash (week, session, task, task_duration, task_type) VALUES ('$week','$session','$task','$task_duration','$task_type')";
+                if ($conn->query($sql) === TRUE) {
+                    $success = true;
+                } else {
+                    die ("Error adding to tasks table: " . $conn->error);
+                    $success = false;
+                }
+            }
+            if (!$success) {
+                throwError("Failed to save to file", $module_hash);
+            }
+        } else {
+            throwError("Filename not .csv", "");
+        }
+    } else {
+        throwError("File not found", "");
+    }
+        // Auto redirect to next page
+?>
+<form name='fr' action='add_module_2.php' method='POST'>
+    <input type='hidden' name='module_name' value='<?php echo $module_name; ?>'/>
+    <input type='hidden' name='student_list_hash' value='<?php echo $student_list_hash; ?>'/>
+    <input type='hidden' name='module_hash' value='<?php echo $module_hash; ?>'/>
+</form>
+<script type='text/javascript'>
+    document.fr.submit();
+</script>
+<?php
+die();
+}
+
+// Else, clone tasks from another module
+else if ($_POST['module_hash'] != '0') {
     $module_hash_to_clone = $_POST['module_hash'];
     $_POST = array();
     
@@ -189,9 +243,10 @@ if ($_POST['module_hash'] != '0') {
 </script>
 <?php
 die();
+}
 
-// Else, allow user to insert options
-} else {
+// Else, allow user to insert options 
+else {
     // Insert one row
     $week = "0";
     $session = "Sample event";
@@ -295,5 +350,49 @@ die();
 </script>
 <?php
 }
-    include("inc/footer.php");
+
+// Function to throw error if there is a problem with students table
+function throwError ($message, $hash) {
+    if ($hash == "") {
+        echo 'Error: '. $message;
+    } else {
+        include_once("inc/db_connect.php");
+        echo 'Error: '. $message;
+        $sql = "DROP TABLE IF EXISTS $hash";
+        $conn->query($sql);
+    }
+    $_POST = array();
+    die();
+}
+
+// Function to get a delimiter
+function getCsvDelimiter(string $filePath, int $checkLines = 3): string {
+    $delimeters = array(",", ";", "\t");
+    $default = ",";
+    $fileObject = new \SplFileObject($filePath);
+    $results = [];
+    $counter = 0;
+    while ($fileObject->valid() && $counter <= $checkLines) {
+        $line = $fileObject->fgets();
+        foreach ($delimeters as $delimiter) {
+            $fields = explode($delimiter, $line);
+            $totalFields = count($fields);
+            if ($totalFields > 1) {
+                if (!empty($results[$delimiter])) {
+                    $results[$delimiter] += $totalFields;
+                } else {
+                    $results[$delimiter] = $totalFields;
+                }
+            }
+        }
+        $counter++;
+    }
+   if (!empty($results)) {
+        $results = array_keys($results, max($results));
+        return $results[0];
+   }
+return $default;
+}
+
+include("inc/footer.php");
 ?>
