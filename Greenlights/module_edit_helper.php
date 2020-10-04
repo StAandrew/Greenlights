@@ -18,6 +18,22 @@ if ($input['action'] == 'edit') {
 	if($update_field && $input['id']) {
 		$sql = 'UPDATE '. $table .' SET '. $update_field .' WHERE id=' . $input['id'];
 		mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+        
+        // update per-student tables
+        $sql = "SELECT student_table_hash 
+                    FROM $all_students_table_name
+                    WHERE module_hash='$table'";
+        $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+        // for each student table
+        while($row = mysqli_fetch_array($resultset)) {
+            $student_table_hash = $row['student_table_hash'];
+            $sql = 'UPDATE '. $student_table_hash .' SET '. $update_field .' WHERE id=' . $input['id'];
+            if ($conn->query($sql) === TRUE) {
+                echo "";
+            } else {
+                die ("Error: " . $conn->error);
+            }
+        }
 	}
 }
 else if ($input['action'] == 'delete') {
@@ -28,7 +44,7 @@ else if ($input['action'] == 'delete') {
         $sql = 'DELETE FROM ' . $table . ' WHERE id=' . $input['id'];
         mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
         
-        // updates per-student tables
+        // update per-student tables
         $sql = "SELECT student_table_hash 
                 FROM $all_students_table_name
                 WHERE module_hash='$table'";
@@ -57,6 +73,22 @@ else if ($input['action'] == 'add') {
     $task_type = $result['task_type'];
     $sql = 'INSERT INTO ' . $table . ' (id, week, session, task, task_duration, task_type) VALUES ("'. $id .'", "'. $week .'", "'. $session .'", "'. $task .'", "'. $task_duration .'", "'. $task_type .'")';
     mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+    
+    // update per-student tables
+    $sql = "SELECT student_table_hash 
+                FROM $all_students_table_name
+                WHERE module_hash='$table'";
+    $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+    // for each student table
+    while($row = mysqli_fetch_array($resultset)) {
+        $student_table_hash = $row['student_table_hash'];
+        $sql = 'INSERT INTO ' . $student_table_hash . ' (id, week, session, task, task_duration, task_type) VALUES ("'. $id .'", "'. $week .'", "'. $session .'", "'. $task .'", "'. $task_duration .'", "'. $task_type .'")';            
+        if ($conn->query($sql) === TRUE) {
+            echo "";
+        } else {
+            die ("Error: " . $conn->error);
+        }
+    }
 }
 mysqli_close($conn);
 echo json_encode($input);

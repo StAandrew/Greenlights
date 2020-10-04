@@ -1,6 +1,5 @@
 <?php
 // Here we allow Lecturers to edit existing modules tables
-// To update per-student tables user needs to press 'save changes' button
 // Editable table, files used: module_edit_helper.js; module_edit_helper.php
 include_once("inc/enable_debug.php");
 
@@ -63,13 +62,6 @@ while( $row = mysqli_fetch_assoc($resultset) ) {
             </tbody>
         </table>
         <button id='add' for-table='#data_table'>Add Row (clones last row)</button>
-    </div>
-    <div style="margin:10px 0px 0px 0px;">
-        <font color=grey>Please make sure to save changes before leaving the page:</font>
-        <form action="<?php echo $callBackURL; ?>" method="post">
-            <input type="hidden" name="module_hash_to_save" value="<?php echo $module_hash; ?>"/>
-            <input type="submit" value="Save changes" class="btn btn-default read-more" style="background:#3399ff;color:white"/>
-        </form> 
     </div>
 <?php
 // Only allow Lecturers to change access

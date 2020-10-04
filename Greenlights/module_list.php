@@ -62,38 +62,6 @@ if(isset($_GET['cancel'])) {
     exit(header('Location: module_list.php'));
 }
 
-// Option when user came back from module edit
-if (isset($_POST['module_hash_to_save'])) {
-    $module_hash_to_save = $_POST['module_hash_to_save'];
-    $_POST = array();
-    $sql = "SELECT student_table_hash 
-                FROM $all_students_table_name
-                WHERE module_hash='$module_hash_to_save'";
-    $big_resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
-    // for each student table
-    while($big_row = mysqli_fetch_array($big_resultset)) {
-        $student_table_hash = $big_row['student_table_hash'];
-        $sql = "SELECT id, week, session, task, task_duration, task_type FROM $module_hash_to_save";
-        $small_resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
-        // for each row in module table
-        while($small_row = mysqli_fetch_array($small_resultset)) {
-            $id = $small_row['id'];
-            $week = $small_row['week'];
-            $session = $small_row['session'];
-            $task = $small_row['task'];
-            $task_duration = $small_row['task_duration'];
-            $task_type = $small_row['task_type'];
-            // update table for each student
-            $sql = "INSERT INTO $student_table_hash (id, week, session, task, task_duration, task_type) VALUES ('$id', '$week', '$session', '$task', '$task_duration', '$task_type') ON DUPLICATE KEY UPDATE id='$id', week='$week', session='$session', task='$task', task_duration='$task_duration', task_type='$task_type'";
-            if ($conn->query($sql) === TRUE) {
-                echo "";
-            } else {
-                die ("Error: " . $conn->error);
-            }
-        }
-    }
-}
-
 // ----- YOUR MODULES AREA -----
 $no_modules_message = "No modules added yet";
 
