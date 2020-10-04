@@ -225,7 +225,7 @@ if ($_SESSION['user_type'] == 'Lecturer') {
         </ul>
     <input style="size:large" type=submit name=submit value="Add New Module" >
 </form>
-<br/>
+<hr>
 <h4 style="margin-bottom:5px;"><font style="color:dimgray;">Additional information and examples:</font></h4>
 <font class="additional-information"><font style="font-size:large;">Student list CSV file structure:</font><br/>delimiter: any<br/><i>note: first row will be skipped</i></font>
 <table class="table additional-information-table">

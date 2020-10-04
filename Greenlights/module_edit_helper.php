@@ -27,6 +27,22 @@ else if ($input['action'] == 'delete') {
     if ($result->num_rows > 1) {
         $sql = 'DELETE FROM ' . $table . ' WHERE id=' . $input['id'];
         mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+        
+        // updates per-student tables
+        $sql = "SELECT student_table_hash 
+                FROM $all_students_table_name
+                WHERE module_hash='$table'";
+        $resultset = mysqli_query($conn, $sql) or die("database error:". mysqli_error($conn));
+        // for each student table
+        while($row = mysqli_fetch_array($resultset)) {
+            $student_table_hash = $row['student_table_hash'];
+            $sql = "DELETE FROM $student_table_hash WHERE id='". $input['id'] ."'";
+            if ($conn->query($sql) === TRUE) {
+                echo "";
+            } else {
+                die ("Error: " . $conn->error);
+            }
+        }
     }
 }
 else if ($input['action'] == 'add') {

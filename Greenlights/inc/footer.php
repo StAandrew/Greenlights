@@ -41,6 +41,7 @@
             <li class="text-muted small"><a href="//www.ucl.ac.uk/legal-services/privacy">Privacy and Cookies</a></li>
             <li class="text-muted small"><a href="//www.ucl.ac.uk/procurement/suppliers/slavery-stmt">Slavery statement</a></li>
             <li class="text-muted small"><a href="//www.ucl.ac.uk/contact-list">Contact Us</a></li>
+            <li class="text-muted small"><a href="https://www.linkedin.com/in/andrey-staniukynas/">Created by Andrey Staniukynas </a><a href="https://www.linkedin.com/in/aishwarya-shaji-2646091a6/">and Aishwarya Shaji</a></li>
         </ul>
     </div>
 </footer>
