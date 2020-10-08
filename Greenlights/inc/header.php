@@ -156,7 +156,7 @@ if(isset($_POST['old_pass'])) {
 <div id="page-container-no-footer">
 <header class="header">
     <div>
-        <img style="width:100%; border-width:0;" alt="UCL logo" id="logo" src="img/UCL-black.png">
+        <img style="width:100%; border-width:0;" alt="UCL logo" id="logo" src="img/ucl-banner-land-black-rgb.png">
 <!--        <hr style="margin:0; height:5px;border-width:0;color:#252624;background-color:#252624">-->
     </div>
     <div role="navigation" class="navbar navbar-default navbar-static-top">

@@ -118,8 +118,8 @@ else if(isset($_POST["email"]) && isset($_POST["password"])){
     
     $email = "";
     $password = "";
-    $email = $_POST["email"];
-    $password = $_POST["password"];
+    $email = mysql_real_escape_string($_POST["email"]);
+    $password = mysql_real_escape_string($_POST["password"]);
     $_POST = array(); // Remove post arguments for security
     $salt = "1F1XPkkBxcO9OmXUgSSlsExIos70CyWLirEqEWMbug8YYNLmtYz25ToVhCyZK9SuVpidelpk21RE1pTYMVPKOo6jFq7k77zJAgAC0Ce6c4BAMxj622i6MHk4VjSK0y8e";
     $password = hash('sha256', $salt.$password);
